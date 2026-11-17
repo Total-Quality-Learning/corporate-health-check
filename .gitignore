@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+hasil/
+hasil-*/
+# dist/ dibuat ulang dengan: python tools/buat_zip.py
+node_modules/
+package-lock.json

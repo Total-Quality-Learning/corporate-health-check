@@ -1,0 +1,149 @@
+{
+  "versi": "1.0.0",
+  "catatan": "Peta gejala keuangan -> kemungkinan penyebab operasional -> data pembukti. Dipakai scripts/deteksi_gejala.py. Ambang adalah ambang umum, bukan benchmark industri.",
+  "gejala": {
+    "persediaan_menumpuk": {
+      "judul": "Persediaan menumpuk (hari persediaan naik)",
+      "kemungkinan_penyebab": [
+        "Overproduksi pada produk/style tertentu karena perencanaan produksi tidak mengikuti order aktual",
+        "Bahan baku dibeli melebihi kebutuhan (pembelian berbasis perkiraan, minimum order pemasok, atau antisipasi harga)",
+        "WIP (barang setengah jadi) tertahan di proses tertentu karena hambatan kapasitas atau menunggu bahan pelengkap",
+        "Stok lambat laku / stok mati yang belum diakui (sisa order, retur, model lama)"
+      ],
+      "kenapa_tidak_terlihat": "Laporan keuangan hanya menunjukkan total nilai persediaan, bukan produk, lokasi, umur, atau tahap produksinya.",
+      "data_pembukti": [
+        "Saldo stok per SKU/style dan per lokasi gudang",
+        "Komposisi persediaan: bahan baku vs WIP vs barang jadi",
+        "Umur persediaan (aging) dan daftar stok berumur > 90 hari",
+        "WIP per lini/proses dan rencana vs realisasi produksi"
+      ],
+      "biasanya_tersedia_jika": "produksi, gudang, dan keuangan tercatat dalam satu sistem yang saling terhubung",
+      "pertanyaan_minggu_ini": [
+        "Berapa lama tim gudang bisa memberikan daftar stok berumur lebih dari 90 hari, lengkap dengan nilainya?",
+        "Dari kenaikan persediaan ini, berapa bagian yang bahan baku, WIP, dan barang jadi?"
+      ],
+      "kategori_solusi": "Integrasi data perencanaan produksi, gudang, dan keuangan; pengendalian WIP di lantai produksi"
+    },
+    "margin_tergerus": {
+      "judul": "Margin laba kotor tergerus",
+      "kemungkinan_penyebab": [
+        "Reject, rework, dan retur meningkat (biaya mutu buruk / cost of poor quality)",
+        "Pemakaian bahan melebihi standar (boros potong, susut, salah ukur)",
+        "Lembur dan biaya tenaga kerja naik karena jadwal produksi tidak stabil",
+        "Harga jual tertekan atau bauran produk bergeser ke produk bermargin rendah"
+      ],
+      "kenapa_tidak_terlihat": "HPP di laporan keuangan adalah satu angka total; biaya mutu, pemborosan bahan, dan lembur tersembunyi di dalamnya.",
+      "data_pembukti": [
+        "Reject rate dan rework per proses / per lini",
+        "Biaya rework dan nilai retur pelanggan",
+        "Pemakaian bahan aktual vs standar per order",
+        "HPP dan margin per produk / per order / per pelanggan"
+      ],
+      "biasanya_tersedia_jika": "mutu dicatat per proses dan bernilai rupiah, serta HPP bisa dihitung per order",
+      "pertanyaan_minggu_ini": [
+        "Berapa nilai rupiah reject, rework, dan retur bulan lalu, dan dari proses mana paling besar?",
+        "Apakah kita tahu tiga produk atau pelanggan dengan margin terendah tahun ini?"
+      ],
+      "kategori_solusi": "Sistem manajemen mutu dengan pencatatan biaya mutu per proses; perhitungan HPP per order"
+    },
+    "laba_naik_kas_turun": {
+      "judul": "Laba naik, tetapi kas dari operasi turun",
+      "kemungkinan_penyebab": [
+        "Kas tertahan di persediaan yang menumpuk",
+        "Kas tertahan di piutang karena pelanggan membayar lebih lama",
+        "Pembayaran ke pemasok lebih cepat daripada penerimaan dari pelanggan"
+      ],
+      "kenapa_tidak_terlihat": "Laba dicatat saat penjualan terjadi, sedangkan kas baru masuk saat pelanggan membayar; laporan keuangan tidak menunjukkan order mana yang uangnya belum kembali.",
+      "data_pembukti": [
+        "Aging piutang per pelanggan",
+        "Siklus order-to-cash: tanggal order, kirim, invoice, dan bayar",
+        "Proyeksi kas mingguan 13 minggu ke depan"
+      ],
+      "biasanya_tersedia_jika": "penjualan, pengiriman, penagihan, dan keuangan terhubung sehingga status tiap order bisa dilacak",
+      "pertanyaan_minggu_ini": [
+        "Jika hari ini kita perlu tahu posisi kas 8 minggu ke depan, berapa lama tim finance bisa menyiapkannya?",
+        "Order mana saja yang sudah dikirim lebih dari 60 hari tetapi belum dibayar?"
+      ],
+      "kategori_solusi": "Integrasi data order-to-cash dan pemantauan modal kerja secara berkala"
+    },
+    "piutang_melambat": {
+      "judul": "Piutang melambat (hari piutang naik)",
+      "kemungkinan_penyebab": [
+        "Invoice terlambat diterbitkan setelah barang dikirim",
+        "Penagihan tidak terpantau; tidak ada pengingat jatuh tempo yang sistematis",
+        "Termin pembayaran dilonggarkan untuk mengejar penjualan",
+        "Sengketa mutu atau dokumen dengan pelanggan menahan pembayaran"
+      ],
+      "kenapa_tidak_terlihat": "Laporan keuangan hanya menunjukkan saldo piutang akhir tahun, bukan berapa lama tiap tahap (kirim, invoice, bayar) berlangsung.",
+      "data_pembukti": [
+        "Selisih hari antara tanggal kirim dan tanggal invoice",
+        "Aging piutang per pelanggan dan per jatuh tempo",
+        "Daftar piutang yang tertahan karena klaim mutu atau dokumen"
+      ],
+      "biasanya_tersedia_jika": "data pengiriman dan penagihan tercatat dalam sistem yang sama",
+      "pertanyaan_minggu_ini": [
+        "Rata-rata berapa hari dari barang dikirim sampai invoice terbit?",
+        "Berapa nilai piutang yang tertahan karena klaim mutu dari pelanggan?"
+      ],
+      "kategori_solusi": "Otomasi dan pemantauan proses penagihan yang terhubung dengan data pengiriman"
+    },
+    "overhead_naik": {
+      "judul": "Beban usaha tumbuh lebih cepat dari pendapatan",
+      "kemungkinan_penyebab": [
+        "Pemborosan (waste) dan downtime mesin menurunkan output per jam",
+        "Penambahan tenaga administrasi untuk pekerjaan rekap data manual",
+        "Biaya logistik, lembur, atau pengiriman darurat karena jadwal tidak stabil"
+      ],
+      "kenapa_tidak_terlihat": "Laporan keuangan mengelompokkan biaya per jenis, bukan per penyebab atau per aktivitas.",
+      "data_pembukti": [
+        "Downtime mesin dan penyebabnya",
+        "Output per jam / per operator per lini",
+        "Jam lembur dan biaya pengiriman darurat per bulan"
+      ],
+      "biasanya_tersedia_jika": "KPI produksi dicatat harian dan dihubungkan dengan biaya",
+      "pertanyaan_minggu_ini": [
+        "Berapa jam downtime mesin bulan lalu, dan apa tiga penyebab terbesarnya?",
+        "Apakah ada KPI produksi harian yang benar-benar ditindaklanjuti setiap pagi?"
+      ],
+      "kategori_solusi": "Peningkatan efisiensi lini produksi dan pengukuran KPI produksi harian"
+    },
+    "utang_menopang_modal_kerja": {
+      "judul": "Utang bank naik saat kas dari operasi melemah",
+      "kemungkinan_penyebab": [
+        "Kas yang tertahan di persediaan dan piutang ditutup dengan pinjaman jangka pendek",
+        "Investasi mesin/aset baru dibiayai utang, tetapi kapasitasnya belum terpakai sehingga belum menghasilkan kas",
+        "Tidak ada proyeksi kas sehingga kebutuhan dana baru diketahui saat mendesak"
+      ],
+      "kenapa_tidak_terlihat": "Laporan keuangan menunjukkan pinjaman bertambah, tetapi tidak menunjukkan order, produk, pelanggan, atau mesin mana yang menyerap dananya dan kapan dana itu kembali.",
+      "data_pembukti": [
+        "Penggunaan fasilitas kredit per bulan",
+        "Hubungan antara kenaikan stok/piutang/aset baru dan penarikan pinjaman",
+        "Utilisasi aset yang dibiayai pinjaman",
+        "Proyeksi kas mingguan"
+      ],
+      "biasanya_tersedia_jika": "data operasional dan keuangan terhubung sehingga kebutuhan kas bisa diproyeksikan",
+      "pertanyaan_minggu_ini": [
+        "Berapa beban bunga tambahan tahun ini yang sebenarnya disebabkan oleh stok dan piutang yang membengkak?"
+      ],
+      "kategori_solusi": "Proyeksi kas berbasis data operasional dan pengendalian modal kerja"
+    },
+    "data_tidak_sinkron": {
+      "judul": "Angka antarlaporan tidak sinkron",
+      "kemungkinan_penyebab": [
+        "Laporan disusun dari banyak file Excel yang digabung manual",
+        "Definisi angka berbeda antardepartemen",
+        "Penyesuaian akhir periode tidak terdokumentasi"
+      ],
+      "kenapa_tidak_terlihat": "Ketidaksinkronan ini justru masalahnya: angka yang menjadi dasar keputusan tidak saling cocok.",
+      "data_pembukti": [
+        "Daftar file dan sumber data yang dipakai menyusun laporan bulanan",
+        "Lama waktu tutup buku dan jumlah koreksi setelah laporan terbit"
+      ],
+      "biasanya_tersedia_jika": "tersedia satu sumber data yang dipakai bersama oleh semua departemen",
+      "pertanyaan_minggu_ini": [
+        "Berapa banyak file Excel yang digabung untuk menyusun laporan bulanan, dan siapa yang memegangnya?"
+      ],
+      "kategori_solusi": "Satu sumber data terintegrasi untuk keuangan dan operasional"
+    }
+  }
+}
