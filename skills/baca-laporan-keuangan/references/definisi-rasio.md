@@ -28,12 +28,12 @@ ROE, dan perputaran aset.
 | Tarif pajak efektif | Beban pajak / Laba sebelum pajak | Pajak riil yang dibayar atas laba | Wajar (sekitar 22%) |
 | Pengali ekuitas | Total aset / Ekuitas | Komponen DuPont: seberapa besar aset dibiayai utang | Wajar |
 | Liabilitas / aset | Total liabilitas / Total aset | Porsi aset yang dibiayai utang | Lebih rendah |
-| Utang bank bersih / EBITDA | (Utang bank − Kas) / EBITDA | Berapa tahun laba operasi untuk melunasi utang bank | Lebih rendah (umum < 2,5x) |
+| Utang bank bersih / EBITDA | (Utang bank - Kas) / EBITDA | Berapa tahun laba operasi untuk melunasi utang bank | Lebih rendah (umum < 2,5x) |
 | Perputaran persediaan | HPP / Persediaan | Berapa kali stok berganti per tahun (= 365 ÷ DIO) | Lebih tinggi |
 | Perputaran piutang | Pendapatan / Piutang | Berapa kali piutang tertagih per tahun (= 365 ÷ DSO) | Lebih tinggi |
-| Margin arus kas bebas | (Arus kas operasi − Belanja modal) / Pendapatan | Uang tunai tersisa setelah investasi, per Rp100 penjualan | Lebih tinggi |
+| Margin arus kas bebas | (Arus kas operasi - Belanja modal) / Pendapatan | Uang tunai tersisa setelah investasi, per Rp100 penjualan | Lebih tinggi |
 | Belanja modal / penyusutan | Belanja modal / Penyusutan | Di atas 1: aset diperbarui/ditambah; di bawah 1: aset menua | Wajar |
-| Skor Altman Z'' | 6,56·X1 + 3,26·X2 + 6,72·X3 + 1,05·X4 | Sinyal kesehatan perusahaan non-publik (X1 modal kerja/aset, X2 saldo laba/aset, X3 laba usaha/aset, X4 ekuitas/liabilitas) | > 2,60 aman; 1,10–2,60 abu-abu; < 1,10 rawan |
+| Skor Altman Z'' | 6,56 x X1 + 3,26 x X2 + 6,72 x X3 + 1,05 x X4 | Sinyal kesehatan perusahaan non-publik (X1 modal kerja/aset, X2 saldo laba/aset, X3 laba usaha/aset, X4 ekuitas/liabilitas) | > 2,60 aman; 1,10-2,60 abu-abu; < 1,10 rawan |
 
 **DuPont:** ROE = margin laba bersih × perputaran aset × pengali ekuitas.
 

@@ -1,7 +1,7 @@
 # PT Contoh Pangan Sejahtera (FIKTIF)
 
 **Industri:** Manufaktur Makanan Ringan & Minuman Kemasan
-**Lokasi:** Kabupaten Contoh, Jawa Tengah (fiktif) · **Berdiri:** 2011 · **Karyawan:** ±780
+**Lokasi:** Kabupaten Contoh, Jawa Tengah (fiktif) | **Berdiri:** 2011 | **Karyawan:** sekitar 780
 
 > Seluruh data di folder ini **fiktif** dan dibuat untuk pelatihan. Bukan data perusahaan nyata.
 
@@ -34,4 +34,4 @@ python skills/laporan-analisa/scripts/susun_laporan.py sample-data/03-makanan-mi
 
 Atau minta asisten AI: *"Analisis LK PT Contoh Pangan Sejahtera lalu buat laporan analisa bulan Oktober 2026."*
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

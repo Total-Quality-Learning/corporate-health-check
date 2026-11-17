@@ -174,7 +174,7 @@ class LKTahunan(unittest.TestCase):
                 "--out-md", self.tmp / "b.md", "--out-html", self.tmp / "b.html", "--diam")
         self.assertEqual(r.returncode, 0, r.stderr)
         md = (self.tmp / "b.md").read_text(encoding="utf-8")
-        self.assertIn("Disusun dengan TQ Board Insight · totalquality.co.id", md)
+        self.assertIn("Disusun dengan TQ Board Insight | totalquality.co.id", md)
         self.assertNotIn("{{", md)
         self.assertIn("<!doctype html>", (self.tmp / "b.html").read_text(encoding="utf-8"))
 

@@ -11,9 +11,9 @@ yang perlu dijawab tim.
 | Skill | Fungsi | Input |
 |---|---|---|
 | [`tampilan-direksi`](skills/tampilan-direksi/SKILL.md) | Menanyakan & menyimpan preferensi (untuk siapa, narasi singkat/detail/checklist, grafik/penjelasan grafik, fokus) + aturan tampilan ramah direksi | 4 pertanyaan bernomor |
-| [`baca-laporan-keuangan`](skills/baca-laporan-keuangan/SKILL.md) | LK → validasi → ±28 rasio **dengan perhitungannya** (termasuk DuPont & Altman Z''), metode saldo akhir/rata-rata, narasi singkat/detail/checklist, grafik atau penjelasan grafik | LK tahunan (PDF/Excel/JSON) |
+| [`baca-laporan-keuangan`](skills/baca-laporan-keuangan/SKILL.md) | LK → validasi → sekitar 28 rasio **dengan perhitungannya** (termasuk DuPont & Altman Z''), metode saldo akhir/rata-rata, narasi singkat/detail/checklist, grafik atau penjelasan grafik | LK tahunan (PDF/Excel/JSON) |
 | [`red-flag-operasional`](skills/red-flag-operasional/SKILL.md) | Gejala keuangan → kemungkinan penyebab operasional → data pembukti → pertanyaan untuk tim | hasil rasio |
-| [`cek-kesiapan-data`](skills/cek-kesiapan-data/SKILL.md) | 8 pertanyaan → Level 1–4 kesiapan data & sistem | jawaban A–D |
+| [`cek-kesiapan-data`](skills/cek-kesiapan-data/SKILL.md) | 8 pertanyaan → Level 1-4 kesiapan data & sistem | jawaban A-D |
 | [`board-brief`](skills/board-brief/SKILL.md) | Ringkasan 1 halaman untuk direksi | hasil skill di atas |
 | [`data-emiten`](skills/data-emiten/SKILL.md) | Pilih perusahaan Tbk (per sektor/industri/kata kunci) → tarik data dari TradingView → tabel pembanding + posisi perusahaan Anda vs median | kode emiten |
 | [`laporan-analisa`](skills/laporan-analisa/SKILL.md) | **Paket rapat direksi** (tampilan Direksi atau Lengkap; cerita narasi atau checklist) (HTML interaktif, cetak PDF): putusan & skor, 5 cerita, 15 KPI, analisa laporan, selisih vs bulan lalu/tahun lalu/target, data operasional, uji ketahanan kas, proyeksi kas 13 minggu, rencana kerja, lampiran rasio | data bulanan (Excel) |
@@ -22,7 +22,7 @@ Prinsipnya: **angka dihitung skrip Python yang deterministik; AI hanya menulis n
 skrip berhenti dan tidak menghitung apa pun. Bagian yang tidak bisa dijawab dari data yang ada ditandai
 **PERLU DATA**, tidak ditebak.
 
-## Data contoh (fiktif) — 4 case industri
+## Data contoh (fiktif): 4 case industri
 
 | Folder | Perusahaan fiktif | Cerita utama |
 |---|---|---|
@@ -31,8 +31,8 @@ skrip berhenti dan tidak menghitung apa pun. Bagian yang tidak bisa dijawab dari
 | [`03-makanan-minuman`](sample-data/03-makanan-minuman/) | PT Contoh Pangan Sejahtera | Kas sehat, tetapi margin kotor tergerus harga bahan & waste |
 | [`04-komponen-logam`](sample-data/04-komponen-logam/) | PT Contoh Presisi Teknik | Volume turun, utilisasi mesin baru rendah, bunga menekan laba |
 
-Setiap folder berisi: LK tahunan 2025 (PDF bergaya laporan keuangan umum, dengan catatan), LK 2023–2025 (Excel &
-JSON), data keuangan bulanan Jan 2023 – Okt 2026 (Excel), dan contoh jawaban cek kesiapan.
+Setiap folder berisi: LK tahunan 2025 (PDF bergaya laporan keuangan umum, dengan catatan), LK 2023-2025 (Excel &
+JSON), data keuangan bulanan Jan 2023 - Okt 2026 (Excel), dan contoh jawaban cek kesiapan.
 
 ## Cara memakai
 
@@ -83,7 +83,7 @@ python ringkas_emiten.py emiten.json --rasio ../../../rasio.json
 > **Penting:** TradingView tidak menyediakan API data publik resmi. Skill ini memakai pustaka komunitas
 > [TradingView-API](https://github.com/Mathieu2301/TradingView-API) yang tidak berafiliasi dengan TradingView, dan
 > ketentuan layanan TradingView membatasi pengambilan data otomatis. Data bisa tertunda atau berbeda dengan laporan
-> keuangan resmi (uji internal: laba kotor bisa selisih hingga ±4%). Gunakan secukupnya dan verifikasi ke idx.co.id.
+> keuangan resmi (uji internal: laba kotor bisa selisih hingga sekitar 4%). Gunakan secukupnya dan verifikasi ke idx.co.id.
 
 ## Memakai data perusahaan Anda sendiri
 
@@ -104,15 +104,15 @@ pengaturan privasi layanan tersebut.
 ```
 corporate-health-check/
 ├── skills/
-│   ├── baca-laporan-keuangan/   SKILL.md · scripts/ · references/ · templates/template-lk.xlsx
-│   ├── red-flag-operasional/    SKILL.md · scripts/ · references/peta-gejala.json
-│   ├── cek-kesiapan-data/       SKILL.md · scripts/ · references/pertanyaan.json
-│   ├── board-brief/             SKILL.md · scripts/ · templates/brief.md
-│   ├── tampilan-direksi/        SKILL.md · scripts/preferensi.py · references/prinsip-tampilan-direksi.md
-│   ├── data-emiten/             SKILL.md · scripts/ (tv_emiten.mjs, ringkas_emiten.py, package.json)
-│   └── laporan-analisa/         SKILL.md · scripts/ · references/ · templates/ (laporan.html, template-paket-data.xlsx)
+│   ├── baca-laporan-keuangan/   SKILL.md | scripts/ | references/ | templates/template-lk.xlsx
+│   ├── red-flag-operasional/    SKILL.md | scripts/ | references/peta-gejala.json
+│   ├── cek-kesiapan-data/       SKILL.md | scripts/ | references/pertanyaan.json
+│   ├── board-brief/             SKILL.md | scripts/ | templates/brief.md
+│   ├── tampilan-direksi/        SKILL.md | scripts/preferensi.py | references/prinsip-tampilan-direksi.md
+│   ├── data-emiten/             SKILL.md | scripts/ (tv_emiten.mjs, ringkas_emiten.py, package.json)
+│   └── laporan-analisa/         SKILL.md | scripts/ | references/ | templates/ (laporan.html, template-paket-data.xlsx)
 ├── sample-data/                 4 case industri FIKTIF
-├── tools/                       analisis_lengkap.py · buat_zip.py · format_data.py
+├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py
 └── tests/                       python -m unittest discover tests -v
 ```
 
@@ -121,8 +121,8 @@ mengekstrak teks PDF.
 
 ## Batas cakupan
 
-Skill ini menemukan **gejala** dan menyusun laporan dari data yang tersedia. Menjawab *mengapa* — pelanggan mana,
-produk mana, lini mana, proses mana — membutuhkan data operasional yang terintegrasi. Tanpa data itu, laporan
+Skill ini menemukan **gejala** dan menyusun laporan dari data yang tersedia. Menjawab *mengapa*, pelanggan mana,
+produk mana, lini mana, proses mana, membutuhkan data operasional yang terintegrasi. Tanpa data itu, laporan
 menandai bagian terkait sebagai **PERLU DATA**.
 
 ## Lisensi
@@ -131,4 +131,4 @@ Lihat [`LICENSE`](LICENSE). Bebas dipakai untuk keperluan internal perusahaan; t
 
 ---
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

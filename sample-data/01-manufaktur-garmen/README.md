@@ -1,7 +1,7 @@
 # PT Contoh Garmen Nusantara (FIKTIF)
 
 **Industri:** Manufaktur Garmen (pakaian jadi, order ekspor & domestik)
-**Lokasi:** Kabupaten Contoh, Jawa Barat (fiktif) · **Berdiri:** 2009 · **Karyawan:** ±1.450
+**Lokasi:** Kabupaten Contoh, Jawa Barat (fiktif) | **Berdiri:** 2009 | **Karyawan:** sekitar 1.450
 
 > Seluruh data di folder ini **fiktif** dan dibuat untuk pelatihan. Bukan data perusahaan nyata.
 
@@ -34,4 +34,4 @@ python skills/laporan-analisa/scripts/susun_laporan.py sample-data/01-manufaktur
 
 Atau minta asisten AI: *"Analisis LK PT Contoh Garmen Nusantara lalu buat laporan analisa bulan Oktober 2026."*
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

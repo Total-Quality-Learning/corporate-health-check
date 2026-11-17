@@ -5,7 +5,7 @@ description: Mencari dan menarik data fundamental perusahaan terbuka (Tbk) di Bu
 
 # Data Emiten IDX (TradingView)
 
-Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resmi** — selalu sampaikan batasannya.
+Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resmi**, selalu sampaikan batasannya.
 
 ## Prasyarat
 
@@ -21,8 +21,8 @@ Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resm
    - Sektor: `node scripts/tv_emiten.mjs sektor` → tampilkan daftar sektor.
    - Per sektor: `node scripts/tv_emiten.mjs daftar --sektor "Consumer Non-Durables" --limit 15`
    - Kata kunci (boleh bahasa Indonesia: tekstil, garmen, makanan, farmasi, semen, otomotif, logam, kimia, kertas,
-     distribusi, ritel, …): `node scripts/tv_emiten.mjs daftar --cari tekstil --limit 15`
-   - Tampilkan tabel (kode, nama, industri, kapitalisasi) dan minta pengguna memilih **3–10 kode**.
+     distribusi, ritel, ...): `node scripts/tv_emiten.mjs daftar --cari tekstil --limit 15`
+   - Tampilkan tabel (kode, nama, industri, kapitalisasi) dan minta pengguna memilih **3-10 kode**.
 3. **Ambil data:** `node scripts/tv_emiten.mjs ambil UNVR ICBP MYOR --out emiten.json`
    (gagal jaringan → skrip mencoba ulang 3 kali; jika tetap gagal, sampaikan apa adanya dan jangan mengarang angka).
 4. **Ringkas:** `python scripts/ringkas_emiten.py emiten.json [--rasio rasio.json] [--gaya ringkas|detail|checklist]`
@@ -34,7 +34,7 @@ Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resm
 ## Wajib disampaikan (singkat, sekali per sesi)
 
 > Data emiten diambil dari TradingView melalui pustaka tidak resmi. Angka bisa tertunda atau berbeda dengan laporan
-> keuangan resmi (laba kotor bisa selisih hingga ±4%). Verifikasi angka penting ke idx.co.id / situs emiten sebelum
+> keuangan resmi (laba kotor bisa selisih hingga sekitar 4%). Verifikasi angka penting ke idx.co.id / situs emiten sebelum
 > dipakai mengambil keputusan.
 
 ## Batasan data (lihat `references/sumber-data.md`)
@@ -48,4 +48,4 @@ Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resm
   tertutup. Jangan menyebutnya "benchmark industri".
 - Jangan menyimpan kredensial TradingView; skill ini hanya memakai akses anonim.
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

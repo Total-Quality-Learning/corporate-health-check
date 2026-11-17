@@ -116,7 +116,7 @@ def fmt_perubahan(p, satuan):
     d = p.get("selisih")
     if d is None:
         return "-"
-    tanda = "+" if d > 0 else ("-" if d < 0 else "±")
+    tanda = "+" if d > 0 else ("-" if d < 0 else "sekitar ")
     if satuan == "persen":
         return f"{tanda}{fmt_angka(abs(d), 1)} poin"
     if satuan == "hari":
@@ -331,7 +331,7 @@ def hitung(lk: dict, periode: list, hari: dict, metode: str = "akhir") -> tuple:
         tag = " × 365/hari" if tahun != 1 else ""
 
         catat("current_ratio", bagi(tal, tljp), f"{U(tal)} ÷ {U(tljp)}", "kali")
-        catat("quick_ratio", bagi(tal - pers, tljp), f"({U(tal)} − {U(pers)}) ÷ {U(tljp)}", "kali")
+        catat("quick_ratio", bagi(tal - pers, tljp), f"({U(tal)} - {U(pers)}) ÷ {U(tljp)}", "kali")
         catat("cash_ratio", bagi(kas, tljp), f"{U(kas)} ÷ {U(tljp)}", "kali")
         catat("gross_margin", pct(bagi(lkt, pend)), f"{U(lkt)} ÷ {U(pend)} × 100%", "persen")
         catat("operating_margin", pct(bagi(lu, pend)), f"{U(lu)} ÷ {U(pend)} × 100%", "persen")
@@ -352,7 +352,7 @@ def hitung(lk: dict, periode: list, hari: dict, metode: str = "akhir") -> tuple:
         catat("der_berbunga", bagi(ub, te) if (te > 0 and ub is not None) else None, f"{U(ub)} ÷ {U(te)}", "kali")
         catat("debt_to_assets", pct(bagi(tl, ta)), f"{U(tl)} ÷ {U(ta)} × 100%", "persen")
         nde = bagi(ub - kas, ebitda * tahun) if (ub is not None and ebitda and ebitda > 0) else None
-        catat("net_debt_ebitda", nde, f"({U(ub)} − {U(kas)}) ÷ {U(ebitda)}{tag}", "kali")
+        catat("net_debt_ebitda", nde, f"({U(ub)} - {U(kas)}) ÷ {U(ebitda)}{tag}", "kali")
         bunga = g(lr, "beban_bunga")
         catat("interest_coverage", bagi(lu, bunga) if bunga else None, f"{U(lu)} ÷ {U(bunga)}", "kali")
         sp, tp = saldo("persediaan")
@@ -366,7 +366,7 @@ def hitung(lk: dict, periode: list, hari: dict, metode: str = "akhir") -> tuple:
             catat("ccc", None, "", "hari")
         else:
             catat("ccc", komp[0] + komp[1] - komp[2],
-                  f"{fmt_nilai(komp[0], 'hari')} + {fmt_nilai(komp[1], 'hari')} − {fmt_nilai(komp[2], 'hari')}", "hari")
+                  f"{fmt_nilai(komp[0], 'hari')} + {fmt_nilai(komp[1], 'hari')} - {fmt_nilai(komp[2], 'hari')}", "hari")
         catat("inventory_turnover", bagi(hpp * tahun, sp) if hpp is not None else None, f"{U(hpp)}{tag} ÷ {tp}", "kali")
         catat("receivable_turnover", bagi(pend * tahun, spi), f"{U(pend)}{tag} ÷ {tpi}", "kali")
         catat("asset_turnover", bagi(pend * tahun, sta), f"{U(pend)}{tag} ÷ {tta}", "kali")
@@ -374,7 +374,7 @@ def hitung(lk: dict, periode: list, hari: dict, metode: str = "akhir") -> tuple:
         catat("cfo_to_ni", bagi(cfo, lb) if (lb is not None and lb > 0) else None, f"{U(cfo)} ÷ {U(lb)}", "kali")
         capex = g(ak, "belanja_modal")
         catat("fcf_margin", pct(bagi(cfo - capex, pend)) if capex is not None else None,
-              f"({U(cfo)} − {U(capex)}) ÷ {U(pend)} × 100%", "persen")
+              f"({U(cfo)} - {U(capex)}) ÷ {U(pend)} × 100%", "persen")
         catat("capex_to_dep", bagi(capex, dep) if (capex is not None and dep) else None, f"{U(capex)} ÷ {U(dep)}", "kali")
         sl = g(n, "saldo_laba")
         if sl is not None and lu is not None and ta and tl and tl > 0:
@@ -497,7 +497,7 @@ def daftar_periksa(out):
         buruk = d if arah == "rendah" else -d
         st = "aman" if buruk < w else ("perhatian" if buruk < c else "kritis")
         satd = "poin" if sat == "persen" else sat
-        teks_d = (f"{'+' if d >= 0 else '−'}{fmt_angka(abs(d), 1 if sat == 'persen' else 0)} "
+        teks_d = (f"{'+' if d >= 0 else '-'}{fmt_angka(abs(d), 1 if sat == 'persen' else 0)} "
                   f"{'poin' if sat == 'persen' else 'hari'}")
         arah_teks = "naik" if arah == "rendah" else "turun"
         items.append((judul, st, f"{F(a, sat)} → {F(b, sat)} ({teks_d})",
@@ -520,12 +520,12 @@ def daftar_periksa(out):
     a, b = R("altman_z")
     if b is not None:
         st = "aman" if b > 2.6 else ("perhatian" if b >= 1.1 else "kritis")
-        items.append(("Skor Altman Z'' (indikatif)", st, F(b, "skor"), "aman > 2,60; zona abu-abu 1,10–2,60; kritis < 1,10"))
+        items.append(("Skor Altman Z'' (indikatif)", st, F(b, "skor"), "aman > 2,60; zona abu-abu 1,10-2,60; kritis < 1,10"))
     pend = out["pos_utama"].get("pendapatan", {}).get("nilai", {})
     if len(per) > 1 and pend.get(per[-2]):
         g_ = (pend[per[-1]] / pend[per[-2]] - 1) * 100
         st = "aman" if g_ >= 0 else ("perhatian" if g_ >= -5 else "kritis")
-        items.append(("Pertumbuhan pendapatan", st, F(g_, "persen"), "aman ≥ 0%; kritis < −5%"))
+        items.append(("Pertumbuhan pendapatan", st, F(g_, "persen"), "aman ≥ 0%; kritis < -5%"))
     return items
 
 
@@ -540,17 +540,17 @@ def kepala(out):
 
 KAKI = ["", "_Angka dihitung oleh skrip deterministik. Ambang status adalah ambang umum, bukan benchmark industri. "
         "Alat bantu analisis, bukan nasihat investasi atau hasil audit._", "",
-        "Disusun dengan TQ Board Insight · totalquality.co.id", ""]
-IKON = {"aman": "✅", "perhatian": "⚠️", "kritis": "❌"}
+        "Disusun dengan TQ Board Insight | totalquality.co.id", ""]
+LABEL_ST = {"aman": "aman", "perhatian": "perlu perhatian", "kritis": "kritis"}
 
 
 def md_checklist(out):
     items = daftar_periksa(out)
     aman = sum(1 for i in items if i[1] == "aman")
-    L = kepala(out) + [f"## Checklist kesehatan keuangan — {aman} dari {len(items)} aman", ""]
+    L = kepala(out) + [f"## Checklist kesehatan keuangan, {aman} dari {len(items)} aman", ""]
     urut = {"kritis": 0, "perhatian": 1, "aman": 2}
     for judul, st, nilai, ambang in sorted(items, key=lambda x: urut[x[1]]):
-        L.append(f"- [{'x' if st == 'aman' else ' '}] {IKON[st]} **{judul}: {nilai}** — {st} _(ambang: {ambang})_")
+        L.append(f"- [{'x' if st == 'aman' else ' '}] **{judul}: {nilai}** ({LABEL_ST[st]}; {ambang})")
     L += ["", "Kotak tercentang = sudah dalam batas aman. Kotak kosong = perlu dibahas dengan tim."]
     return "\n".join(L + KAKI)
 
@@ -569,7 +569,7 @@ def md_ringkas(out):
     items.sort(key=lambda x: 0 if x[1] == "kritis" else 1)
     L += ["", "## Tiga hal yang perlu perhatian", ""]
     if items:
-        L += [f"{n}. {IKON[st]} **{j}** — {nil}" for n, (j, st, nil, _) in enumerate(items[:3], 1)]
+        L += [f"{n}. **{j}**: {nil} ({LABEL_ST[st]})" for n, (j, st, nil, _) in enumerate(items[:3], 1)]
     else:
         L.append("Tidak ada indikator di luar batas aman.")
     return "\n".join(L + KAKI)
@@ -610,7 +610,7 @@ def md_detail(out):
     if z is not None:
         zona = "aman" if z > 2.6 else ("abu-abu" if z >= 1.1 else "rawan")
         L += ["", "## Skor Altman Z'' (indikatif)", "",
-              f"Skor {fmt_nilai(z, 'skor')} → zona **{zona}** (aman > 2,60; abu-abu 1,10–2,60; rawan < 1,10). "
+              f"Skor {fmt_nilai(z, 'skor')} → zona **{zona}** (aman > 2,60; abu-abu 1,10-2,60; rawan < 1,10). "
               "Model statistik untuk perusahaan non-publik; dipakai sebagai sinyal awal, bukan vonis."]
     return "\n".join(L + KAKI)
 

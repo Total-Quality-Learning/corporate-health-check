@@ -1,6 +1,6 @@
 # Board Brief: {{perusahaan}}
 
-**Periode:** {{periode}} · **Satuan:** {{satuan}}
+**Periode:** {{periode}} | **Satuan:** {{satuan}}
 
 ## 1. Kondisi singkat
 
@@ -12,7 +12,7 @@
 |---|---:|---:|:---:|
 {{tabel_indikator}}
 
-🟢 aman · 🟡 perlu perhatian · 🔴 perlu tindakan — berdasarkan ambang umum, bukan benchmark industri.
+Status memakai ambang umum, bukan benchmark industri: Aman, Perhatian (perlu dicermati), Kritis (perlu tindakan).
 
 ## 3. Tiga temuan terpenting
 
@@ -28,4 +28,4 @@
 
 _{{disclaimer}}_
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

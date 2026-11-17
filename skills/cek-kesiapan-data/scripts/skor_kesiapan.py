@@ -54,7 +54,7 @@ def baca_jawaban(a, n: int) -> list[str]:
 
 
 def kuesioner(ref: dict) -> str:
-    L = ["# Cek Kesiapan Data & Sistem (8 pertanyaan, ±3 menit)", "",
+    L = ["# Cek Kesiapan Data & Sistem (8 pertanyaan, sekitar 3 menit)", "",
          "Pilih satu jawaban yang paling menggambarkan kondisi **saat ini** (bukan rencana).", ""]
     for q in ref["pertanyaan"]:
         L.append(f"**{q['no']}. {q['teks']}**")
@@ -109,10 +109,10 @@ def ke_markdown(h: dict) -> str:
     L += ["## Empat level kesiapan", ""]
     for x in h["semua_level"]:
         tanda = " ← posisi Anda" if x["level"] == h["level"] else ""
-        L.append(f"- **Level {x['level']} – {x['nama']}**{tanda}: {x['deskripsi']}")
+        L.append(f"- **Level {x['level']} - {x['nama']}**{tanda}: {x['deskripsi']}")
     L += ["", f"Kode ringkas (opsional, untuk dibagikan saat sesi): `{h['kode_ringkas']}`", "",
           "_Versi singkat dengan skoring sederhana tanpa bobot; gambaran awal, bukan hasil asesmen lengkap._", "",
-          "Disusun dengan TQ Board Insight · totalquality.co.id", ""]
+          "Disusun dengan TQ Board Insight | totalquality.co.id", ""]
     return "\n".join(L)
 
 

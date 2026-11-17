@@ -218,16 +218,16 @@ def ke_markdown_ringkas(r: dict, temuan: list, ringkas: dict, checklist: bool) -
         x = ringkas["tambahan_modal_kerja"]
         L += [f"Dana tambahan tertahan di modal kerja: **{fmt_uang(x['nilai'])} {x['satuan']}**.", ""]
     for i, t in enumerate(temuan, 1):
-        ikon = "🔴" if t["tingkat"] == "merah" else "🟡"
+        ikon = "status merah" if t["tingkat"] == "merah" else "status kuning"
         if checklist:
-            L += [f"- [ ] {ikon} **{t['judul']}** — {t['ringkas']}",
+            L += [f"- [ ] **{t['judul']}**, {ikon}. {t['ringkas']}",
                   f"  - [ ] Data pembukti: {'; '.join(t['data_pembukti'][:2])}",
                   f"  - [ ] Tanya tim: {t['pertanyaan_minggu_ini'][0]}"]
         else:
-            L.append(f"{i}. {ikon} **{t['judul']}** — {t['ringkas']} Penyebab belum bisa dipastikan dari laporan "
+            L.append(f"{i}. **{t['judul']}**, {ikon}. {t['ringkas']} Penyebab belum bisa dipastikan dari laporan "
                      f"keuangan. *Tanya tim:* {t['pertanyaan_minggu_ini'][0]}")
     L += ["", "_Penyebab bersifat hipotesis. Alat bantu analisis, bukan nasihat investasi atau hasil audit._", "",
-          "Disusun dengan TQ Board Insight · totalquality.co.id", ""]
+          "Disusun dengan TQ Board Insight | totalquality.co.id", ""]
     return "\n".join(L)
 
 
@@ -253,13 +253,13 @@ def ke_markdown(r: dict, temuan: list, ringkas: dict, gaya: str = "detail") -> s
             L.append(f"- Cash conversion cycle: {fmt(c['dari'])} → {fmt(c['ke'])} hari")
         L.append("")
     for i, t in enumerate(temuan, 1):
-        ikon = "🔴" if t["tingkat"] == "merah" else "🟡"
-        L += [f"## {i}. {ikon} {t['judul']}", "",
+        ikon = "status merah" if t["tingkat"] == "merah" else "status kuning"
+        L += [f"## {i}. {t['judul']}, {ikon}", "",
               f"**Temuan:** {t['ringkas']}", ""]
         L += [f"- {b}" for b in t["bukti"]]
         if t.get("dampak_kas") and t["dampak_kas"].get("nilai"):
             d = t["dampak_kas"]
-            L.append(f"- {d['keterangan']}: ±{fmt_uang(d['nilai'])} {d['satuan']}")
+            L.append(f"- {d['keterangan']}: sekitar {fmt_uang(d['nilai'])} {d['satuan']}")
         L += ["", "**Kemungkinan penyebab:** " + "; ".join(f"({j}) {p}" for j, p in
                                                           enumerate(t["kemungkinan_penyebab"], 1)) + ".", "",
               f"**Tidak bisa dipastikan dari laporan keuangan.** {t['kenapa_tidak_terlihat']} "
@@ -271,7 +271,7 @@ def ke_markdown(r: dict, temuan: list, ringkas: dict, gaya: str = "detail") -> s
           "_Gejala dideteksi dengan aturan ambang umum (bukan benchmark industri) oleh "
           f"deteksi_gejala.py v{VERSI}. Penyebab bersifat hipotesis. Alat bantu analisis, bukan nasihat investasi "
           "atau hasil audit._", "",
-          "Disusun dengan TQ Board Insight · totalquality.co.id", ""]
+          "Disusun dengan TQ Board Insight | totalquality.co.id", ""]
     return "\n".join(L)
 
 

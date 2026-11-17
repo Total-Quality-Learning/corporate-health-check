@@ -35,7 +35,7 @@ class Satuan:
 
     def uang(self, v):
         if v is None:
-            return "–"
+            return "-"
         if self.samaran:
             return idn(v, 0) + " u"
         rupiah = v * self.faktor
@@ -48,13 +48,13 @@ class Satuan:
             s = idn(a / 1e6, 0) + " JT"
         else:
             s = idn(a, 0)
-        return ("−" if v < 0 else "") + ("Rp" if self.rp else "") + s
+        return ("-" if v < 0 else "") + ("Rp" if self.rp else "") + s
 
 
 def fmt(v, sat):
     if v is None:
-        return "–"
-    t = "−" if v < 0 else ""
+        return "-"
+    t = "-" if v < 0 else ""
     a = abs(v)
     return {"persen": f"{t}{idn(a, 1)}%", "hari": f"{t}{idn(a, 0)} hari", "kali": f"{t}{idn(a, 2)}x",
             "skor": f"{t}{idn(a, 2)}"}.get(sat, f"{t}{idn(a, 1)}")
@@ -148,19 +148,19 @@ def bangun_bagian(r: dict, istilah: str):
         if None not in pend else "",
         "apa": "Pendapatan, laba bersih, dan arus kas dari operasi per periode.",
         "cara": ("Batang hijau (laba) dan merah (kas operasi) idealnya setinggi atau sejajar. Jika batang merah jauh lebih "
-                 "pendek atau di bawah nol, laba belum menjadi uang tunai — biasanya tertahan di piutang atau persediaan."
+                 "pendek atau di bawah nol, laba belum menjadi uang tunai, biasanya tertahan di piutang atau persediaan."
                  if jelaskan else "Bandingkan laba bersih dengan arus kas operasi."),
-        "fakta": [f"Pendapatan {S.uang(pend[-2]) + ' → ' if a else ''}{S.uang(pend[-1])}" + (f" ({'+' if gp >= 0 else '−'}{idn(abs(gp), 1)}%)" if gp is not None else ""),
-                  f"Laba bersih {S.uang(lb[-2]) + ' → ' if a else ''}{S.uang(lb[-1])}" + (f" ({'+' if gl >= 0 else '−'}{idn(abs(gl), 1)}%)" if gl is not None else ""),
+        "fakta": [f"Pendapatan {S.uang(pend[-2]) + ' → ' if a else ''}{S.uang(pend[-1])}" + (f" ({'+' if gp >= 0 else '-'}{idn(abs(gp), 1)}%)" if gp is not None else ""),
+                  f"Laba bersih {S.uang(lb[-2]) + ' → ' if a else ''}{S.uang(lb[-1])}" + (f" ({'+' if gl >= 0 else '-'}{idn(abs(gl), 1)}%)" if gl is not None else ""),
                   f"Arus kas operasi {S.uang(ocf[-2]) + ' → ' if a else ''}{S.uang(ocf[-1])}"],
-        "tanya": "Ke mana selisih antara laba dan kas operasi tahun ini — piutang, persediaan, atau pembayaran pemasok?",
+        "tanya": "Ke mana selisih antara laba dan kas operasi tahun ini, piutang, persediaan, atau pembayaran pemasok?",
     })
     # 2. Margin
     gm, om, nm = V("gross_margin"), V("operating_margin"), V("net_margin")
     d_gm = (gm[-1] - gm[-2]) if (a and None not in (gm[-1], gm[-2])) else None
     bagian.append({
         "judul": (f"Margin kotor {'tergerus' if d_gm is not None and d_gm <= -1 else 'relatif terjaga' if d_gm is not None else ''} "
-                  f"{fmt(gm[-1], 'persen')}" + (f" ({'+' if d_gm >= 0 else '−'}{idn(abs(d_gm), 1)} poin)" if d_gm is not None else "")).strip(),
+                  f"{fmt(gm[-1], 'persen')}" + (f" ({'+' if d_gm >= 0 else '-'}{idn(abs(d_gm), 1)} poin)" if d_gm is not None else "")).strip(),
         "grafik": bar_kelompok(per, [("Margin kotor", WARNA["navy"], gm), ("Margin usaha", WARNA["a"], om),
                                      ("Margin bersih", WARNA["b"], nm)], lambda v: fmt(v, "persen")),
         "apa": "Berapa rupiah tersisa dari setiap Rp100 penjualan pada tiap lapis: setelah HPP, setelah beban usaha, dan akhir.",
@@ -177,13 +177,13 @@ def bangun_bagian(r: dict, istilah: str):
     d_ccc = (ccc[-1] - ccc[-2]) if (a and None not in (ccc[-1], ccc[-2])) else None
     bagian.append({
         "judul": (f"Uang tertahan {fmt(ccc[-1], 'hari')} dalam siklus operasi"
-                  + (f" ({'+' if d_ccc >= 0 else '−'}{idn(abs(d_ccc), 0)} hari)" if d_ccc is not None else "")),
+                  + (f" ({'+' if d_ccc >= 0 else '-'}{idn(abs(d_ccc), 0)} hari)" if d_ccc is not None else "")),
         "grafik": bar_kelompok(per, [("DSO (piutang)", WARNA["a"], dso), ("DIO (persediaan)", WARNA["d"], dio),
                                      ("DPO (utang usaha)", WARNA["abu"], dpo)], lambda v: fmt(v, "hari")),
         "apa": "Hari piutang (DSO), hari persediaan (DIO), dan hari pembayaran pemasok (DPO).",
-        "cara": ("Siklus konversi kas = DSO + DIO − DPO: berapa hari uang perusahaan 'terkunci' dari membeli bahan sampai "
+        "cara": ("Siklus konversi kas = DSO + DIO - DPO: berapa hari uang perusahaan 'terkunci' dari membeli bahan sampai "
                  "dibayar pelanggan. Batang biru dan oranye yang memanjang berarti kebutuhan modal kerja naik."
-                 if jelaskan else "Siklus konversi kas = DSO + DIO − DPO."),
+                 if jelaskan else "Siklus konversi kas = DSO + DIO - DPO."),
         "fakta": [f"DSO {fmt(dso[-2], 'hari') + ' → ' if a else ''}{fmt(dso[-1], 'hari')}",
                   f"DIO {fmt(dio[-2], 'hari') + ' → ' if a else ''}{fmt(dio[-1], 'hari')}",
                   f"DPO {fmt(dpo[-2], 'hari') + ' → ' if a else ''}{fmt(dpo[-1], 'hari')}",
@@ -215,9 +215,9 @@ def bangun_bagian(r: dict, istilah: str):
                                     (2.6, 8, "#bbf7d0", "aman > 2,60")], lambda v: fmt(v, "skor")),
             "apa": "Skor statistik dari modal kerja, saldo laba, laba usaha, dan ekuitas terhadap aset/liabilitas.",
             "cara": ("Semakin ke kanan semakin sehat. Ini sinyal awal untuk perusahaan non-publik, bukan vonis; tetap lihat "
-                     "arus kas dan tren." if jelaskan else "Zona: < 1,10 rawan; 1,10–2,60 abu-abu; > 2,60 aman."),
+                     "arus kas dan tren." if jelaskan else "Zona: < 1,10 rawan; 1,10-2,60 abu-abu; > 2,60 aman."),
             "fakta": [f"Perhitungan: {ra['altman_z'].get('perhitungan', {}).get(b, '-')}"],
-            "tanya": "Komponen mana yang paling menurunkan skor — modal kerja, laba usaha, atau struktur utang?",
+            "tanya": "Komponen mana yang paling menurunkan skor, modal kerja, laba usaha, atau struktur utang?",
         })
     return bagian
 
@@ -256,19 +256,19 @@ def ke_html(r, bagian, mode):
         isi.append(f'<section class="kartu"><h2>{i}. {html.escape(s["judul"])}</h2>{graf}{jel}</section>')
     return f"""<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Visual Rasio</title><style>{CSS}</style></head><body><main>
-<header><h1>{html.escape(m['perusahaan'])} — gambaran keuangan</h1>
-<p>Periode {html.escape(' · '.join(m['periode']))} · satuan pos: {html.escape(str(m.get('mata_uang', '')))} {html.escape(str(m.get('satuan', '')))} · mode: {html.escape(mode)}</p></header>
+<header><h1>{html.escape(m['perusahaan'])}, gambaran keuangan</h1>
+<p>Periode {html.escape(' | '.join(m['periode']))} | satuan pos: {html.escape(str(m.get('mata_uang', '')))} {html.escape(str(m.get('satuan', '')))} | mode: {html.escape(mode)}</p></header>
 {''.join(isi)}</main>
 <footer>Alat bantu analisis, bukan nasihat investasi atau hasil audit. Ambang adalah ambang umum, bukan benchmark industri.<br>
-Disusun dengan TQ Board Insight · totalquality.co.id</footer></body></html>"""
+Disusun dengan TQ Board Insight | totalquality.co.id</footer></body></html>"""
 
 
 def ke_md(r, bagian):
-    L = [f"# {r['meta']['perusahaan']} — penjelasan grafik", ""]
+    L = [f"# {r['meta']['perusahaan']}, penjelasan grafik", ""]
     for i, s in enumerate(bagian, 1):
         L += [f"## {i}. {s['judul']}", "", f"**Apa yang ditampilkan:** {s['apa']}", "", f"**Cara membaca:** {s['cara']}", "",
               "**Yang terjadi:**"] + [f"- {x}" for x in s["fakta"]] + ["", f"**Pertanyaan untuk tim minggu ini:** {s['tanya']}", ""]
-    L += ["_Alat bantu analisis, bukan nasihat investasi atau hasil audit._", "", "Disusun dengan TQ Board Insight · totalquality.co.id"]
+    L += ["_Alat bantu analisis, bukan nasihat investasi atau hasil audit._", "", "Disusun dengan TQ Board Insight | totalquality.co.id"]
     return "\n".join(L)
 
 

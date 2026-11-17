@@ -20,21 +20,21 @@ from pathlib import Path
 # kunci -> (pertanyaan, {pilihan: keterangan}, bawaan)
 SKEMA = {
     "audiens": ("Laporan ini untuk siapa?", {
-        "direksi": "Direksi / pemilik — keputusan cepat",
-        "komisaris": "Dewan komisaris — pengawasan & risiko",
-        "manajer_keuangan": "Manajer keuangan / CFO — rinci & teknis",
-        "bank_investor": "Bank / investor — kelayakan & utang",
+        "direksi": "Direksi / pemilik, keputusan cepat",
+        "komisaris": "Dewan komisaris, pengawasan & risiko",
+        "manajer_keuangan": "Manajer keuangan / CFO, rinci & teknis",
+        "bank_investor": "Bank / investor, kelayakan & utang",
     }, "direksi"),
     "gaya_narasi": ("Bentuk narasi yang diinginkan?", {
-        "ringkas": "Singkat — rasio kunci + 3 hal yang perlu perhatian",
-        "detail": "Detail — semua rasio, perhitungan, dan penjelasan",
-        "checklist": "Checklist — setiap indikator sebagai kotak centang aman/perlu perhatian",
+        "ringkas": "Singkat, rasio kunci + 3 hal yang perlu perhatian",
+        "detail": "Detail, semua rasio, perhitungan, dan penjelasan",
+        "checklist": "Checklist, setiap indikator sebagai kotak centang aman/perlu perhatian",
     }, "ringkas"),
     "visual": ("Bentuk visualisasi?", {
         "grafik": "Grafik saja, dengan judul berupa kesimpulan",
         "penjelasan": "Penjelasan detail tiap grafik (teks), tanpa gambar",
         "keduanya": "Grafik + penjelasan detail di bawahnya",
-        "tanpa": "Tanpa visual — tabel & teks saja",
+        "tanpa": "Tanpa visual, tabel & teks saja",
     }, "keduanya"),
     "fokus": ("Fokus utama?", {
         "semua": "Semua aspek",
@@ -44,9 +44,9 @@ SKEMA = {
         "efisiensi": "Efisiensi & produktivitas",
     }, "semua"),
     "istilah": ("Tingkat istilah teknis?", {
-        "awam": "Bahasa awam — setiap istilah dijelaskan",
-        "campuran": "Campuran — istilah umum tanpa penjelasan",
-        "teknis": "Teknis — istilah keuangan apa adanya",
+        "awam": "Bahasa awam, setiap istilah dijelaskan",
+        "campuran": "Campuran, istilah umum tanpa penjelasan",
+        "teknis": "Teknis, istilah keuangan apa adanya",
     }, "awam"),
     "panjang": ("Panjang hasil?", {
         "1_halaman": "Maksimal 1 halaman",
@@ -59,8 +59,8 @@ SKEMA = {
         "keduanya": "Ringkasan di chat + berkas HTML",
     }, "keduanya"),
     "mode_laporan": ("Tampilan laporan analisa bulanan?", {
-        "direksi": "Mode direksi — putusan, cerita, KPI bermasalah, keputusan",
-        "lengkap": "Mode lengkap — 11 bagian",
+        "direksi": "Mode direksi, putusan, cerita, KPI bermasalah, keputusan",
+        "lengkap": "Mode lengkap, 11 bagian",
     }, "direksi"),
     "metode_rasio": ("Metode saldo neraca untuk rasio?", {
         "akhir": "Saldo akhir periode (cocok untuk tren internal)",

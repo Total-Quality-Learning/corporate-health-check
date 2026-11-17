@@ -1,6 +1,6 @@
 ---
 name: laporan-analisa
-description: Menyusun laporan analisa keuangan & kinerja lengkap bergaya paket rapat direksi (HTML interaktif, bisa dicetak ke PDF) dari data laporan keuangan BULANAN — putusan & skor kesehatan, 5 cerita utama, 15 KPI berambang, analisa laba rugi/neraca/arus kas, selisih vs bulan lalu/tahun lalu/target, data operasional (piutang per pelanggan, margin produk, pemasok, umur stok, KPI pabrik), uji ketahanan kas, proyeksi kas 13 minggu, rencana kerja, dan lampiran rasio dengan rumus. Gunakan saat pengguna meminta laporan bulanan untuk direksi, paket rapat direksi, laporan pertanggungjawaban, atau analisa kinerja bulanan/triwulanan/YTD dari data Excel bulanan.
+description: Menyusun laporan analisa keuangan & kinerja lengkap bergaya paket rapat direksi (HTML interaktif, bisa dicetak ke PDF) dari data laporan keuangan BULANAN, putusan & skor kesehatan, 5 cerita utama, 15 KPI berambang, analisa laba rugi/neraca/arus kas, selisih vs bulan lalu/tahun lalu/target, data operasional (piutang per pelanggan, margin produk, pemasok, umur stok, KPI pabrik), uji ketahanan kas, proyeksi kas 13 minggu, rencana kerja, dan lampiran rasio dengan rumus. Gunakan saat pengguna meminta laporan bulanan untuk direksi, paket rapat direksi, laporan pertanggungjawaban, atau analisa kinerja bulanan/triwulanan/YTD dari data Excel bulanan.
 ---
 
 # Laporan Analisa (Paket Rapat Direksi)
@@ -17,7 +17,7 @@ disusun **skrip deterministik**. Anda tidak menghitung apa pun sendiri.
    - Contoh fiktif: `sample-data/<case>/Data-Keuangan-Bulanan.xlsx` (garmen, distribusi FMCG, makanan-minuman,
      komponen logam).
    - Jika pengguna hanya punya LK tahunan, arahkan ke skill **baca-laporan-keuangan** + **board-brief**.
-2. **Cek isi paket:** `python scripts/baca_paket.py <paket.xlsx>` — sampaikan periode, ada/tidaknya target dan data
+2. **Cek isi paket:** `python scripts/baca_paket.py <paket.xlsx>`, sampaikan periode, ada/tidaknya target dan data
    operasional.
 3. **Data rahasia?** Tawarkan penyamaran yang dijalankan pengguna sendiri **tanpa AI**:
    `python scripts/samarkan_paket.py <paket.xlsx> --out <paket-samaran.xlsx>` (rasio & status tetap sama).
@@ -37,14 +37,14 @@ disusun **skrip deterministik**. Anda tidak menghitung apa pun sendiri.
 ## Format jawaban di chat
 
 1. Putusan 10 detik + skor kesehatan (dari ringkasan skrip).
-2. 3–5 cerita utama: judul, fakta (angka dari skrip), penyebab. Jika penyebab berlabel **PERLU DATA**, sampaikan apa
-   adanya — itu temuan penting, bukan kekurangan laporan.
+2. 3-5 cerita utama: judul, fakta (angka dari skrip), penyebab. Jika penyebab berlabel **PERLU DATA**, sampaikan apa
+   adanya, itu temuan penting, bukan kekurangan laporan.
 3. Daftar bagian yang berstatus PERLU DATA dan data apa yang dibutuhkan.
 4. Lokasi berkas `laporan.html`.
 5. Disclaimer + footer:
    > Alat bantu analisis, bukan nasihat investasi atau hasil audit.
    >
-   > Disusun dengan TQ Board Insight · totalquality.co.id
+   > Disusun dengan TQ Board Insight | totalquality.co.id
 
 ## Aturan
 

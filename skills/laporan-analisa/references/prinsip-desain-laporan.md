@@ -8,7 +8,7 @@ terbaik pelaporan manajemen: jawaban dulu, rincian kemudian, dan setiap angka bi
 | Lapis | Waktu baca | Isi | Lokasi |
 |---|---|---|---|
 | 1 | 30 detik | 3 angka besar (penjualan, laba, uang tunai) + tren 12 bulan + lampu status | Ringkasan, atas |
-| 2 | 2 menit | 3 hal yang perlu diketahui: *apa yang terjadi · kenapa · yang bisa dilakukan* + usulan keputusan | Ringkasan |
+| 2 | 2 menit | 3 hal yang perlu diketahui: *apa yang terjadi, kenapa, yang bisa dilakukan* + usulan keputusan | Ringkasan |
 | 3 | 10 menit | Indikator, arus kas, tren, laporan keuangan, operasional | Tab lain |
 | 4 | Sesuai kebutuhan | Rumus & perhitungan setiap angka, pemeriksaan data, kamus | Rumus & data |
 
@@ -35,7 +35,7 @@ Simbol + teks selalu menyertai warna (aman bagi pembaca buta warna dan cetak hit
 
 ## 4. Angka
 
-- Satuan ringkas dan konsisten: Rp19,76 M · Rp690 JT · 23,2% · 81 hari · 1,89x.
+- Satuan ringkas dan konsisten: Rp19,76 M | Rp690 JT | 23,2% | 81 hari | 1,89x.
 - Setiap angka besar disertai **pembanding** (tahun lalu / periode lalu / target) dan **arah** berwarna.
 - Persentase perubahan disembunyikan bila basisnya terlalu kecil (lebih dari 3x) karena menyesatkan.
 - Grafik: maksimal 3 seri, legenda di bawah, garis batas putus-putus, satu pesan per grafik.

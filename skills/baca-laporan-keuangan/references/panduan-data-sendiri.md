@@ -15,18 +15,18 @@ yang Anda pakai (mis. apakah percakapan dipakai untuk melatih model, dan paket a
 
 ## 2. Siapkan data (pilih salah satu)
 
-**Cara 1 — Isi template Excel (paling akurat)**
+**Cara 1, Isi template Excel (paling akurat)**
 1. Salin `templates/template-lk.xlsx`.
 2. Isi sheet `Info`, `Neraca`, `LabaRugi`, `ArusKas`. Kolom `kode` jangan diubah. Baris bertanda `*` wajib.
 3. Minimal 2 periode, urut dari terlama. Beban diisi angka positif. Satu satuan untuk semua angka.
 4. Ubah ke JSON: `python scripts/baca_excel.py LK-saya.xlsx --out lk.json`
 
-**Cara 2 — Dari PDF LK**
+**Cara 2, Dari PDF LK**
 Minta AI mengekstrak dengan skill ini. AI akan menampilkan tabel hasil ekstraksi; **periksa** terutama total aset,
 laba bersih, dan arus kas operasi sebelum lanjut. Catatan: dengan cara ini AI membaca angka asli (jalur B), kecuali
 Anda menyamarkan PDF lebih dulu, yang sulit dilakukan. Untuk data rahasia, gunakan Cara 1 + jalur A.
 
-## 3. Samarkan (jalur A) — dijalankan sendiri, TANPA AI
+## 3. Samarkan (jalur A): dijalankan sendiri, TANPA AI
 
 **Dengan Python (staf IT/finance):**
 ```
@@ -68,7 +68,7 @@ python skills/laporan-analisa/scripts/samarkan_paket.py Data-Bulanan.xlsx --out 
 ```
 Semua angka uang dikali satu faktor; nama perusahaan, pelanggan, dan pemasok diganti kode. Rasio, hari modal kerja,
 dan status KPI tetap sama. Sheet data operasional (piutang per pelanggan, produk, pemasok, stok, KPI pabrik) boleh
-dikosongkan — laporan akan menandai bagian itu "PERLU DATA".
+dikosongkan, laporan akan menandai bagian itu "PERLU DATA".
 
 ## 6. Jika validasi gagal
 

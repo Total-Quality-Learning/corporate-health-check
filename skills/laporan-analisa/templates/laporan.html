@@ -124,7 +124,7 @@ footer{border-top:1px solid var(--line);color:var(--sub);font-size:12.5px;paddin
     <ul>
       <li>Mulai dari tab <b>Ringkasan</b>: tiga angka besar, lampu status, tiga hal yang perlu Anda ketahui, dan usulan keputusan.</li>
       <li>Warna selalu berarti sama: <span class="pill aman">● Aman</span> <span class="pill waspada">▲ Perlu perhatian</span> <span class="pill kritis">■ Kritis</span>. Status dinilai terhadap batas aman dan tren tahun lalu.</li>
-      <li><span class="pill info">? Perlu data</span> artinya pertanyaannya <b>belum bisa dijawab</b> dari laporan keuangan — bukan kesalahan laporan. Kotak itu menyebut data apa yang dibutuhkan.</li>
+      <li><span class="pill info">? Perlu data</span> artinya pertanyaannya <b>belum bisa dijawab</b> dari laporan keuangan, bukan kesalahan laporan. Kotak itu menyebut data apa yang dibutuhkan.</li>
       <li>Ganti <b>Periode</b> dan <b>Dibanding</b> di atas; semua angka ikut berubah. Klik "Apa artinya?" pada kartu untuk penjelasan dan rumus.</li>
       <li>Semua angka dihitung skrip yang sama setiap kali; rumus lengkap ada di tab <b>Rumus &amp; data</b>. Tombol <b>Cetak / PDF</b> mencetak semua tab.</li>
     </ul>
@@ -144,11 +144,11 @@ const S = {p:'month', c:'yoy', tab:'ringkasan', g: TP.cerita || 'narasi', perhat
 const $ = s => document.querySelector(s);
 const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const C = {brand:'#2f5d8a', accent:'#e07a1f', ok:'#1e8e5a', warn:'#b7790d', bad:'#c8372d', grid:'#e3e7ee', sub:'#5b6676', gray:'#9aa3af'};
-const ST = {aman:['●','Aman'], waspada:['▲','Perlu perhatian'], kritis:['■','Kritis'], netral:['–','Belum dinilai'], info:['?','Perlu data']};
+const ST = {aman:['●','Aman'], waspada:['▲','Perlu perhatian'], kritis:['■','Kritis'], netral:['-','Belum dinilai'], info:['?','Perlu data']};
 const pill = (st, txt) => `<span class="pill ${st}">${(ST[st]||['',''])[0]} ${esc(txt || (ST[st]||['',st])[1])}</span>`;
 const cls = b => b===true?'good':(b===false?'bad':'');
 const tbl = (head, rows, num) => `<div class="tw"><table><thead><tr>${head.map((h,i)=>`<th class="${(num||[]).includes(i)?'n':''}">${esc(h)}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
-const need = (o, judul) => `<div class="needbox"><b>? Perlu data — ${esc(judul)}</b><br>Pertanyaan ini belum bisa dijawab dari laporan keuangan. Data yang dibutuhkan: ${esc(o.butuh)}. <span class="muted">${esc(o.sumber)}</span></div>`;
+const need = (o, judul) => `<div class="needbox"><b>? Perlu data, ${esc(judul)}</b><br>Pertanyaan ini belum bisa dijawab dari laporan keuangan. Data yang dibutuhkan: ${esc(o.butuh)}. <span class="muted">${esc(o.sumber)}</span></div>`;
 
 const AWAM = {
   gross_margin:['Margin kotor','Sisa tiap Rp100 penjualan setelah biaya produksi'],
@@ -161,7 +161,7 @@ const AWAM = {
   dso:['Hari pelanggan membayar','DSO'],
   dio:['Hari stok tersimpan','DIO'],
   dpo:['Hari kita membayar pemasok','DPO'],
-  ccc:['Hari uang tertahan di operasi','Cash conversion cycle = DSO + DIO − DPO'],
+  ccc:['Hari uang tertahan di operasi','Cash conversion cycle = DSO + DIO - DPO'],
   current_ratio:['Kemampuan bayar jangka pendek','Rasio lancar'],
   quick_ratio:['Kemampuan bayar tanpa menjual stok','Rasio cepat'],
   net_debt_ebitda:['Tahun untuk melunasi utang bank','Utang bersih ÷ EBITDA'],
@@ -173,15 +173,15 @@ const KAMUS = [
   ['DSO (hari piutang)','Rata-rata berapa hari pelanggan membayar setelah barang dikirim.'],
   ['DIO (hari persediaan)','Rata-rata berapa hari barang (bahan, setengah jadi, jadi) tersimpan sebelum terjual.'],
   ['DPO (hari utang usaha)','Rata-rata berapa hari perusahaan membayar pemasok.'],
-  ['Cash conversion cycle','DSO + DIO − DPO: berapa hari uang terkunci dari beli bahan sampai dibayar pelanggan.'],
-  ['EBITDA','Laba usaha sebelum bunga, pajak, dan penyusutan — gambaran laba operasi tunai.'],
+  ['Cash conversion cycle','DSO + DIO - DPO: berapa hari uang terkunci dari beli bahan sampai dibayar pelanggan.'],
+  ['EBITDA','Laba usaha sebelum bunga, pajak, dan penyusutan, gambaran laba operasi tunai.'],
   ['HPP','Harga pokok penjualan: biaya langsung barang yang terjual.'],
   ['ROE / ROA','Laba 12 bulan dibanding modal pemilik / seluruh aset.'],
   ['YTD','Sejak awal tahun sampai bulan laporan.'],
   ['Perlu data','Pertanyaan yang belum bisa dijawab dari laporan keuangan; butuh data penjualan, gudang, produksi, atau mutu.'],
 ];
 
-const fmtM = v => { const a=Math.abs(v); const s = a>=1000 ? (a/1000).toLocaleString('id-ID',{maximumFractionDigits:1})+' M' : Math.round(a).toLocaleString('id-ID'); return (v<0?'−':'')+s; };
+const fmtM = v => { const a=Math.abs(v); const s = a>=1000 ? (a/1000).toLocaleString('id-ID',{maximumFractionDigits:1})+' M' : Math.round(a).toLocaleString('id-ID'); return (v<0?'-':'')+s; };
 function spark(data, color){
   const v = data.filter(x=>x!=null); if (v.length<2) return '';
   const W=240,H=42,lo=Math.min(...v,0),hi=Math.max(...v); const r=(hi-lo)||1;
@@ -238,8 +238,8 @@ function hero(){
     ['Uang tunai dari operasi', row(pos.ak,'Arus kas operasi'), s.ocf.slice(-n), C.accent],
   ];
   return `<div class="grid g3">${items.map(([lbl,r,sp,col])=>`<div class="card hero">
-    <div class="lbl">${esc(lbl)} · ${esc(P().short)}</div><div class="val">${esc(r.cur||'–')}</div>
-    <div class="cmp">${esc(compLabel())}: ${esc(r.comp||'–')} <b class="${cls(r.baik)}">${esc(r.delta&&r.delta!=='–'?r.delta:'')}</b></div>
+    <div class="lbl">${esc(lbl)} | ${esc(P().short)}</div><div class="val">${esc(r.cur||'-')}</div>
+    <div class="cmp">${esc(compLabel())}: ${esc(r.comp||'-')} <b class="${cls(r.baik)}">${esc(r.delta&&r.delta!=='-'?r.delta:'')}</b></div>
     ${spark(sp,col)}<div class="small muted">tren 12 bulan</div></div>`).join('')}</div>`;
 }
 function kesehatan(){
@@ -247,9 +247,9 @@ function kesehatan(){
   r.forEach(x=>{ if(c[x.status]!=null) c[x.status]++; });
   const tot=c.aman+c.waspada+c.kritis||1; const sk=D.skor[S.p];
   return `<div class="card" style="margin-top:14px"><div class="health">
-    <div class="count"><b class="good">${c.aman}</b> aman · <b style="color:var(--warn)">${c.waspada}</b> perlu perhatian · <b class="bad">${c.kritis}</b> kritis <span class="muted small">dari 15 indikator (dinilai terhadap tahun lalu)</span></div>
+    <div class="count"><b class="good">${c.aman}</b> aman | <b style="color:var(--warn)">${c.waspada}</b> perlu perhatian | <b class="bad">${c.kritis}</b> kritis <span class="muted small">dari 15 indikator (dinilai terhadap tahun lalu)</span></div>
     <div class="bar"><i style="width:${c.aman/tot*100}%;background:${C.ok}"></i><i style="width:${c.waspada/tot*100}%;background:${C.warn}"></i><i style="width:${c.kritis/tot*100}%;background:${C.bad}"></i></div>
-    <div class="small muted">Skor kesehatan ${sk.nilai==null?'–':sk.nilai+'/100'}</div></div>
+    <div class="small muted">Skor kesehatan ${sk.nilai==null?'-':sk.nilai+'/100'}</div></div>
     <p class="small" style="margin:10px 0 0">${esc(D.putusan[S.p].teks)}</p></div>`;
 }
 function penyebabHtml(c){
@@ -274,7 +274,7 @@ function cerita(){
 function keputusan(){
   if (!D.rencana.length) return '<div class="card">Tidak ada keputusan mendesak bulan ini.</div>';
   return `<div class="card"><ol class="decision">${D.rencana.slice(0,4).map(r=>`<li><b>${esc(r.isu)}</b> ${pill(r.prio==='P1'?'kritis':'waspada', r.prio==='P1'?'Segera':'Bulan ini')}
-    <div class="small">${esc(r.opsi)}${r.dampak&&r.dampak!=='–'?` · perkiraan dampak kas ${esc(r.dampak)}`:''}</div>
+    <div class="small">${esc(r.opsi)}${r.dampak&&r.dampak!=='-'?` | perkiraan dampak kas ${esc(r.dampak)}`:''}</div>
     <div class="small muted">Penanggung jawab & tenggat: ________ (diisi direksi)</div></li>`).join('')}</ol></div>`;
 }
 function tabRingkasan(){
@@ -293,7 +293,7 @@ function tabKesehatan(){
     <label class="small noprint" style="margin-left:8px"><input type="checkbox" id="cbPerhatian" ${S.perhatian?'checked':''}> hanya yang perlu perhatian</label></p>
     ${kel.map(k=>`<h3>${esc(k)}</h3><div class="grid kpis">${rows.filter(r=>(KELOMPOK[r.kel]||r.kel)===k).map(r=>{ const a=AWAM[r.key]||[r.nama,''];
       return `<div class="card kpi ${r.status}"><div class="t">${esc(a[0])}</div><div class="tech">${esc(a[1])}</div>
-      <div class="v">${esc(r.cur)}</div><div class="c">${esc(compLabel())}: ${esc(r.comp)} <b class="${cls(r.baik)}">${esc(r.delta!=='–'?r.delta:'')}</b></div>
+      <div class="v">${esc(r.cur)}</div><div class="c">${esc(compLabel())}: ${esc(r.comp)} <b class="${cls(r.baik)}">${esc(r.delta!=='-'?r.delta:'')}</b></div>
       <div>${pill(r.status)}</div>
       <details><summary>Apa artinya?</summary><p>${esc(r.def)}</p><p><b>Rumus:</b> ${esc(r.rumus)}</p><p><b>Perlu perhatian bila</b> ${esc(r.waspada)}; <b>kritis bila</b> ${esc(r.kritis)}. <span class="small">(${esc(r.sumber_ambang)})</span></p></details></div>`; }).join('')}</div>`).join('')}`;
 }
@@ -315,39 +315,39 @@ function tabKas(){
     ${legend([['Pola saat ini',C.brand],['Penerimaan 10% lebih rendah',C.accent]])}
     <p class="small muted">${esc(k.asumsi)}</p>
     <details class="more"><summary>Lihat tabel per minggu</summary>${tbl(['Minggu','Penerimaan','Bayar pemasok','Operasi & utang','Neto','Kas akhir','Kas akhir (rendah)'], k.rows.map(r=>`<tr><td>${esc(r.mg)}</td><td class="n">${esc(r.masuk)}</td><td class="n">${esc(r.pemasok)}</td><td class="n">${esc(r.operasi)}</td><td class="n">${esc(r.neto)}</td><td class="n"><b>${esc(r.akhir)}</b></td><td class="n">${esc(r.akhir_rendah)}</td></tr>`),[1,2,3,4,5,6])}</details></div>
-    <h2>Bagaimana jika…?</h2><p class="lead">Kas 3 bulan ke depan bila terjadi guncangan, tanpa pinjaman baru. Kas saat ini ${esc(u.kas_kini)}; kas minimum ${esc(u.kas_min)}.</p>
+    <h2>Bagaimana jika...?</h2><p class="lead">Kas 3 bulan ke depan bila terjadi guncangan, tanpa pinjaman baru. Kas saat ini ${esc(u.kas_kini)}; kas minimum ${esc(u.kas_min)}.</p>
     <div class="grid g2">${u.rows.map(r=>`<div class="card"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(r.nama)}</b>${pill(r.status)}</div>
       <div class="small muted">${esc(r.besaran)}</div><div style="font-size:20px;font-weight:700;margin-top:6px">${esc(r.kas_akhir)}</div>
-      <div class="small">kas akhir 3 bulan · cukup ${esc(r.tahan)} biaya tetap · dampak ${esc(r.dampak)}</div>${r.catatan?`<div class="small muted">${esc(r.catatan)}</div>`:''}</div>`).join('')}</div>
+      <div class="small">kas akhir 3 bulan | cukup ${esc(r.tahan)} biaya tetap | dampak ${esc(r.dampak)}</div>${r.catatan?`<div class="small muted">${esc(r.catatan)}</div>`:''}</div>`).join('')}</div>
     <p class="small muted">${esc(u.asumsi)}</p>
     ${D.risiko.length?`<h3>Risiko dari temuan</h3>${tbl(['Risiko','Tingkat','Perkiraan dampak','Langkah pengendalian'], D.risiko.map(r=>`<tr><td>${esc(r.judul)}</td><td>${pill(r.sev)}</td><td class="n">${esc(r.dampak)}</td><td>${esc(r.mitigasi)}</td></tr>`),[2])}`:''}`;
 }
 function tabTren(){
   const s=D.seri, b=D.bulanan, M=v=>v==null?null:v/1000;
-  return `<h2>Tren bulanan</h2><p class="lead">${esc(s.label[0])} – ${esc(s.label[s.label.length-1])}.</p>
+  return `<h2>Tren bulanan</h2><p class="lead">${esc(s.label[0])} - ${esc(s.label[s.label.length-1])}.</p>
     <div class="grid g2">
       <div class="viz"><div class="cap">Penjualan, laba bersih, dan uang tunai dari operasi</div><div class="sub">per bulan</div>${line(s.label,[{data:s.pendapatan,color:C.brand},{data:s.laba_bersih,color:C.ok},{data:s.ocf,color:C.accent,dash:true}],{aria:'tren penjualan laba kas'})}${legend([['Penjualan',C.brand],['Laba bersih',C.ok],['Kas dari operasi',C.accent]])}</div>
       <div class="viz"><div class="cap">Hari pelanggan membayar & hari stok tersimpan</div><div class="sub">Naik = uang lebih lama tertahan</div>${line(s.label,[{data:s.dso,color:C.brand},{data:s.dio,color:C.accent}],{fmt:v=>Math.round(v)+' hr',aria:'DSO DIO'})}${legend([['Hari piutang (DSO)',C.brand],['Hari persediaan (DIO)',C.accent]])}</div>
       <div class="viz"><div class="cap">Margin kotor & margin bersih</div><div class="sub">% dari penjualan</div>${line(s.label,[{data:s.gm,color:C.brand},{data:s.nm,color:C.ok}],{fmt:v=>v.toFixed(0)+'%',aria:'margin'})}${legend([['Margin kotor',C.brand],['Margin bersih',C.ok]])}</div>
       <div class="viz"><div class="cap">Saldo kas akhir bulan</div><div class="sub">per bulan</div>${line(s.label,[{data:s.kas,color:C.brand}],{aria:'kas'})}</div>
     </div>
-    <details class="more"><summary>Pos utama per bulan (${esc(b.label[0])}–${esc(b.label[b.label.length-1])})</summary>${tbl(['Pos'].concat(b.label), b.pos.map(r=>`<tr><td>${esc(r.nama)}</td>${r.nilai.map(v=>`<td class="n">${esc(v)}</td>`).join('')}</tr>`), b.label.map((_,i)=>i+1))}</details>
+    <details class="more"><summary>Pos utama per bulan (${esc(b.label[0])}-${esc(b.label[b.label.length-1])})</summary>${tbl(['Pos'].concat(b.label), b.pos.map(r=>`<tr><td>${esc(r.nama)}</td>${r.nilai.map(v=>`<td class="n">${esc(v)}</td>`).join('')}</tr>`), b.label.map((_,i)=>i+1))}</details>
     <details class="more"><summary>Dari mana imbal hasil pemilik berasal (DuPont)</summary>${tbl(['Komponen'].concat(b.label), b.dupont.map(r=>`<tr><td>${esc(r.nama)}</td>${r.nilai.map(v=>`<td class="n">${esc(v)}</td>`).join('')}</tr>`), b.label.map((_,i)=>i+1))}</details>`;
 }
 function posTbl(rows, comp){ return tbl(['Pos', P().short, comp, 'Selisih'], rows.map(r=>`<tr class="${r.tebal?'b':''}"><td>${esc(r.nama)}</td><td class="n">${esc(r.cur)}</td><td class="n">${esc(r.comp)}</td><td class="n ${cls(r.baik)}">${esc(r.delta)}</td></tr>`),[1,2,3]); }
 function tabLK(){
   const p=D.pos[S.p][S.c], sl=D.selisih[S.p][S.c], cl=compLabel(), t=S.c==='target';
   return `<h2>Laporan keuangan</h2><p class="lead">${esc(P().label)} dibanding ${esc(cl)}.${t?' Target hanya tersedia untuk pos utama laba rugi.':''}</p>
-    ${sl.ada?`<div class="explain"><b>Perubahan terbesar:</b><ul style="margin:4px 0;padding-left:20px">${sl.penjelas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:`<div class="needbox"><b>? Perlu data.</b> Pembanding "${esc(cl)}" belum tersedia${t?' — isi sheet Target (anggaran) di paket data':''}.</div>`}
+    ${sl.ada?`<div class="explain"><b>Perubahan terbesar:</b><ul style="margin:4px 0;padding-left:20px">${sl.penjelas.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:`<div class="needbox"><b>? Perlu data.</b> Pembanding "${esc(cl)}" belum tersedia${t?', isi sheet Target (anggaran) di paket data':''}.</div>`}
     <h3>Laba rugi</h3>${posTbl(p.lr, cl)}
-    <h3>Posisi keuangan (akhir periode)</h3>${posTbl(p.neraca, t?'–':cl)}
-    <h3>Arus kas</h3>${posTbl(p.ak, t?'–':cl)}`;
+    <h3>Posisi keuangan (akhir periode)</h3>${posTbl(p.neraca, t?'-':cl)}
+    <h3>Arus kas</h3>${posTbl(p.ak, t?'-':cl)}`;
 }
 function tabOps(){
   const o=D.ops, n=D.meta.ops_terisi, pr=o.produk[S.p]; let h='';
   h += '<h3>Piutang per pelanggan</h3>';
   h += o.piutang.ada ? `<div class="card">${stack(o.piutang.bucket)}<p class="small">Lewat 90 hari: <b>${esc(o.piutang.lewat90)}</b> (${esc(o.piutang.lewat90_pct)}%). Tiga pelanggan terbesar = ${esc(o.piutang.top3_omzet)}% penjualan.</p></div>`
-      + `<details class="more" open><summary>Daftar pelanggan</summary>${tbl(['Pelanggan','Wilayah','Porsi penjualan','Piutang','> 90 hari','Pakai batas kredit','Pihak berelasi','Catatan'], o.piutang.pelanggan.map(r=>`<tr><td>${esc(r.nama)}</td><td>${esc(r.wilayah)}</td><td class="n">${esc(r.omzet)}</td><td class="n">${esc(r.saldo)}</td><td class="n ${r.lewat90!=='–'?'bad':''}">${esc(r.lewat90)}</td><td>${pill(r.limit_status, r.limit)}</td><td>${esc(r.berelasi)}</td><td class="small">${esc(r.catatan)}</td></tr>`),[2,3,4])}</details>`
+      + `<details class="more" open><summary>Daftar pelanggan</summary>${tbl(['Pelanggan','Wilayah','Porsi penjualan','Piutang','> 90 hari','Pakai batas kredit','Pihak berelasi','Catatan'], o.piutang.pelanggan.map(r=>`<tr><td>${esc(r.nama)}</td><td>${esc(r.wilayah)}</td><td class="n">${esc(r.omzet)}</td><td class="n">${esc(r.saldo)}</td><td class="n ${r.lewat90!=='-'?'bad':''}">${esc(r.lewat90)}</td><td>${pill(r.limit_status, r.limit)}</td><td>${esc(r.berelasi)}</td><td class="small">${esc(r.catatan)}</td></tr>`),[2,3,4])}</details>`
       : need(o.piutang,'piutang per pelanggan');
   h += `<h3>Produk & margin (${esc(P().short)})</h3>`;
   h += pr.ada ? tbl(['Produk','Penjualan','Porsi','Tumbuh','Margin kotor','Δ margin','Volume'], pr.rows.map(r=>`<tr><td>${esc(r.nama)}</td><td class="n">${esc(r.pendapatan)}</td><td class="n">${esc(r.porsi)}</td><td class="n">${esc(r.tumbuh)}</td><td class="n">${esc(r.gm)}</td><td class="n ${r.dgm_v!=null&&r.dgm_v<=-1?'bad':''}">${esc(r.dgm)}</td><td class="n">${esc(r.volume)}</td></tr>`),[1,2,3,4,5,6]) : need(pr,'margin per produk');
@@ -361,30 +361,30 @@ function tabOps(){
   return `<h2>Menjawab "kenapa"</h2><p class="lead">Laporan keuangan menunjukkan gejala; penyebabnya ada di data operasional. Terisi <b>${n} dari 6</b> tabel.${n<6?' Kotak biru menunjukkan pertanyaan yang belum bisa dijawab perusahaan saat ini.':''}</p>${h}`;
 }
 function tabRumus(){
-  const L=D.lampiran[S.p][S.c], cl=S.c==='target'?'–':compLabel();
+  const L=D.lampiran[S.p][S.c], cl=S.c==='target'?'-':compLabel();
   return `<h2>Rumus & data</h2><p class="lead">Setiap angka dapat ditelusuri: rumus dan perhitungannya.</p>
     ${L.map(g=>`<details class="more"><summary>${esc(g.grup.replace(/^\d+\.\s*/,''))}</summary>${tbl(['Metrik',P().short,cl,'Selisih','Perhitungan'], g.rows.map(r=>`<tr><td>${esc(r.nama)}<div class="small muted">${esc(r.rumus)}</div></td><td class="n"><b>${esc(r.cur)}</b></td><td class="n">${esc(r.comp)}</td><td class="n">${esc(r.delta)}</td><td class="small">${esc(r.hitung)}</td></tr>`),[1,2,3])}</details>`).join('')}
     <h3>Pemeriksaan data</h3>${tbl(['Pemeriksaan','Hasil','Catatan'], D.gerbang.map(g=>`<tr><td>${esc(g.nama)}</td><td>${pill({Lulus:'aman',Perhatian:'waspada',Gagal:'kritis','PERLU DATA':'info',Sebagian:'waspada'}[g.status]||'netral', g.status)}</td><td class="small">${esc(g.catatan)}</td></tr>`))}
     <h3>Kelengkapan data</h3>${tbl(['Bagian','Sumber','Status'], D.kelengkapan.map(k=>`<tr><td>${esc(k.bagian)}</td><td class="small">${esc(k.sumber)}</td><td>${k.ada?pill('aman','Tersedia'):pill('info')}</td></tr>`))}
     <h3>Kamus istilah</h3><div class="grid g2">${KAMUS.map(([a,b])=>`<div class="card small"><b>${esc(a)}</b><br>${esc(b)}</div>`).join('')}</div>
     <h3>Catatan metode</h3><ul class="small"><li>Bulanan memakai hari kalender; neraca = saldo akhir periode. ROE, ROA, kemampuan bayar bunga, dan tahun pelunasan utang memakai 12 bulan terakhir.</li>
-    <li>Batas status: kebijakan perusahaan (sheet Ambang_KPI) bila ada, selain itu batas umum atau tren tahun lalu — bukan benchmark industri.</li>
+    <li>Batas status: kebijakan perusahaan (sheet Ambang_KPI) bila ada, selain itu batas umum atau tren tahun lalu, bukan benchmark industri.</li>
     <li>Temuan, risiko, dan usulan keputusan dibentuk dari aturan tetap; penyebab yang tidak didukung data ditandai "Perlu data".</li>
-    <li>${esc(D.meta.versi)} · dibuat ${esc(D.meta.dibuat)}${D.meta.sumber?' · '+esc(D.meta.sumber):''}</li></ul>`;
+    <li>${esc(D.meta.versi)} | dibuat ${esc(D.meta.dibuat)}${D.meta.sumber?' | '+esc(D.meta.sumber):''}</li></ul>`;
 }
 
 const TABS = [['ringkasan','Ringkasan',tabRingkasan],['kesehatan','Kesehatan',tabKesehatan],['kas','Arus kas',tabKas],['tren','Tren',tabTren],['lk','Laporan keuangan',tabLK],['ops','Operasional',tabOps],['rumus','Rumus & data',tabRumus]];
 function render(){
   $('#nm').textContent = D.meta.perusahaan;
   $('#lb').textContent = D.meta.label_data;
-  $('#mt').textContent = `${D.meta.industri||''} · ${P().range} · ${D.meta.satuan}`;
+  $('#mt').textContent = `${D.meta.industri||''} | ${P().range} | ${D.meta.satuan}`;
   document.querySelectorAll('#segP button').forEach(b=>b.classList.toggle('on', b.dataset.p===S.p));
   document.querySelectorAll('#segC button').forEach(b=>{ b.classList.toggle('on', b.dataset.c===S.c); b.disabled = (S.p==='ytd' && b.dataset.c==='prev'); });
   const kritis = statusYoy().filter(x=>x.status==='kritis').length;
   const perlu = D.kelengkapan.filter(k=>!k.ada).length;
   $('#tabs').innerHTML = TABS.map(([id,nm])=>`<button data-tab="${id}" class="${S.tab===id?'on':''}">${esc(nm)}${id==='kesehatan'&&kritis?`<span class="dot">${kritis}</span>`:''}${id==='ops'&&perlu>2?`<span class="dot" style="background:var(--info)">?</span>`:''}</button>`).join('');
   $('#app').innerHTML = TABS.map(([id,,fn])=>`<section class="panel ${S.tab===id?'on':''}" id="tab-${id}">${fn()}</section>`).join('');
-  document.title = D.meta.perusahaan + ' · ' + P().short;
+  document.title = D.meta.perusahaan + ' | ' + P().short;
   const cb = $('#cbPerhatian'); if (cb) cb.onchange = ()=>{ S.perhatian = cb.checked; render(); };
 }
 document.addEventListener('click', e=>{
@@ -395,7 +395,7 @@ document.addEventListener('click', e=>{
 });
 $('#bPrint').onclick = ()=>{ document.querySelectorAll('details').forEach(d=>d.open=true); window.print(); };
 $('#bGuide').onclick = ()=>{ const g=$('#guide'); g.hidden=!g.hidden; };
-$('#foot').innerHTML = 'Alat bantu analisis, bukan nasihat investasi atau hasil audit. Kebenaran hasil bergantung pada data yang dimasukkan.<br>Disusun dengan TQ Board Insight · totalquality.co.id';
+$('#foot').innerHTML = 'Alat bantu analisis, bukan nasihat investasi atau hasil audit. Kebenaran hasil bergantung pada data yang dimasukkan.<br>Disusun dengan TQ Board Insight | totalquality.co.id';
 if (TP.mode === 'lengkap') { $('#guide').hidden = false; }
 render();
 })();

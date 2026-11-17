@@ -6,7 +6,7 @@ akumulasi penyusutan diisi **positif**.
 
 ## Sheet wajib
 
-**Info** — `perusahaan`, `industri`, `mata_uang` (IDR), `satuan`, `bulan_aktif` (YYYY-MM, bulan laporan), `sumber`.
+**Info**, `perusahaan`, `industri`, `mata_uang` (IDR), `satuan`, `bulan_aktif` (YYYY-MM, bulan laporan), `sumber`.
 
 **LabaRugi** (kolom = bulan)
 

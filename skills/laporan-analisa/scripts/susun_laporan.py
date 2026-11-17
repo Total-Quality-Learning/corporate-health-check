@@ -9,7 +9,7 @@ Pemakaian:
            lewat tombol di laporan).
 --narasi : JSON opsional {"surat_direksi": "...", "catatan_analis": "..."} hasil tulisan direksi/AI.
            Angka di dalamnya harus berasal dari laporan; skrip tidak memeriksa teks ini.
-Exit code: 0 sukses · 1 input tidak terbaca · 2 validasi gagal (neraca tidak seimbang / periode tidak lengkap).
+Exit code: 0 sukses | 1 input tidak terbaca | 2 validasi gagal (neraca tidak seimbang / periode tidak lengkap).
 """
 from __future__ import annotations
 
@@ -28,11 +28,11 @@ TEMPLATE = HERE.parent / "templates" / "laporan.html"
 
 def ringkas(vm: dict) -> str:
     m = vm["meta"]
-    L = [f"Laporan: {m['perusahaan']} · {vm['periode']['month']['label']} · data: {m['tingkat_data']}",
+    L = [f"Laporan: {m['perusahaan']} | {vm['periode']['month']['label']} | data: {m['tingkat_data']}",
          f"Skor kesehatan (bulanan vs tahun lalu): {vm['skor']['month']['grade']} ({vm['skor']['month']['nilai']}/100)",
          "Putusan: " + vm["putusan"]["month"]["teks"], "", "Cerita utama:"]
     for c in vm["cerita"]:
-        L.append(f"  [{c['sev'].upper()}] {c['judul']} — {c['kind']}")
+        L.append(f"  [{c['sev'].upper()}] {c['judul']}, {c['kind']}")
         L.append(f"      Fakta: {c['fakta']}")
         L.append(f"      Penyebab: {c['penyebab']}")
     L.append("")

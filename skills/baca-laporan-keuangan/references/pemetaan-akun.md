@@ -19,15 +19,15 @@ Gunakan saat mengekstrak dari PDF atau Excel dengan format bebas.
 | Di LK | Kunci |
 |---|---|
 | Kas dan bank; Kas dan setara kas | `kas_dan_setara_kas` |
-| Piutang usaha – pihak ketiga + pihak berelasi (neto setelah cadangan kerugian) | `piutang_usaha` |
-| Persediaan – neto | `persediaan` |
+| Piutang usaha - pihak ketiga + pihak berelasi (neto setelah cadangan kerugian) | `piutang_usaha` |
+| Persediaan - neto | `persediaan` |
 | Uang muka, biaya dibayar di muka, pajak dibayar di muka, piutang lain-lain, aset lancar lain | `aset_lancar_lainnya` (jumlahkan) |
-| Aset tetap – neto | `aset_tetap_neto` |
+| Aset tetap - neto | `aset_tetap_neto` |
 | Aset pajak tangguhan, properti investasi, aset hak guna, aset tak berwujud, uang jaminan | `aset_tidak_lancar_lainnya` (jumlahkan) |
 | Utang bank jangka pendek; pinjaman bank; cerukan; **bagian lancar** utang bank jangka panjang | `utang_bank_jangka_pendek` (jumlahkan) |
-| Utang usaha – pihak ketiga + berelasi | `utang_usaha` |
+| Utang usaha - pihak ketiga + berelasi | `utang_usaha` |
 | Beban akrual, utang pajak, uang muka pelanggan, utang lain-lain, liabilitas sewa jangka pendek | `liabilitas_jangka_pendek_lainnya` (jumlahkan) |
-| Utang bank jangka panjang – setelah dikurangi bagian lancar | `utang_bank_jangka_panjang` |
+| Utang bank jangka panjang - setelah dikurangi bagian lancar | `utang_bank_jangka_panjang` |
 | Liabilitas imbalan kerja, liabilitas pajak tangguhan, liabilitas sewa jangka panjang | `liabilitas_jangka_panjang_lainnya` (jumlahkan) |
 | Jumlah ekuitas (termasuk kepentingan nonpengendali) | `total_ekuitas` |
 | Penjualan neto; Pendapatan usaha; Pendapatan kontrak | `pendapatan` |

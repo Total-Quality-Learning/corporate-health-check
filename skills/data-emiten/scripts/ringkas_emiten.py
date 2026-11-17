@@ -8,7 +8,7 @@ Pemakaian:
     python scripts/ringkas_emiten.py emiten.json --gaya checklist --rasio rasio.json
     python scripts/ringkas_emiten.py emiten.json --out-json pembanding.json
 
-Hanya pustaka standar Python. Angka emiten berasal dari TradingView (tidak resmi) — lihat references/sumber-data.md.
+Hanya pustaka standar Python. Angka emiten berasal dari TradingView (tidak resmi), lihat references/sumber-data.md.
 """
 from __future__ import annotations
 
@@ -45,18 +45,18 @@ def idn(x, d=1):
 
 def fmt(v, sat):
     if v is None:
-        return "–"
-    t = "−" if v < 0 else ""
+        return "-"
+    t = "-" if v < 0 else ""
     a = abs(v)
     return {"persen": f"{t}{idn(a, 1)}%", "kali": f"{t}{idn(a, 2)}x", "hari": f"{t}{idn(a, 0)} hari"}.get(sat, idn(v))
 
 
 def rp(v):
     if v is None:
-        return "–"
+        return "-"
     a = abs(v)
     s = f"{idn(a / 1e12, 2)} T" if a >= 1e12 else f"{idn(a / 1e9, 1)} M"
-    return ("−" if v < 0 else "") + "Rp" + s
+    return ("-" if v < 0 else "") + "Rp" + s
 
 
 def bagi(a, b, k=1.0):
@@ -156,7 +156,7 @@ def main(argv=None) -> int:
             if pos is None:
                 continue
             L.append(f"- [{'x' if pos != 'lebih lemah' else ' '}] **{lab}**: {fmt(user.get(k), sat)} vs median "
-                     f"{fmt(median[k], sat)} — {pos}")
+                     f"{fmt(median[k], sat)}, {pos}")
     else:
         head = "| Metrik | " + " | ".join(kode) + " | Median |" + (" Perusahaan Anda | Posisi |" if user else "")
         sep = "|---|" + "---:|" * (len(kode) + 1) + ("---:|---|" if user else "")
@@ -165,16 +165,16 @@ def main(argv=None) -> int:
             baris = f"| {lab} | " + " | ".join(fmt(hasil[t][k], sat) for t in kode) + f" | **{fmt(median[k], sat)}** |"
             if user:
                 pos = posisi(user.get(k), median[k], arah)
-                baris += f" {fmt(user.get(k), sat)} | {pos or '–'} |"
+                baris += f" {fmt(user.get(k), sat)} | {pos or '-'} |"
             L.append(baris)
     L += ["", "**Catatan sumber & definisi**", "",
           "- Data dari TradingView melalui pustaka TradingView-API (tidak resmi). Uji akurasi internal: pendapatan, laba bersih,",
-          "  total aset, dan utang sama dengan sumber pembanding; **laba kotor bisa berbeda hingga ±4%** karena klasifikasi.",
+          "  total aset, dan utang sama dengan sumber pembanding; **laba kotor bisa berbeda hingga sekitar 4%** karena klasifikasi.",
           "- ROE/ROA/margin memakai definisi TradingView; hari piutang diperkirakan dari perputaran piutang (365 ÷ perputaran).",
           "- Persediaan, utang usaha, dan beban bunga tidak tersedia, sehingga DIO/DPO/interest coverage emiten tidak ditampilkan.",
           "- Emiten adalah perusahaan besar & terbuka; pembanding ini konteks, bukan target. Verifikasi angka penting ke LK resmi"
           " (idx.co.id / situs emiten).", "",
-          "_Alat bantu analisis, bukan nasihat investasi._", "", "Disusun dengan TQ Board Insight · totalquality.co.id"]
+          "_Alat bantu analisis, bukan nasihat investasi._", "", "Disusun dengan TQ Board Insight | totalquality.co.id"]
     md = "\n".join(L)
     if a.out_md:
         a.out_md.write_text(md, encoding="utf-8")

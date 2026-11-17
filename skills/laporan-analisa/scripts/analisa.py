@@ -56,7 +56,7 @@ class Fmt:
 
     def uang(self, v, tanda=False):
         if v is None:
-            return "–"
+            return "-"
         neg = v < 0
         a = abs(v)
         if self.samaran:
@@ -70,13 +70,13 @@ class Fmt:
         else:
             s = _id(a, 0)
         if neg:
-            return "−" + s
+            return "-" + s
         return ("+" + s) if tanda and v > 0 else s
 
     def nilai(self, v, unit, tanda=False):
         if v is None:
-            return "–"
-        p = "+" if (tanda and v > 0) else ("−" if v < 0 else "")
+            return "-"
+        p = "+" if (tanda and v > 0) else ("-" if v < 0 else "")
         a = abs(v)
         if unit == "uang":
             return self.uang(v, tanda)
@@ -95,12 +95,12 @@ class Fmt:
     def delta(self, cur, ref, unit):
         """Teks selisih + persen (untuk uang) atau poin/hari/x."""
         if cur is None or ref is None:
-            return "–"
+            return "-"
         d = cur - ref
         if unit == "uang":
             t = self.uang(d, True)
             if ref > 0 and abs(d / ref) <= 3:  # persen > 300% dari basis kecil membingungkan pembaca
-                t += f" ({'+' if d >= 0 else '−'}{_id(abs(d / ref * 100), 1)}%)"
+                t += f" ({'+' if d >= 0 else '-'}{_id(abs(d / ref * 100), 1)}%)"
             elif ref > 0:
                 t += " (lebih dari 3x)" if d > 0 else ""
             return t
@@ -277,7 +277,7 @@ KPI_META = [
     ("net_margin", "Margin laba bersih", "Profitabilitas", "%", "tinggi", "rel", 1.0, 2.0,
      "Porsi pendapatan yang menjadi laba bersih.", "Laba bersih ÷ Pendapatan × 100%"),
     ("rev_growth", "Pertumbuhan pendapatan (YoY)", "Pertumbuhan", "%", "tinggi", "abs", 0.0, -5.0,
-     "Perubahan pendapatan dibanding periode yang sama tahun lalu.", "(Pendapatan ÷ Pendapatan tahun lalu − 1) × 100%"),
+     "Perubahan pendapatan dibanding periode yang sama tahun lalu.", "(Pendapatan ÷ Pendapatan tahun lalu - 1) × 100%"),
     ("roe_ltm", "ROE (12 bulan)", "Profitabilitas & DuPont", "%", "tinggi", "abs", 10.0, 5.0,
      "Imbal hasil atas modal pemilik, laba 12 bulan terakhir.", "Laba bersih 12 bln ÷ Ekuitas akhir × 100%"),
     ("roa_ltm", "ROA (12 bulan)", "Profitabilitas & DuPont", "%", "tinggi", "abs", 5.0, 2.0,
@@ -291,13 +291,13 @@ KPI_META = [
     ("dpo", "Hari pembayaran pemasok (DPO)", "Kas & modal kerja", "hari", "wajar", "rel", 10.0, 20.0,
      "Rata-rata hari perusahaan membayar pemasok; perubahan tajam ke dua arah perlu dicermati.", "Utang usaha ÷ HPP × hari periode"),
     ("ccc", "Siklus konversi kas (CCC)", "Kas & modal kerja", "hari", "rendah", "rel", 15.0, 30.0,
-     "Berapa hari uang tertahan dari membeli bahan sampai dibayar pelanggan.", "DSO + DIO − DPO"),
+     "Berapa hari uang tertahan dari membeli bahan sampai dibayar pelanggan.", "DSO + DIO - DPO"),
     ("current_ratio", "Rasio lancar", "Likuiditas", "x", "tinggi", "abs", 1.5, 1.1,
      "Kemampuan membayar kewajiban < 1 tahun dengan aset lancar.", "Aset lancar ÷ Liabilitas jangka pendek"),
     ("quick_ratio", "Rasio cepat", "Likuiditas", "x", "tinggi", "abs", 1.0, 0.7,
      "Sama dengan rasio lancar tanpa mengandalkan persediaan.", "(Kas + Piutang usaha) ÷ Liabilitas jangka pendek"),
     ("net_debt_ebitda", "Utang bersih / EBITDA", "Solvabilitas", "x", "rendah", "abs", 2.5, 3.5,
-     "Berapa tahun EBITDA dibutuhkan untuk melunasi utang bank bersih.", "(Utang bank − Kas) ÷ EBITDA 12 bln"),
+     "Berapa tahun EBITDA dibutuhkan untuk melunasi utang bank bersih.", "(Utang bank - Kas) ÷ EBITDA 12 bln"),
     ("icr", "Interest coverage", "Solvabilitas", "x", "tinggi", "abs", 3.0, 1.5,
      "Berapa kali laba usaha menutup beban bunga.", "Laba usaha 12 bln ÷ Beban bunga 12 bln"),
 ]
@@ -311,7 +311,7 @@ def status_kpi(meta, cur, yoy, ambang):
         aturan, w, c = "abs", a["waspada"], a["kritis"]
         arah = {"tinggi": "tinggi", "rendah": "rendah"}.get(a.get("arah") or "", arah)
     if cur is None:
-        return "netral", ("–", "–")
+        return "netral", ("-", "-")
     if aturan == "abs":
         if arah == "tinggi":
             st = "kritis" if cur < c else ("waspada" if cur < w else "aman")
@@ -374,7 +374,7 @@ class Analisa:
         celah = [b for b in rentang(bl[-1], len(bl)) if b not in d.ada]
         hasil.append({"kode": "G2", "nama": "Kelengkapan bulan laba rugi (tanpa celah, ≥ 13 bulan)",
                       "status": "Lulus" if (not celah and len(bl) >= 13) else "Perhatian",
-                      "catatan": f"{len(bl)} bulan ({lbl(bl[0])} – {lbl(bl[-1])})" + (f"; bulan hilang: {', '.join(lbl(x) for x in celah[:5])}" if celah else "")})
+                      "catatan": f"{len(bl)} bulan ({lbl(bl[0])} - {lbl(bl[-1])})" + (f"; bulan hilang: {', '.join(lbl(x) for x in celah[:5])}" if celah else "")})
         beda_kas = []
         for b in bl:
             if "kas_akhir" in d.ak and b in d.ak["kas_akhir"] and d.neraca_ada(b):
@@ -398,7 +398,7 @@ class Analisa:
                       "catatan": ("Tidak rekonsiliasi: " + ", ".join(beda_ocf[:5])) if beda_ocf else "Terekonsiliasi penuh"})
         beda_lb = [lbl(b) for b in bl if "laba_bersih" in d.lr and b in d.lr["laba_bersih"]
                    and abs(d.laba_hitung(b) - d.lr["laba_bersih"][b]) > 1]
-        hasil.append({"kode": "G5", "nama": "Laba bersih = pendapatan − beban (dihitung ulang)",
+        hasil.append({"kode": "G5", "nama": "Laba bersih = pendapatan - beban (dihitung ulang)",
                       "status": "Perhatian" if beda_lb else "Lulus",
                       "catatan": ("Berbeda: " + ", ".join(beda_lb[:5])) if beda_lb else "Cocok di semua bulan"})
         beda_sl = []
@@ -407,7 +407,7 @@ class Analisa:
             if d.neraca_ada(pb) and d.neraca_ada(b) and "saldo_laba" in d.n:
                 if abs(d.N("saldo_laba", pb) + d.L("laba_bersih", b) - d.A("dividen", b) - d.N("saldo_laba", b)) > 1:
                     beda_sl.append(lbl(b))
-        hasil.append({"kode": "G6", "nama": "Saldo laba bergerak sesuai laba bersih − dividen",
+        hasil.append({"kode": "G6", "nama": "Saldo laba bergerak sesuai laba bersih - dividen",
                       "status": "Perhatian" if beda_sl else "Lulus",
                       "catatan": ("Ada penyesuaian lain: " + ", ".join(beda_sl[:5])) if beda_sl else "Konsisten"})
         hasil.append({"kode": "G7", "nama": "Target / anggaran (RKAP) tersedia",
@@ -434,19 +434,19 @@ class Analisa:
         ytd = [f"{B[:4]}-{i:02d}" for i in range(1, m + 1)]
         self.periode = {
             "month": {"label": f"{BLN_PANJANG[m - 1]} {B[:4]} (Bulanan)", "short": lbl(B),
-                      "range": f"1–{hari(B)} {BLN_PANJANG[m - 1]} {B[:4]}", "months": [B],
+                      "range": f"1-{hari(B)} {BLN_PANJANG[m - 1]} {B[:4]}", "months": [B],
                       "comps": {"prev": ([geser(B, -1)], f"{lbl(geser(B, -1))} (bulan lalu)"),
                                 "yoy": ([geser(B, -12)], f"{lbl(geser(B, -12))} (tahun lalu)"),
                                 "target": ([B], f"Target {lbl(B)}")}},
-            "quarter": {"label": f"Triwulan {romawi[qn - 1]} {q_akhir[:4]} ({BLN[int(q[0][5:]) - 1]}–{BLN[int(q[-1][5:]) - 1]})",
+            "quarter": {"label": f"Triwulan {romawi[qn - 1]} {q_akhir[:4]} ({BLN[int(q[0][5:]) - 1]}-{BLN[int(q[-1][5:]) - 1]})",
                         "short": f"Q{qn} {q_akhir[:4]}",
-                        "range": f"1 {BLN_PANJANG[int(q[0][5:]) - 1]} – {hari(q[-1])} {BLN_PANJANG[int(q[-1][5:]) - 1]} {q_akhir[:4]}",
+                        "range": f"1 {BLN_PANJANG[int(q[0][5:]) - 1]} - {hari(q[-1])} {BLN_PANJANG[int(q[-1][5:]) - 1]} {q_akhir[:4]}",
                         "months": q,
                         "comps": {"prev": ([geser(b, -3) for b in q], f"Q{(qn - 2) % 4 + 1} {geser(q_akhir, -3)[:4]} (triwulan lalu)"),
                                   "yoy": ([geser(b, -12) for b in q], f"Q{qn} {int(q_akhir[:4]) - 1} (tahun lalu)"),
                                   "target": (q, f"Target Q{qn} {q_akhir[:4]}")}},
             "ytd": {"label": f"Tahun berjalan s.d. {BLN[m - 1]} {B[:4]} ({m} bulan)", "short": f"YTD {BLN[m - 1]} {B[:4]}",
-                    "range": f"1 Januari – {hari(B)} {BLN_PANJANG[m - 1]} {B[:4]}", "months": ytd,
+                    "range": f"1 Januari - {hari(B)} {BLN_PANJANG[m - 1]} {B[:4]}", "months": ytd,
                     "comps": {"prev": (None, "Tidak berlaku untuk YTD"),
                               "yoy": ([geser(b, -12) for b in ytd], f"YTD {BLN[m - 1]} {int(B[:4]) - 1} (tahun lalu)"),
                               "target": (ytd, f"Target YTD {BLN[m - 1]} {B[:4]}")}},
@@ -492,8 +492,8 @@ class Analisa:
             st, (tw, tk) = status_kpi(meta, v, vy, self.ambang)
             d = (v - vc) if (v is not None and vc is not None) else None
             rows.append({"key": key, "nama": nama, "kel": kel, "cur": self.f.nilai(v, unit),
-                         "comp": self.f.nilai(vc, unit) if comp else "PERLU DATA" if cid == "target" else "–",
-                         "delta": self.f.nilai(d, "poin" if unit == "%" else unit, True) if d is not None else "–",
+                         "comp": self.f.nilai(vc, unit) if comp else "PERLU DATA" if cid == "target" else "-",
+                         "delta": self.f.nilai(d, "poin" if unit == "%" else unit, True) if d is not None else "-",
                          "baik": lebih_baik(arah, d), "status": st, "waspada": tw, "kritis": tk,
                          "def": meta[8], "rumus": meta[9],
                          "sumber_ambang": "Kebijakan perusahaan (sheet Ambang_KPI)" if key in self.ambang else
@@ -514,7 +514,7 @@ class Analisa:
         nilai = {"aman": 2, "waspada": 1, "kritis": 0}
         s = [nilai[r["status"]] for r in rows if r["status"] in nilai]
         if not s:
-            return None, "–"
+            return None, "-"
         pct = sum(s) / (2 * len(s)) * 100
         for batas, g in ((85, "A"), (75, "B+"), (65, "B"), (55, "C+"), (45, "C")):
             if pct >= batas:
@@ -541,8 +541,8 @@ class Analisa:
                 ("Total aset", b["total_aset"], "", True), ("Utang usaha", b["utang_usaha"], "", False),
                 ("Utang bank (total)", b["utang_bank"], "rendah", False), ("Liabilitas jangka pendek", b["ljp"], "", True),
                 ("Total liabilitas", b["total_liabilitas"], "rendah", True), ("Ekuitas", b["ekuitas"], "tinggi", True),
-                ("Modal kerja (aset lancar − liab. pendek)", b["modal_kerja"], "", False),
-                ("Utang bersih (utang bank − kas)", b["utang_bersih"], "rendah", False)]
+                ("Modal kerja (aset lancar - liab. pendek)", b["modal_kerja"], "", False),
+                ("Utang bersih (utang bank - kas)", b["utang_bersih"], "rendah", False)]
 
     def baris_ak(self, x):
         r = [("Laba bersih", x["laba_bersih"], "tinggi", False), ("Penyusutan", x["penyusutan"], "", False)]
@@ -552,8 +552,8 @@ class Analisa:
                   ("Kenaikan (penurunan) utang usaha", x["d_utang_usaha"], "", False),
                   ("Perubahan pos lain", x["d_lain"], "", False)]
         r += [("Arus kas operasi", x["arus_kas_operasi"], "tinggi", True), ("Belanja modal", -x["belanja_modal"], "", False),
-              ("Arus kas bebas (operasi − belanja modal)", x["fcf"], "tinggi", True),
-              ("Pinjaman jangka panjang: tarik − cicil", x["penerimaan_pinjaman_panjang"] - x["pembayaran_pinjaman_panjang"], "", False),
+              ("Arus kas bebas (operasi - belanja modal)", x["fcf"], "tinggi", True),
+              ("Pinjaman jangka panjang: tarik - cicil", x["penerimaan_pinjaman_panjang"] - x["pembayaran_pinjaman_panjang"], "", False),
               ("Utang bank jangka pendek, neto", x["perubahan_utang_bank_pendek"], "", False),
               ("Dividen", -x["dividen"], "", False)]
         return r
@@ -565,8 +565,8 @@ class Analisa:
             if target is not None:
                 vc = target.get(nama)
             d = (v - vc) if (vc is not None) else None
-            out.append({"nama": nama, "cur": self.f.uang(v), "comp": self.f.uang(vc) if vc is not None else "–",
-                        "delta": self.f.delta(v, vc, "uang") if vc is not None else "–",
+            out.append({"nama": nama, "cur": self.f.uang(v), "comp": self.f.uang(vc) if vc is not None else "-",
+                        "delta": self.f.delta(v, vc, "uang") if vc is not None else "-",
                         "baik": lebih_baik(arah, d), "tebal": tebal})
         return out
 
@@ -687,8 +687,8 @@ class Analisa:
             return {"ada": False, "butuh": kebutuhan[0], "sumber": kebutuhan[1]}
         tot = {k: sum(r.get(k) or 0 for r in rows) for k in ("umur_0_30", "umur_31_60", "umur_61_90", "umur_90_plus", "penjualan_ytd")}
         total = sum(tot[k] for k in ("umur_0_30", "umur_31_60", "umur_61_90", "umur_90_plus")) or 1
-        bucket = [("Belum jatuh tempo / 0–30 hari", tot["umur_0_30"], "aman"), ("31–60 hari", tot["umur_31_60"], "waspada"),
-                  ("61–90 hari", tot["umur_61_90"], "waspada"), ("> 90 hari", tot["umur_90_plus"], "kritis")]
+        bucket = [("Belum jatuh tempo / 0-30 hari", tot["umur_0_30"], "aman"), ("31-60 hari", tot["umur_31_60"], "waspada"),
+                  ("61-90 hari", tot["umur_61_90"], "waspada"), ("> 90 hari", tot["umur_90_plus"], "kritis")]
         pel = []
         for r in rows:
             saldo = sum(r.get(k) or 0 for k in ("umur_0_30", "umur_31_60", "umur_61_90", "umur_90_plus"))
@@ -714,14 +714,14 @@ class Analisa:
                 "lewat90": f.uang(tot["umur_90_plus"]), "lewat90_pct": _id(tot["umur_90_plus"] / total * 100, 1),
                 "top3_nama": ", ".join(z["nama"] for z in top3), "top3_omzet": _id(sum(z["omzet"] for z in top3), 1),
                 "pelanggan": [{"nama": z["nama"], "wilayah": z["wilayah"], "omzet": f"{_id(z['omzet'], 1)}%", "saldo": f.uang(z["saldo"]),
-                               "lewat90": f.uang(z["lewat90"]) if z["lewat90"] else "–",
-                               "limit": f"{_id(z['pakai_limit'], 0)}%" if z["pakai_limit"] else "–",
+                               "lewat90": f.uang(z["lewat90"]) if z["lewat90"] else "-",
+                               "limit": f"{_id(z['pakai_limit'], 0)}%" if z["pakai_limit"] else "-",
                                "limit_status": "kritis" if (z["pakai_limit"] or 0) > 100 else ("waspada" if (z["pakai_limit"] or 0) > 90 else "aman"),
                                "berelasi": "Ya" if z["berelasi"] else "Tidak",
-                               "margin": f"{_id(z['margin'], 1)}%" if z["margin"] is not None else "–",
+                               "margin": f"{_id(z['margin'], 1)}%" if z["margin"] is not None else "-",
                                "catatan": z["catatan"]} for z in pel],
                 "wilayah": [{"nama": k, "omzet": f"{_id(v['omzet'], 1)}%", "saldo": f.uang(v["saldo"]),
-                             "lewat90": f.uang(v["lewat90"]) if v["lewat90"] else "–"}
+                             "lewat90": f.uang(v["lewat90"]) if v["lewat90"] else "-"}
                             for k, v in sorted(wil.items(), key=lambda kv: -kv[1]["omzet"])],
                 "_raw": {"lewat90": tot["umur_90_plus"], "total": total, "pel": pel, "top3": top3}}
 
@@ -750,8 +750,8 @@ class Analisa:
             gmy = (a["y"][0] - a["y"][1]) / a["y"][0] * 100 if a["y"][0] else None
             gr = (a["c"][0] / a["y"][0] - 1) * 100 if a["y"][0] else None
             out.append({"nama": nama, "pendapatan": f.uang(a["c"][0]), "porsi": f"{_id(a['c'][0] / tot * 100, 1)}%",
-                        "tumbuh": f.nilai(gr, "%", True) if gr is not None else "–", "gm": f.nilai(gm, "%"),
-                        "dgm": f.nilai(gm - gmy, "poin", True) if None not in (gm, gmy) else "–",
+                        "tumbuh": f.nilai(gr, "%", True) if gr is not None else "-", "gm": f.nilai(gm, "%"),
+                        "dgm": f.nilai(gm - gmy, "poin", True) if None not in (gm, gmy) else "-",
                         "dgm_v": (gm - gmy) if None not in (gm, gmy) else None,
                         "volume": f"{_id(a['c'][2], 1)} {a['satuan']}", "laba_kotor": f.uang(a["c"][0] - a["c"][1])})
         return {"ada": True, "rows": out}
@@ -765,13 +765,13 @@ class Analisa:
         f = self.f
         out = [{"nama": r.get("pemasok"), "kategori": r.get("kategori") or "", "beli": f.uang(r.get("pembelian_ytd") or 0),
                 "porsi": f"{_id((r.get('pembelian_ytd') or 0) / tot * 100, 1)}%",
-                "harga": f.nilai(r.get("perubahan_harga_pct"), "%", True) if r.get("perubahan_harga_pct") is not None else "–",
+                "harga": f.nilai(r.get("perubahan_harga_pct"), "%", True) if r.get("perubahan_harga_pct") is not None else "-",
                 "harga_v": r.get("perubahan_harga_pct"),
-                "dpo": f.nilai(r.get("dpo_hari"), "hari") if r.get("dpo_hari") is not None else "–", "catatan": r.get("catatan") or ""}
+                "dpo": f.nilai(r.get("dpo_hari"), "hari") if r.get("dpo_hari") is not None else "-", "catatan": r.get("catatan") or ""}
                for r in sorted(rows, key=lambda r: -(r.get("pembelian_ytd") or 0))]
         rata = sum((r.get("perubahan_harga_pct") or 0) * (r.get("pembelian_ytd") or 0) for r in rows) / tot
         return {"ada": True, "rows": out, "harga_rata": f.nilai(rata, "%", True), "harga_rata_v": rata,
-                "top1_porsi": out[0]["porsi"] if out else "–"}
+                "top1_porsi": out[0]["porsi"] if out else "-"}
 
     def ops_persediaan(self):
         rows = self.p.get("persediaan_rincian")
@@ -791,7 +791,7 @@ class Analisa:
         return {"ada": True, "lebih90": f.uang(lebih90), "lebih90_pct": _id(lebih90 / total * 100, 1),
                 "jenis": [{"nama": nama_j.get(k, k), "nilai": f.uang(v[0]), "u1": f.uang(v[1]), "u2": f.uang(v[2]),
                            "u3": f.uang(v[3]), "u4": f.uang(v[4]),
-                           "tua_pct": f"{_id((v[3] + v[4]) / v[0] * 100, 1)}%" if v[0] else "–"} for k, v in jen.items()],
+                           "tua_pct": f"{_id((v[3] + v[4]) / v[0] * 100, 1)}%" if v[0] else "-"} for k, v in jen.items()],
                 "tertua": [{"nama": r.get("item"), "jenis": nama_j.get(r.get("jenis"), r.get("jenis")), "nilai": f.uang(r.get("nilai") or 0),
                             "tua": f.uang((r.get("umur_91_180") or 0) + (r.get("umur_180_plus") or 0)),
                             "catatan": r.get("catatan") or ""} for r in tua[:6] if (r.get("umur_91_180") or 0) + (r.get("umur_180_plus") or 0) > 0],
@@ -815,8 +815,8 @@ class Analisa:
                 buruk = -ch if arah == "tinggi" else ch
                 st = "kritis" if buruk >= 15 else ("waspada" if buruk >= 5 else "aman")
             out.append({"kode": k, "nama": v["uraian"], "satuan": v["satuan"], "status": st,
-                        "nilai": [("–" if n.get(b) is None else _id(n[b], 1 if abs(n[b]) < 100 else 0)) for b in bl],
-                        "ly": "–" if ly is None else _id(ly, 1 if abs(ly) < 100 else 0),
+                        "nilai": [("-" if n.get(b) is None else _id(n[b], 1 if abs(n[b]) < 100 else 0)) for b in bl],
+                        "ly": "-" if ly is None else _id(ly, 1 if abs(ly) < 100 else 0),
                         "seri": [n.get(b) for b in rentang(B, 22)], "cur_v": cur, "ly_v": ly})
         return {"ada": True, "label": [lbl(b) for b in bl], "rows": out}
 
@@ -840,7 +840,7 @@ class Analisa:
             if (r.get("utilisasi_pct") or 100) < 50:
                 tanda.append("utilisasi rendah")
             out.append({"nama": r.get("lini"), "rencana": _id(ren, 1 if ren < 100 else 0), "realisasi": _id(rea, 1 if rea < 100 else 0),
-                        "satuan": r.get("satuan") or "", "capai": f"{_id(capai, 0)}%" if capai is not None else "–",
+                        "satuan": r.get("satuan") or "", "capai": f"{_id(capai, 0)}%" if capai is not None else "-",
                         "wip": _id(r.get("wip") or 0, 1), "reject": f"{_id(r.get('reject_pct') or 0, 1)}%",
                         "util": f"{_id(r.get('utilisasi_pct') or 0, 0)}%", "tanda": ", ".join(tanda),
                         "status": "kritis" if len(tanda) >= 2 else ("waspada" if tanda else "aman"), "catatan": r.get("catatan") or ""})
@@ -878,8 +878,8 @@ class Analisa:
                 pen = (f"Dari data piutang: {pp['lewat90']} ({pp['lewat90_pct']}%) lewat 90 hari; tiga pelanggan terbesar "
                        f"({pp['top3_nama']}) menyumbang {pp['top3_omzet']}% omzet.")
             else:
-                pen = "PERLU DATA: penyebab tidak bisa dipastikan dari laporan keuangan — butuh umur piutang per pelanggan dan status order-to-cash."
-            add(sev, 100 - (cc or -100), f"Kualitas laba · konversi kas {f.nilai(cc, '%') if cc >= 0 else 'negatif'}",
+                pen = "PERLU DATA: penyebab tidak bisa dipastikan dari laporan keuangan, butuh umur piutang per pelanggan dan status order-to-cash."
+            add(sev, 100 - (cc or -100), f"Kualitas laba | konversi kas {f.nilai(cc, '%') if cc >= 0 else 'negatif'}",
                 "Laba belum menjadi kas", fakta, pen,
                 ["Tinjau mingguan 10 piutang & 10 stok terbesar di rapat direksi",
                  "Susun proyeksi kas 13 minggu dan tetapkan batas kas minimum"],
@@ -890,7 +890,7 @@ class Analisa:
             dd = k["dso"] - ky["dso"]
             lepas = dd / x["hari"] * x["pendapatan"]
             fakta = (f"DSO naik dari {f.nilai(ky['dso'], 'hari')} menjadi {f.nilai(k['dso'], 'hari')}; piutang usaha "
-                     f"{f.uang(x['bs']['piutang'])}. Jika DSO kembali ke level tahun lalu, kas ±{f.uang(lepas)} dapat dilepas.")
+                     f"{f.uang(x['bs']['piutang'])}. Jika DSO kembali ke level tahun lalu, kas sekitar {f.uang(lepas)} dapat dilepas.")
             if pp["ada"]:
                 raw = pp["_raw"]
                 terlewat = [z for z in raw["pel"] if z["lewat90"] > 0]
@@ -902,10 +902,10 @@ class Analisa:
                 if lim:
                     pen += f" Batas kredit terlampaui: {', '.join(lim[:3])}."
                 if rel:
-                    pen += f" Termasuk pihak berelasi: {', '.join(rel[:2])} — perlu kebijakan kredit khusus."
+                    pen += f" Termasuk pihak berelasi: {', '.join(rel[:2])}, perlu kebijakan kredit khusus."
             else:
-                pen = "PERLU DATA: tidak terlihat pelanggan mana yang terlambat dari laporan keuangan — butuh umur piutang per pelanggan dan tanggal kirim vs invoice."
-            add("kritis" if dd >= 20 else "waspada", dd * 3, f"Eksposur kas · piutang {f.uang(x['bs']['piutang'])}",
+                pen = "PERLU DATA: tidak terlihat pelanggan mana yang terlambat dari laporan keuangan, butuh umur piutang per pelanggan dan tanggal kirim vs invoice."
+            add("kritis" if dd >= 20 else "waspada", dd * 3, f"Eksposur kas | piutang {f.uang(x['bs']['piutang'])}",
                 "Piutang semakin lama tertagih", fakta, pen,
                 ["Bekukan pengiriman kredit baru untuk akun lewat jatuh tempo > 60 hari",
                  "Tetapkan dan tegakkan batas kredit per pelanggan", "Percepat penerbitan invoice setelah pengiriman"],
@@ -916,20 +916,20 @@ class Analisa:
             lepas = dd / x["hari"] * x["hpp"]
             fakta = (f"DIO naik dari {f.nilai(ky['dio'], 'hari')} menjadi {f.nilai(k['dio'], 'hari')}; persediaan "
                      f"{f.uang(x['bs']['persediaan'])} (tahun lalu {f.uang(y['bs']['persediaan'])}). "
-                     f"Jika DIO kembali ke level tahun lalu, kas ±{f.uang(lepas)} dapat dilepas.")
+                     f"Jika DIO kembali ke level tahun lalu, kas sekitar {f.uang(lepas)} dapat dilepas.")
             pen_list = []
             if pr["ada"]:
                 tua = pr["_raw"]["tua"][0]
                 pen_list.append(f"{pr['lebih90']} ({pr['lebih90_pct']}%) persediaan berumur > 90 hari; terbesar: {tua['item']}"
-                                + (f" — {tua['catatan']}" if tua.get("catatan") else "") + ".")
+                                + (f", {tua['catatan']}" if tua.get("catatan") else "") + ".")
             if pl["ada"]:
                 lebih = [r for r in pl["rows"] if "melebihi" in r["tanda"]]
                 if lebih:
                     pen_list.append(f"{lebih[0]['nama']} berproduksi {lebih[0]['capai']} dari rencana" +
                                     (f" ({lebih[0]['catatan']})" if lebih[0]["catatan"] else "") + ".")
-            pen = " ".join(pen_list) if pen_list else ("PERLU DATA: laporan keuangan hanya menunjukkan total persediaan — "
+            pen = " ".join(pen_list) if pen_list else ("PERLU DATA: laporan keuangan hanya menunjukkan total persediaan, "
                                                        "butuh stok per SKU/style, umur stok, dan WIP per lini.")
-            add("kritis" if dd >= 20 else "waspada", dd * 3, f"Modal kerja · persediaan {f.uang(x['bs']['persediaan'])}",
+            add("kritis" if dd >= 20 else "waspada", dd * 3, f"Modal kerja | persediaan {f.uang(x['bs']['persediaan'])}",
                 "Persediaan menumpuk", fakta, pen,
                 ["Hentikan sementara produksi/pembelian di luar order pasti", "Program penjualan stok berumur > 90 hari",
                  "Tinjau kebijakan minimum order bahan"],
@@ -940,7 +940,7 @@ class Analisa:
             if dgm <= -1.0:
                 hilang = -dgm / 100 * x["pendapatan"]
                 fakta = (f"Margin kotor {P} {f.nilai(k['gross_margin'], '%')} dibanding {f.nilai(ky['gross_margin'], '%')} "
-                         f"tahun lalu ({f.nilai(dgm, 'poin', True)}), setara laba kotor ±{f.uang(hilang)} yang hilang.")
+                         f"tahun lalu ({f.nilai(dgm, 'poin', True)}), setara laba kotor sekitar {f.uang(hilang)} yang hilang.")
                 pen_list = []
                 if ops["produk"]["ada"]:
                     rr = [r for r in ops["produk"]["rows"] if r["dgm_v"] is not None]
@@ -955,9 +955,9 @@ class Analisa:
                         if r["status"] in ("kritis", "waspada") and any(s in r["kode"] for s in ("reject", "waste", "scrap", "oee", "potong")):
                             pen_list.append(f"{r['nama']}: {r['ly']} → {r['nilai'][-1]} {r['satuan']} (tahun lalu → kini).")
                             break
-                pen = " ".join(pen_list) if pen_list else ("PERLU DATA: HPP di laporan keuangan adalah satu angka total — butuh "
+                pen = " ".join(pen_list) if pen_list else ("PERLU DATA: HPP di laporan keuangan adalah satu angka total, butuh "
                                                            "margin per produk, harga beli bahan, dan biaya reject/rework per proses.")
-                add("kritis" if dgm <= -2.5 else "waspada", -dgm * 12, f"Profitabilitas · margin kotor {f.nilai(dgm, 'poin', True)}",
+                add("kritis" if dgm <= -2.5 else "waspada", -dgm * 12, f"Profitabilitas | margin kotor {f.nilai(dgm, 'poin', True)}",
                     "Margin kotor tergerus", fakta, pen,
                     ["Hitung margin per produk/order dan tinjau harga jual produk bermargin terendah",
                      "Ukur biaya reject/rework/waste dalam rupiah per proses", "Negosiasikan kontrak harga bahan utama"],
@@ -972,7 +972,7 @@ class Analisa:
                     rr = [r for r in ops["kpi"]["rows"] if r["status"] in ("kritis", "waspada")]
                     if rr:
                         pen = "Indikator operasional memburuk: " + "; ".join(f"{r['nama']} {r['ly']} → {r['nilai'][-1]} {r['satuan']}" for r in rr[:3]) + "."
-                add("kritis" if go - gp >= 10 else "waspada", (go - gp) * 4, "Efisiensi · beban usaha",
+                add("kritis" if go - gp >= 10 else "waspada", (go - gp) * 4, "Efisiensi | beban usaha",
                     "Beban usaha tumbuh lebih cepat dari pendapatan",
                     f"Beban usaha {P} {f.nilai(go, '%', True)} sementara pendapatan {f.nilai(gp, '%', True)} (YoY).", pen,
                     ["Tetapkan anggaran beban usaha berbasis volume", "Pantau KPI produktivitas harian per lini"],
@@ -990,7 +990,7 @@ class Analisa:
             if (naik is None or naik > 0) and serap_mk > x["belanja_modal"]:
                 # utang terutama menutup modal kerja
                 if pp["ada"] or pr["ada"]:
-                    pen = (f"Sejak awal tahun modal kerja menyerap ±{f.uang(serap_mk)}, lebih besar dari belanja modal "
+                    pen = (f"Sejak awal tahun modal kerja menyerap sekitar {f.uang(serap_mk)}, lebih besar dari belanja modal "
                            f"{f.uang(x['belanja_modal'])}; pinjaman menutup kas yang tertahan di piutang"
                            + (f" (lewat 90 hari {pp['lewat90']})" if pp["ada"] else "") + " dan persediaan"
                            + (f" (berumur > 90 hari {pr['lebih90']})" if pr["ada"] else "") + ".")
@@ -998,14 +998,14 @@ class Analisa:
                 ut = [r for r in ops["kpi"]["rows"] if "utilisasi" in r["kode"] and r["status"] != "aman"]
                 if ut:
                     pen = (f"{ut[0]['nama']} hanya {ut[0]['nilai'][-1]}{'%' if ut[0]['satuan'] == '%' else ' ' + ut[0]['satuan']}"
-                           " — aset yang dibiayai pinjaman belum menghasilkan.")
-            add(sev, 60 if sev == "kritis" else 30, f"Solvabilitas · ICR {f.nilai(icr, 'x')}", "Beban utang membatasi ruang gerak",
+                           ", aset yang dibiayai pinjaman belum menghasilkan.")
+            add(sev, 60 if sev == "kritis" else 30, f"Solvabilitas | ICR {f.nilai(icr, 'x')}", "Beban utang membatasi ruang gerak",
                 fakta, pen, ["Susun rencana penurunan utang & uji covenant bulanan",
                              "Prioritaskan utilisasi aset yang sudah dibiayai sebelum investasi baru"],
                 "Penggunaan fasilitas kredit; utilisasi aset yang dibiayai; proyeksi kas", None, "utang")
         # 7. konsentrasi pelanggan
         if pp["ada"] and float(pp["top3_omzet"].replace(",", ".")) >= 40:
-            add("waspada", 20, f"Konsentrasi · {pp['top3_omzet']}% omzet di 3 pelanggan", "Ketergantungan pada sedikit pelanggan",
+            add("waspada", 20, f"Konsentrasi | {pp['top3_omzet']}% omzet di 3 pelanggan", "Ketergantungan pada sedikit pelanggan",
                 f"{pp['top3_nama']} menyumbang {pp['top3_omzet']}% penjualan YTD.",
                 "Posisi tawar termin & harga melemah bila satu pelanggan besar menunda bayar atau mengurangi order.",
                 ["Tetapkan batas porsi omzet & piutang per pelanggan", "Diversifikasi ke segmen dengan termin lebih pendek"],
@@ -1016,9 +1016,9 @@ class Analisa:
             if gp >= 3:
                 pen = ""
                 if ops["produk"]["ada"]:
-                    best = max(ops["produk"]["rows"], key=lambda r: float(r["tumbuh"].replace("%", "").replace("+", "").replace("−", "-").replace(",", ".")) if r["tumbuh"] != "–" else -999)
+                    best = max(ops["produk"]["rows"], key=lambda r: float(r["tumbuh"].replace("%", "").replace("+", "").replace("-", "-").replace(",", ".")) if r["tumbuh"] != "-" else -999)
                     pen = f"Pertumbuhan tertinggi: {best['nama']} ({best['tumbuh']})."
-                add("aman", 5, f"Pertumbuhan · pendapatan {f.nilai(gp, '%', True)}", "Penjualan tumbuh",
+                add("aman", 5, f"Pertumbuhan | pendapatan {f.nilai(gp, '%', True)}", "Penjualan tumbuh",
                     f"Pendapatan {P} {f.uang(x['pendapatan'])} ({f.nilai(gp, '%', True)} dibanding tahun lalu).",
                     pen or "Rincian pendorong pertumbuhan per produk/pelanggan butuh data penjualan per produk.",
                     ["Pastikan pertumbuhan tidak dibeli dengan termin lebih panjang atau potongan lebih besar"],
@@ -1058,7 +1058,7 @@ class Analisa:
                        "status": st, "catatan": catatan})
 
         tambah("Dasar (tren 3 bulan terakhir berlanjut)", "Tanpa guncangan", 0, ebitda, rev)
-        tambah("Penjualan turun 15% selama 3 bulan", "Permintaan −15%", -0.15 * rev * cm * 3, ebitda - 0.15 * rev * cm, rev * 0.85)
+        tambah("Penjualan turun 15% selama 3 bulan", "Permintaan -15%", -0.15 * rev * cm * 3, ebitda - 0.15 * rev * cm, rev * 0.85)
         tambah("Harga bahan naik 10% tanpa kenaikan harga jual", "Bahan +10%", -0.10 * bahan * 3, ebitda - 0.10 * bahan, rev)
         tambah("DSO molor 15 hari & penjualan turun 10%", "Penagihan +15 hari", -(15 / 30.4 * rev) - 0.10 * rev * cm * 3,
                ebitda - 0.10 * rev * cm, rev * 0.9, "Tambahan piutang tertahan dihitung sekali")
@@ -1068,7 +1068,7 @@ class Analisa:
                    f"Interest coverage menjadi {f.nilai(icr_baru, 'x')}")
         return {"rows": sk, "kas_kini": f.uang(kas), "kas_min": f.uang(kas_min), "dasar": f.uang(dasar, True),
                 "asumsi": ("Rata-rata 3 bulan terakhir, tanpa penarikan pinjaman baru. Kas minimum = 1 bulan beban kas tetap (upah, overhead, beban umum). "
-                           "Arus kas dasar per bulan = arus kas operasi − belanja modal − cicilan pinjaman. "
+                           "Arus kas dasar per bulan = arus kas operasi - belanja modal - cicilan pinjaman. "
                            "Biaya variabel = bahan + beban penjualan. Perhitungan deterministik sederhana, bukan simulasi.")}
 
     def kas13(self):
@@ -1098,9 +1098,9 @@ class Analisa:
                          "v_b": round(kas_b, 1), "v_l": round(kas_l, 1)})
         return {"rows": rows, "kas_min": round(tetap, 1), "kas_min_teks": f.uang(tetap),
                 "asumsi": ("Ilustrasi: pola rata-rata 3 bulan terakhir diteruskan 13 minggu. Penerimaan = pendapatan dikurangi "
-                           "kenaikan piutang; bayar pemasok = bahan + kenaikan persediaan − kenaikan utang usaha; operasi = upah, "
+                           "kenaikan piutang; bayar pemasok = bahan + kenaikan persediaan - kenaikan utang usaha; operasi = upah, "
                            "overhead, beban usaha, pajak, belanja modal. Cicilan & bunga tiap 4 minggu. Skenario rendah: penerimaan "
-                           "−10%. Tanpa pinjaman baru. Bukan proyeksi resmi; perlu jadwal penagihan & pembayaran aktual.")}
+                           "-10%. Tanpa pinjaman baru. Bukan proyeksi resmi; perlu jadwal penagihan & pembayaran aktual.")}
 
     # ========================================================== lampiran ==
     def lampiran(self, pid, cid):
@@ -1115,26 +1115,26 @@ class Analisa:
         g = []
 
         def baris(nama, v, vc, unit, rumus, hitung):
-            return {"nama": nama, "cur": f.nilai(v, unit), "comp": f.nilai(vc, unit) if c else "–",
-                    "delta": f.delta(v, vc, unit) if (c and v is not None and vc is not None) else "–",
+            return {"nama": nama, "cur": f.nilai(v, unit), "comp": f.nilai(vc, unit) if c else "-",
+                    "delta": f.delta(v, vc, unit) if (c and v is not None and vc is not None) else "-",
                     "rumus": rumus, "hitung": hitung}
 
         cb = c["bs"] if c else {}
         ck = c["kpi"] if c else {}
         g.append(("1. Posisi keuangan", [
             baris("Kas & setara kas", bs["kas"], cb.get("kas"), "uang", "Saldo kas + bank akhir periode", f"{U(bs['kas'])}"),
-            baris("Piutang usaha neto", bs["piutang"], cb.get("piutang"), "uang", "Piutang bruto − cadangan kerugian", U(bs["piutang"])),
+            baris("Piutang usaha neto", bs["piutang"], cb.get("piutang"), "uang", "Piutang bruto - cadangan kerugian", U(bs["piutang"])),
             baris("Persediaan", bs["persediaan"], cb.get("persediaan"), "uang", "Bahan + WIP + barang jadi", U(bs["persediaan"])),
             baris("Aset lancar", bs["aset_lancar"], cb.get("aset_lancar"), "uang", "Kas + piutang + persediaan + uang muka", U(bs["aset_lancar"])),
-            baris("Aset tetap neto", bs["aset_tetap"], cb.get("aset_tetap"), "uang", "Harga perolehan − akumulasi penyusutan", U(bs["aset_tetap"])),
+            baris("Aset tetap neto", bs["aset_tetap"], cb.get("aset_tetap"), "uang", "Harga perolehan - akumulasi penyusutan", U(bs["aset_tetap"])),
             baris("Total aset", bs["total_aset"], cb.get("total_aset"), "uang", "Aset lancar + aset tidak lancar", U(bs["total_aset"])),
             baris("Utang bank", bs["utang_bank"], cb.get("utang_bank"), "uang", "Pendek + bagian lancar + jangka panjang", U(bs["utang_bank"])),
             baris("Total liabilitas", bs["total_liabilitas"], cb.get("total_liabilitas"), "uang", "Liabilitas pendek + panjang", U(bs["total_liabilitas"])),
             baris("Ekuitas", bs["ekuitas"], cb.get("ekuitas"), "uang", "Modal disetor + saldo laba", U(bs["ekuitas"])),
-            baris("Modal kerja", bs["modal_kerja"], cb.get("modal_kerja"), "uang", "Aset lancar − liabilitas jangka pendek",
-                  f"{U(bs['aset_lancar'])} − {U(bs['ljp'])} = {U(bs['modal_kerja'])}"),
-            baris("Utang bersih", bs["utang_bersih"], cb.get("utang_bersih"), "uang", "Utang bank − kas",
-                  f"{U(bs['utang_bank'])} − {U(bs['kas'])} = {U(bs['utang_bersih'])}"),
+            baris("Modal kerja", bs["modal_kerja"], cb.get("modal_kerja"), "uang", "Aset lancar - liabilitas jangka pendek",
+                  f"{U(bs['aset_lancar'])} - {U(bs['ljp'])} = {U(bs['modal_kerja'])}"),
+            baris("Utang bersih", bs["utang_bersih"], cb.get("utang_bersih"), "uang", "Utang bank - kas",
+                  f"{U(bs['utang_bank'])} - {U(bs['kas'])} = {U(bs['utang_bersih'])}"),
         ]))
         pend = x["pendapatan"]
         g.append(("2. Profitabilitas & DuPont", [
@@ -1149,13 +1149,13 @@ class Analisa:
             baris("Rasio beban usaha", k["opex_ratio"], ck.get("opex_ratio"), "%", "Beban usaha ÷ Pendapatan × 100%",
                   f"{U(x['beban_usaha'])} ÷ {U(pend)} × 100% = {f.nilai(k['opex_ratio'], '%')}"),
             baris("ROE (12 bulan)", k.get("roe_ltm"), ck.get("roe_ltm"), "%", "Laba bersih 12 bln ÷ Ekuitas × 100%",
-                  f"{U(lt.get('laba_bersih'))} ÷ {U(bs['ekuitas'])} × 100% = {f.nilai(k.get('roe_ltm'), '%')}" if lt else "–"),
+                  f"{U(lt.get('laba_bersih'))} ÷ {U(bs['ekuitas'])} × 100% = {f.nilai(k.get('roe_ltm'), '%')}" if lt else "-"),
             baris("ROA (12 bulan)", k.get("roa_ltm"), ck.get("roa_ltm"), "%", "Laba bersih 12 bln ÷ Total aset × 100%",
-                  f"{U(lt.get('laba_bersih'))} ÷ {U(bs['total_aset'])} × 100% = {f.nilai(k.get('roa_ltm'), '%')}" if lt else "–"),
+                  f"{U(lt.get('laba_bersih'))} ÷ {U(bs['total_aset'])} × 100% = {f.nilai(k.get('roa_ltm'), '%')}" if lt else "-"),
             baris("DuPont: margin bersih 12 bln", k.get("net_margin_ltm"), ck.get("net_margin_ltm"), "%", "Laba bersih 12 bln ÷ Pendapatan 12 bln",
-                  f"{U(lt.get('laba_bersih'))} ÷ {U(lt.get('pendapatan'))}" if lt else "–"),
+                  f"{U(lt.get('laba_bersih'))} ÷ {U(lt.get('pendapatan'))}" if lt else "-"),
             baris("DuPont: perputaran aset", k.get("asset_turn"), ck.get("asset_turn"), "x", "Pendapatan 12 bln ÷ Total aset",
-                  f"{U(lt.get('pendapatan'))} ÷ {U(bs['total_aset'])} = {f.nilai(k.get('asset_turn'), 'x')}" if lt else "–"),
+                  f"{U(lt.get('pendapatan'))} ÷ {U(bs['total_aset'])} = {f.nilai(k.get('asset_turn'), 'x')}" if lt else "-"),
             baris("DuPont: pengali ekuitas", k.get("eq_mult"), ck.get("eq_mult"), "x", "Total aset ÷ Ekuitas",
                   f"{U(bs['total_aset'])} ÷ {U(bs['ekuitas'])} = {f.nilai(k.get('eq_mult'), 'x')}"),
         ]))
@@ -1175,24 +1175,24 @@ class Analisa:
                   f"{U(bs['persediaan'])} ÷ {U(x['hpp'])} × {h} = {f.nilai(k['dio'], 'hari')}"),
             baris("DPO", k["dpo"], ck.get("dpo"), "hari", "Utang usaha ÷ HPP × hari periode",
                   f"{U(bs['utang_usaha'])} ÷ {U(x['hpp'])} × {h} = {f.nilai(k['dpo'], 'hari')}"),
-            baris("Siklus konversi kas", k["ccc"], ck.get("ccc"), "hari", "DSO + DIO − DPO",
-                  f"{f.nilai(k['dso'], 'hari')} + {f.nilai(k['dio'], 'hari')} − {f.nilai(k['dpo'], 'hari')} = {f.nilai(k['ccc'], 'hari')}"),
+            baris("Siklus konversi kas", k["ccc"], ck.get("ccc"), "hari", "DSO + DIO - DPO",
+                  f"{f.nilai(k['dso'], 'hari')} + {f.nilai(k['dio'], 'hari')} - {f.nilai(k['dpo'], 'hari')} = {f.nilai(k['ccc'], 'hari')}"),
         ]))
         g.append(("5. Solvabilitas", [
             baris("DER (liabilitas ÷ ekuitas)", k["der"], ck.get("der"), "x", "Total liabilitas ÷ Ekuitas",
                   f"{U(bs['total_liabilitas'])} ÷ {U(bs['ekuitas'])} = {f.nilai(k['der'], 'x')}"),
             baris("Utang bank ÷ ekuitas", k["bank_der"], ck.get("bank_der"), "x", "Utang bank ÷ Ekuitas",
                   f"{U(bs['utang_bank'])} ÷ {U(bs['ekuitas'])} = {f.nilai(k['bank_der'], 'x')}"),
-            baris("Utang bersih ÷ EBITDA", k.get("net_debt_ebitda"), ck.get("net_debt_ebitda"), "x", "(Utang bank − Kas) ÷ EBITDA 12 bln",
-                  f"{U(bs['utang_bersih'])} ÷ {U(lt.get('ebitda'))} = {f.nilai(k.get('net_debt_ebitda'), 'x')}" if lt else "–"),
+            baris("Utang bersih ÷ EBITDA", k.get("net_debt_ebitda"), ck.get("net_debt_ebitda"), "x", "(Utang bank - Kas) ÷ EBITDA 12 bln",
+                  f"{U(bs['utang_bersih'])} ÷ {U(lt.get('ebitda'))} = {f.nilai(k.get('net_debt_ebitda'), 'x')}" if lt else "-"),
             baris("Interest coverage", k.get("icr"), ck.get("icr"), "x", "Laba usaha 12 bln ÷ Beban bunga 12 bln",
-                  f"{U(lt.get('ebit'))} ÷ {U(lt.get('bunga'))} = {f.nilai(k.get('icr'), 'x')}" if lt else "–"),
+                  f"{U(lt.get('ebit'))} ÷ {U(lt.get('bunga'))} = {f.nilai(k.get('icr'), 'x')}" if lt else "-"),
         ]))
         g.append(("6. Arus kas & kualitas laba", [
             baris("Arus kas operasi", x["arus_kas_operasi"], c.get("arus_kas_operasi") if c else None, "uang", "Dari laporan arus kas", U(x["arus_kas_operasi"])),
             baris("Belanja modal", x["belanja_modal"], c.get("belanja_modal") if c else None, "uang", "Perolehan aset tetap", U(x["belanja_modal"])),
-            baris("Arus kas bebas", x["fcf"], c.get("fcf") if c else None, "uang", "Arus kas operasi − belanja modal",
-                  f"{U(x['arus_kas_operasi'])} − {U(x['belanja_modal'])} = {U(x['fcf'])}"),
+            baris("Arus kas bebas", x["fcf"], c.get("fcf") if c else None, "uang", "Arus kas operasi - belanja modal",
+                  f"{U(x['arus_kas_operasi'])} - {U(x['belanja_modal'])} = {U(x['fcf'])}"),
             baris("Konversi laba ke kas", k.get("cash_conversion"), ck.get("cash_conversion"), "%", "Arus kas operasi ÷ Laba bersih × 100%",
                   f"{U(x['arus_kas_operasi'])} ÷ {U(x['laba_bersih'])} × 100% = {f.nilai(k.get('cash_conversion'), '%')}"),
             baris("Belanja modal ÷ penyusutan", k.get("capex_dep"), ck.get("capex_dep"), "x", "Belanja modal ÷ Penyusutan",
@@ -1226,13 +1226,13 @@ class Analisa:
         for c in cerita:
             if c["sev"] in ("kritis", "waspada"):
                 risiko.append({"id": f"R-{len(risiko) + 1:02d}", "judul": c["judul"].split(". ", 1)[-1], "sev": c["sev"],
-                               "dampak": c["dampak"] or "–", "mitigasi": c["opsi"][0], "pic": "[DIISI DIREKSI]"})
+                               "dampak": c["dampak"] or "-", "mitigasi": c["opsi"][0], "pic": "[DIISI DIREKSI]"})
         rencana = []
         for c in cerita:
             if c["sev"] in ("kritis", "waspada"):
                 rencana.append({"no": f"KEP-{len(rencana) + 1:02d}", "prio": "P1" if c["sev"] == "kritis" else "P2",
                                 "pemicu": c["kind"], "isu": c["judul"].split(". ", 1)[-1], "opsi": " / ".join(c["opsi"][:2]),
-                                "dampak": (f"±{c['dampak']}" if c["dampak"] else "–"), "pemilik": "[DIISI DIREKSI]",
+                                "dampak": (f"sekitar {c['dampak']}" if c["dampak"] else "-"), "pemilik": "[DIISI DIREKSI]",
                                 "tenggat": "[DIISI DIREKSI]", "data": c["butuh"]})
         kelengkapan = [
             {"bagian": "KPI, laporan pos, selisih, lampiran rasio", "sumber": "LK bulanan", "ada": True},
@@ -1254,8 +1254,8 @@ class Analisa:
                      "tingkat_data": "LK + data operasional" if jml_ops >= 4 else ("LK + sebagian data operasional" if jml_ops else "LK bulanan saja"),
                      "ops_terisi": jml_ops, "samaran": self.f.samaran,
                      "label_data": ("DATA DISAMARKAN" if self.f.samaran else
-                                    ("DATA FIKTIF · PELATIHAN" if "FIKTIF" in str(info.get("perusahaan", "")).upper()
-                                     else "RAHASIA · INTERNAL DIREKSI"))},
+                                    ("DATA FIKTIF | PELATIHAN" if "FIKTIF" in str(info.get("perusahaan", "")).upper()
+                                     else "RAHASIA | INTERNAL DIREKSI"))},
             "periode": {pid: {"label": P["label"], "short": P["short"], "range": P["range"],
                               "comps": {cid: {"label": lab, "ada": self.hasil[pid]["comps"].get(cid) is not None}
                                         for cid, (_, lab) in P["comps"].items()}} for pid, P in self.periode.items()},

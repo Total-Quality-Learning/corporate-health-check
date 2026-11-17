@@ -2,7 +2,7 @@
 
 - Pustaka: `@mathieuc/tradingview` 4.1.2 (github.com/Mathieu2301/TradingView-API, lisensi ISC). Proyek komunitas,
   **tidak berafiliasi** dengan TradingView.
-- Fungsi yang dipakai: `getScreener({ market: 'indonesia', columns, symbols | filter, sort, range })` — satu permintaan
+- Fungsi yang dipakai: `getScreener({ market: 'indonesia', columns, symbols | filter, sort, range })`, satu permintaan
   HTTP ke layanan screener TradingView, tanpa login.
 - TradingView tidak menyediakan API data publik resmi; ketentuan layanannya membatasi pengambilan data otomatis.
   Pemakaian skill ini adalah keputusan pengguna. Gunakan secukupnya (bukan pengambilan massal berulang).
@@ -26,6 +26,6 @@ Dibandingkan dengan data LK yang dipublikasikan ulang oleh penyedia data lain:
 | Pos | Hasil |
 |---|---|
 | Pendapatan, laba bersih, total aset, total utang | Sama persis (selisih 0,00%) |
-| Laba kotor | Lebih rendah 0,3%–4,3% (perbedaan klasifikasi biaya) |
+| Laba kotor | Lebih rendah 0,3%-4,3% (perbedaan klasifikasi biaya) |
 
 Konsekuensi: margin laba kotor dari TradingView bisa sedikit lebih rendah daripada angka di LK resmi emiten.

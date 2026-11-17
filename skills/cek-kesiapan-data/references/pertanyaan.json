@@ -8,8 +8,8 @@
       "teks": "Berapa hari kerja yang dibutuhkan tim finance untuk menutup buku bulanan?",
       "pilihan": {
         "A": "Lebih dari 20 hari kerja, atau tidak menentu",
-        "B": "11–20 hari kerja",
-        "C": "6–10 hari kerja",
+        "B": "11-20 hari kerja",
+        "C": "6-10 hari kerja",
         "D": "5 hari kerja atau kurang"
       },
       "mengapa_penting": "Laporan yang terlambat berarti keputusan diambil berdasarkan kondisi sebulan lalu.",
@@ -34,7 +34,7 @@
       "teks": "Berapa lama untuk mengetahui posisi stok (bahan baku, WIP, barang jadi) saat ini?",
       "pilihan": {
         "A": "Harus stock opname dulu / lebih dari 1 minggu",
-        "B": "2–5 hari kerja",
+        "B": "2-5 hari kerja",
         "C": "Dalam 1 hari kerja",
         "D": "Seketika (real-time) dari sistem"
       },
@@ -60,8 +60,8 @@
       "teks": "Berapa banyak file Excel yang digabung untuk menyusun laporan manajemen bulanan?",
       "pilihan": {
         "A": "Lebih dari 20 file",
-        "B": "10–20 file",
-        "C": "3–9 file",
+        "B": "10-20 file",
+        "C": "3-9 file",
         "D": "2 file atau kurang / langsung dari sistem"
       },
       "mengapa_penting": "Setiap penggabungan manual menambah waktu dan peluang salah angka.",
@@ -69,7 +69,7 @@
     },
     {
       "no": 6,
-      "area": "Integrasi produksi–gudang–keuangan",
+      "area": "Integrasi produksi-gudang-keuangan",
       "teks": "Apakah data produksi, gudang, dan keuangan saling terhubung?",
       "pilihan": {
         "A": "Tidak; data diketik ulang antarbagian",
@@ -117,13 +117,13 @@
     {
       "level": 2,
       "nama": "Tercatat tetapi terpisah",
-      "rentang": "1,75 – < 2,50",
+      "rentang": "1,75 - < 2,50",
       "deskripsi": "Setiap bagian sudah mencatat datanya, tetapi di sistem atau file masing-masing. Laporan bisa dibuat, namun butuh rekonsiliasi manual dan sulit menelusuri penyebab di balik angka."
     },
     {
       "level": 3,
       "nama": "Terhubung sebagian",
-      "rentang": "2,50 – < 3,25",
+      "rentang": "2,50 - < 3,25",
       "deskripsi": "Sebagian data sudah terintegrasi dan laporan rutin relatif tepat waktu. Penelusuran penyebab (per produk, per lini, per proses) masih sebagian manual."
     },
     {

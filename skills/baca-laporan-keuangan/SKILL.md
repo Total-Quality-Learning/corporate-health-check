@@ -12,8 +12,8 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
 
 0. **Tanya preferensi tampilan** (sekali per sesi; lewati bila `preferensi.json` sudah ada atau pengguna sudah
    menyebutnya). Ajukan dua pertanyaan bernomor dalam satu pesan:
-   - **Visualisasi:** (A) grafik · (B) penjelasan detail tiap grafik (teks) · (C) grafik + penjelasan · (D) tanpa visual
-   - **Narasi:** (A) singkat · (B) detail dengan perhitungan · (C) checklist
+   - **Visualisasi:** (A) grafik | (B) penjelasan detail tiap grafik (teks) | (C) grafik + penjelasan | (D) tanpa visual
+   - **Narasi:** (A) singkat | (B) detail dengan perhitungan | (C) checklist
    Simpan dengan skill **tampilan-direksi** (`preferensi.py --set visual=... gaya_narasi=...`) bila tersedia; jika tidak,
    cukup ingat pilihan pengguna selama sesi. "Terserah" → visual C, narasi A.
 
@@ -22,7 +22,7 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
      `python scripts/baca_excel.py <file.xlsx> --out lk.json`
    - **JSON format standar**: langsung ke langkah 3.
    - **PDF atau Excel bebas** (format perusahaan masing-masing): lakukan langkah 2.
-   - Tidak ada file / pengguna hanya ingin mencoba: pakai data contoh fiktif di `sample-data/<case>/` — pilihan:
+   - Tidak ada file / pengguna hanya ingin mencoba: pakai data contoh fiktif di `sample-data/<case>/`, pilihan:
      `01-manufaktur-garmen`, `02-distribusi-fmcg`, `03-makanan-minuman`, `04-komponen-logam`
      (`lk-tahunan.json`, `LK-Tahunan.xlsx`, atau PDF `LK-2025-*.pdf` untuk latihan ekstraksi). Sebutkan bahwa datanya fiktif.
    - Pengguna punya data **bulanan** dan ingin laporan rapat direksi lengkap: arahkan ke skill **laporan-analisa**.
@@ -56,22 +56,22 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
 
 | Gaya | Isi jawaban |
 |---|---|
-| **Singkat** | 1 kalimat kesimpulan · tabel 8 rasio kunci (`rasio.md` gaya ringkas) · 3 hal yang perlu perhatian · 1 pertanyaan untuk tim |
-| **Detail** | Paragraf kondisi (≤ 4 kalimat) · semua kelompok rasio **dengan kolom perhitungan** · DuPont · skor Altman Z'' · 3–5 pengamatan |
-| **Checklist** | Daftar `- [x]` / `- [ ]` per indikator dengan ambang (`rasio.md` gaya checklist), urut dari yang kritis · tindak lanjut sebagai checklist |
+| **Singkat** | 1 kalimat kesimpulan, tabel 8 rasio kunci (`rasio.md` gaya ringkas), 3 hal yang perlu perhatian, 1 pertanyaan untuk tim |
+| **Detail** | Paragraf kondisi (≤ 4 kalimat), semua kelompok rasio **dengan kolom perhitungan**, DuPont, skor Altman Z'', 3-5 pengamatan |
+| **Checklist** | Daftar `- [x]` / `- [ ]` per indikator dengan ambang (`rasio.md` gaya checklist), urut dari yang kritis, tindak lanjut sebagai checklist |
 
 Untuk semua gaya:
 1. Kalimat pertama = kesimpulan (aturan `tampilan-direksi`: angka dibulatkan, bersatuan, ada pembanding).
 2. Bila pengguna bertanya "dari mana angka ini", tampilkan baris **perhitungan** dari `rasio.json`
    (mis. `5.280.548 ÷ 11.830.201 = 0,45x`).
-3. 3–5 poin pengamatan (gaya detail). Setiap poin merujuk angka dari skrip. Jelaskan istilah teknis singkat saat pertama muncul,
+3. 3-5 poin pengamatan (gaya detail). Setiap poin merujuk angka dari skrip. Jelaskan istilah teknis singkat saat pertama muncul,
    mis. "DIO (rata-rata hari barang tersimpan sebelum terjual)". Definisi: `references/definisi-rasio.md`.
 4. Jika ada gejala (persediaan/piutang membengkak, kas operasi turun padahal laba naik, margin tergerus), tawarkan
    menjalankan skill **red-flag-operasional** untuk memetakan kemungkinan penyebab operasionalnya.
 5. Tutup dengan disclaimer dan footer:
    > Alat bantu analisis, bukan nasihat investasi atau hasil audit. Angka bergantung pada kebenaran data input.
    >
-   > Disusun dengan TQ Board Insight · totalquality.co.id
+   > Disusun dengan TQ Board Insight | totalquality.co.id
 
 ## Data milik pengguna sendiri
 

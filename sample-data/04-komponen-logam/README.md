@@ -1,7 +1,7 @@
 # PT Contoh Presisi Teknik (FIKTIF)
 
 **Industri:** Manufaktur Komponen Logam Presisi (stamping & machining) untuk Otomotif
-**Lokasi:** Kawasan Industri Contoh, Banten (fiktif) · **Berdiri:** 2001 · **Karyawan:** ±410
+**Lokasi:** Kawasan Industri Contoh, Banten (fiktif) | **Berdiri:** 2001 | **Karyawan:** sekitar 410
 
 > Seluruh data di folder ini **fiktif** dan dibuat untuk pelatihan. Bukan data perusahaan nyata.
 
@@ -34,4 +34,4 @@ python skills/laporan-analisa/scripts/susun_laporan.py sample-data/04-komponen-l
 
 Atau minta asisten AI: *"Analisis LK PT Contoh Presisi Teknik lalu buat laporan analisa bulan Oktober 2026."*
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id

@@ -100,7 +100,7 @@ async function main() {
     r.rows.forEach((x) => { emiten[x.values.name] = { simbol: x.symbol, ...x.values }; });
     const hilang = kode.filter((k) => !emiten[k]);
     const hasil = {
-      sumber: 'TradingView melalui TradingView-API (github.com/Mathieu2301/TradingView-API) — sumber TIDAK RESMI',
+      sumber: 'TradingView melalui TradingView-API (github.com/Mathieu2301/TradingView-API), sumber TIDAK RESMI',
       catatan: 'Nilai uang dalam Rupiah penuh. *_fy = tahun buku terakhir yang tersedia; *_fy_h = riwayat tahunan, indeks 0 = terbaru.',
       diambil: new Date().toISOString(),
       emiten,

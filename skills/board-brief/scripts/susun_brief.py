@@ -25,7 +25,7 @@ VERSI = "1.0.0"
 TEMPLATE = Path(__file__).resolve().parents[1] / "templates" / "brief.md"
 DISCLAIMER = ("Alat bantu analisis, bukan nasihat investasi atau hasil audit. Penyebab yang disebut bersifat hipotesis "
               "dan perlu dibuktikan dengan data operasional.")
-IKON = {"hijau": "🟢", "kuning": "🟡", "merah": "🔴", None: "–"}
+IKON = {"hijau": "Aman", "kuning": "Perhatian", "merah": "Kritis", None: "-"}
 
 
 def fmt(x, d=0):
@@ -171,10 +171,10 @@ def susun_temuan(r, gejala, ind) -> list[str]:
     if gejala and gejala.get("temuan"):
         hasil = []
         for t in gejala["temuan"][:3]:
-            teks = f"{IKON[t['tingkat']]} **{t['judul']}.** {t['ringkas']}"
+            teks = f"**{t['judul']}** ({IKON[t['tingkat']].lower()}). {t['ringkas']}"
             if t.get("dampak_kas") and t["dampak_kas"].get("nilai"):
                 d = t["dampak_kas"]
-                teks += f" {d['keterangan']}: ±{fmt_uang(d['nilai'])} {d['satuan']}."
+                teks += f" {d['keterangan']}: sekitar {fmt_uang(d['nilai'])} {d['satuan']}."
             teks += f" Penyebab belum bisa dipastikan dari laporan keuangan; butuh data seperti: {t['data_pembukti'][0]}."
             hasil.append(teks)
         return hasil
@@ -182,7 +182,7 @@ def susun_temuan(r, gejala, ind) -> list[str]:
     buruk.sort(key=lambda i: 0 if i["status"] == "merah" else 1)
     if not buruk:
         return ["Tidak ada indikator utama yang berstatus kuning atau merah."]
-    return [f"{IKON[i['status']]} **{i['nama']}**: {fmt_ind(i['a'], i['satuan'])} → {fmt_ind(i['b'], i['satuan'])}."
+    return [f"**{i['nama']}** ({IKON[i['status']].lower()}): {fmt_ind(i['a'], i['satuan'])} → {fmt_ind(i['b'], i['satuan'])}."
             for i in buruk[:3]]
 
 
@@ -217,7 +217,7 @@ def susun_kesiapan(k) -> str:
     if not k:
         return ""
     area = "; ".join(x["area"] for x in k["area_prioritas"])
-    return (f"## 5. Kesiapan data & sistem\n\n**Level {k['level']} dari 4 – {k['nama_level']}.** "
+    return (f"## 5. Kesiapan data & sistem\n\n**Level {k['level']} dari 4 - {k['nama_level']}.** "
             f"{k['deskripsi_level']} Area terlemah: {area}.\n")
 
 
@@ -262,7 +262,7 @@ def md_inline(s: str) -> str:
 
 def render_html(data: dict, kes) -> str:
     warna = {"hijau": "#1a7f37", "kuning": "#b58100", "merah": "#c62828", None: "#999"}
-    label = {"hijau": "Aman", "kuning": "Perhatian", "merah": "Tindakan", None: "–"}
+    label = {"hijau": "Aman", "kuning": "Perhatian", "merah": "Tindakan", None: "-"}
     baris = "".join(
         f"<tr><td>{html.escape(i['nama'])}</td><td class=n>{fmt_ind(i['a'], i['satuan'])}</td>"
         f"<td class=n>{fmt_ind(i['b'], i['satuan'])}</td>"
@@ -273,7 +273,7 @@ def render_html(data: dict, kes) -> str:
     kes_html = ""
     if kes:
         area = "; ".join(x["area"] for x in kes["area_prioritas"])
-        kes_html = (f"<h2>5. Kesiapan data &amp; sistem</h2><p><strong>Level {kes['level']} dari 4 – "
+        kes_html = (f"<h2>5. Kesiapan data &amp; sistem</h2><p><strong>Level {kes['level']} dari 4 - "
                     f"{html.escape(kes['nama_level'])}.</strong> {html.escape(kes['deskripsi_level'])} "
                     f"Area terlemah: {html.escape(area)}.</p>")
     return f"""<!doctype html>
@@ -293,7 +293,7 @@ ol {{ padding-left: 20px; margin: 4px 0; }} li {{ margin: 3px 0; }}
 .note {{ color:#777; font-size: 11px; }} footer {{ margin-top: 18px; color:#666; font-size: 11px; border-top:1px solid #ddd; padding-top:6px; }}
 </style></head><body>
 <h1>Board Brief: {html.escape(data['perusahaan'])}</h1>
-<div class=meta>Periode {html.escape(data['periode'])} · Satuan {html.escape(data['satuan'])}</div>
+<div class=meta>Periode {html.escape(data['periode'])} | Satuan {html.escape(data['satuan'])}</div>
 <h2>1. Kondisi singkat</h2><p>{md_inline(data['kondisi_singkat'])}</p>
 <h2>2. Indikator utama</h2>
 <table><tr><th>Indikator</th><th class=n>{html.escape(data['periode_a'])}</th><th class=n>{html.escape(data['periode_b'])}</th><th>Status</th></tr>{baris}</table>
@@ -301,7 +301,7 @@ ol {{ padding-left: 20px; margin: 4px 0; }} li {{ margin: 3px 0; }}
 <h2>3. Tiga temuan terpenting</h2><ol>{temuan}</ol>
 <h2>4. Pertanyaan untuk CFO / tim minggu ini</h2><ol>{tanya}</ol>
 {kes_html}
-<footer><em>{html.escape(DISCLAIMER)}</em><br>Disusun dengan TQ Board Insight · totalquality.co.id</footer>
+<footer><em>{html.escape(DISCLAIMER)}</em><br>Disusun dengan TQ Board Insight | totalquality.co.id</footer>
 </body></html>
 """
 

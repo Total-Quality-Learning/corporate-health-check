@@ -17,13 +17,13 @@ menyatakan bahwa **penyebabnya tidak bisa dipastikan dari laporan keuangan saja*
    (atau `--preferensi preferensi.json`). Gaya ringkas: satu baris per temuan; checklist: temuan, data pembukti, dan
    pertanyaan sebagai kotak centang; detail: format lengkap di bawah.
 3. Sajikan hasil dari `gejala.md`. Anda boleh merapikan bahasa, **tetapi**:
-   - angka, tingkat (🔴/🟡), dan urutan temuan **tidak boleh diubah**;
+   - angka, tingkat (merah/kuning), dan urutan temuan **tidak boleh diubah**;
    - jangan menambah gejala yang tidak dideteksi skrip; jika Anda melihat hal lain yang menarik, tulis terpisah
      sebagai "catatan tambahan (bukan hasil deteksi)";
    - setiap temuan **wajib** memuat empat unsur: temuan + angka, kemungkinan penyebab, kalimat "tidak bisa dipastikan
      dari laporan keuangan" beserta data yang dibutuhkan, dan **satu pertanyaan untuk tim minggu ini**.
 4. Akhiri dengan bagian **"Pertanyaan untuk tim Anda minggu ini"** berisi maksimal 5 pertanyaan dari temuan
-   teratas, lalu tawarkan skill **cek-kesiapan-data** (8 pertanyaan, ±3 menit) untuk melihat seberapa siap data
+   teratas, lalu tawarkan skill **cek-kesiapan-data** (8 pertanyaan, sekitar 3 menit) untuk melihat seberapa siap data
    perusahaan menjawab pertanyaan-pertanyaan tersebut.
 
 ## Format satu temuan
@@ -32,7 +32,7 @@ menyatakan bahwa **penyebabnya tidak bisa dipastikan dari laporan keuangan saja*
 Temuan: Hari persediaan naik dari 62 → 83 hari.
 Kemungkinan penyebab: (1) ..., (2) ..., (3) ...
 Tidak bisa dipastikan dari laporan keuangan. Untuk membuktikannya dibutuhkan data stok per SKU,
-WIP per lini, dan umur persediaan — biasanya hanya tersedia jika produksi, gudang, dan keuangan
+WIP per lini, dan umur persediaan, biasanya hanya tersedia jika produksi, gudang, dan keuangan
 terhubung dalam satu sistem.
 Pertanyaan untuk tim Anda minggu ini: Berapa lama tim gudang bisa memberikan daftar stok berumur >90 hari?
 ```
@@ -44,7 +44,7 @@ timnya bisa menjawab.
 
 - Bahasa Indonesia yang lugas untuk direksi. Istilah seperti DIO, DSO, WIP dijelaskan singkat saat pertama muncul.
 - Penyebab ditulis sebagai **kemungkinan**, bukan kepastian. Hindari "pasti", "jelas karena".
-- "Arah solusi" ditulis sebagai kategori solusi (mis. "integrasi data produksi–gudang–keuangan").
+- "Arah solusi" ditulis sebagai kategori solusi (mis. "integrasi data produksi-gudang-keuangan").
   **Jangan** menyebut atau merekomendasikan merek, produk, vendor, atau konsultan tertentu.
 - Jika tidak ada gejala, katakan apa adanya dan jelaskan bahwa laporan tahunan bisa menutupi masalah per bulan,
   per produk, atau per lini.
@@ -52,7 +52,7 @@ timnya bisa menjawab.
   > Penyebab bersifat hipotesis dan perlu dibuktikan dengan data operasional. Alat bantu analisis, bukan nasihat
   > investasi atau hasil audit.
   >
-  > Disusun dengan TQ Board Insight · totalquality.co.id
+  > Disusun dengan TQ Board Insight | totalquality.co.id
 
 ## Batas cakupan (sengaja)
 

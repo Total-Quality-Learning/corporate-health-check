@@ -1,7 +1,7 @@
 # PT Contoh Niaga Distribusi (FIKTIF)
 
 **Industri:** Distribusi Barang Konsumsi (FMCG) ke toko tradisional & ritel modern
-**Lokasi:** Kota Contoh, Jawa Timur (fiktif) · **Berdiri:** 2004 · **Karyawan:** ±620
+**Lokasi:** Kota Contoh, Jawa Timur (fiktif) | **Berdiri:** 2004 | **Karyawan:** sekitar 620
 
 > Seluruh data di folder ini **fiktif** dan dibuat untuk pelatihan. Bukan data perusahaan nyata.
 
@@ -34,4 +34,4 @@ python skills/laporan-analisa/scripts/susun_laporan.py sample-data/02-distribusi
 
 Atau minta asisten AI: *"Analisis LK PT Contoh Niaga Distribusi lalu buat laporan analisa bulan Oktober 2026."*
 
-Disusun dengan TQ Board Insight · totalquality.co.id
+Disusun dengan TQ Board Insight | totalquality.co.id
