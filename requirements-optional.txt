@@ -1,0 +1,4 @@
+# Opsional: membaca LK berformat PDF
+pdfplumber
+pypdf
+pymupdf
