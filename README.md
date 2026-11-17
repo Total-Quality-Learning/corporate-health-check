@@ -17,6 +17,7 @@ yang perlu dijawab tim.
 | [`board-brief`](skills/board-brief/SKILL.md) | Ringkasan 1 halaman untuk direksi | hasil skill di atas |
 | [`data-emiten`](skills/data-emiten/SKILL.md) | Pilih perusahaan Tbk (per sektor/industri/kata kunci) → tarik data dari TradingView → tabel pembanding + posisi perusahaan Anda vs median | kode emiten |
 | [`laporan-analisa`](skills/laporan-analisa/SKILL.md) | **Paket rapat direksi** (tampilan Direksi atau Lengkap; cerita narasi atau checklist) (HTML interaktif, cetak PDF): putusan & skor, 5 cerita, 15 KPI, analisa laporan, selisih vs bulan lalu/tahun lalu/target, data operasional, uji ketahanan kas, proyeksi kas 13 minggu, rencana kerja, lampiran rasio | data bulanan (Excel) |
+| [`uji-ketahanan-kas`](skills/uji-ketahanan-kas/SKILL.md) | **Stress test kas**: skenario penjualan turun, bahan naik, piutang molor, pemasok, bunga, gabungan; bulan kas di bawah minimum, plafon kredit, kovenan DSCR/ICR, uji balik | data bulanan (Excel) + skenario (opsional) |
 
 Prinsipnya: **angka dihitung skrip Python yang deterministik; AI hanya menulis narasi.** Jika neraca tidak seimbang,
 skrip berhenti dan tidak menghitung apa pun. Bagian yang tidak bisa dijawab dari data yang ada ditandai
@@ -53,6 +54,7 @@ Gemini CLI, dan lainnya lihat dokumentasi masing-masing tentang Agent Skills), l
 ```
 pip install -r requirements.txt
 python skills/laporan-analisa/scripts/susun_laporan.py sample-data/01-manufaktur-garmen/Data-Keuangan-Bulanan.xlsx --out laporan.html
+python skills/uji-ketahanan-kas/scripts/uji_ketahanan_kas.py sample-data/02-distribusi-fmcg/Data-Keuangan-Bulanan.xlsx --horizon 6
 python tools/analisis_lengkap.py sample-data/01-manufaktur-garmen/lk-tahunan.json --kesiapan B,B,A,B,A,B,A,C
 ```
 
