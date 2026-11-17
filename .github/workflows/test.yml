@@ -13,16 +13,14 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Container resmi Python dipakai karena runner Ubuntu terbaru tidak lagi menyediakan Python 3.9.
+    container: python:${{ matrix.python-version }}-slim
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9", "3.12"]
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
 
       - name: Pasang dependensi
         run: python -m pip install --upgrade pip openpyxl
