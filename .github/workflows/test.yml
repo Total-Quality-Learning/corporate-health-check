@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Pasang dependensi
-        run: python -m pip install --upgrade pip openpyxl
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt -r requirements-optional.txt
 
       - name: Jalankan tes
         run: python -m unittest discover tests -v

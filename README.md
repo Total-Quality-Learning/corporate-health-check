@@ -51,7 +51,7 @@ Gemini CLI, dan lainnya lihat dokumentasi masing-masing tentang Agent Skills), l
 ### 3. Langsung dengan Python (tanpa AI)
 
 ```
-pip install openpyxl
+pip install -r requirements.txt
 python skills/laporan-analisa/scripts/susun_laporan.py sample-data/01-manufaktur-garmen/Data-Keuangan-Bulanan.xlsx --out laporan.html
 python tools/analisis_lengkap.py sample-data/01-manufaktur-garmen/lk-tahunan.json --kesiapan B,B,A,B,A,B,A,C
 ```
@@ -132,3 +132,7 @@ Lihat [`LICENSE`](LICENSE). Bebas dipakai untuk keperluan internal perusahaan; t
 ---
 
 Disusun dengan TQ Board Insight | totalquality.co.id
+
+## Kontribusi
+
+Lihat [CONTRIBUTING.md](CONTRIBUTING.md).

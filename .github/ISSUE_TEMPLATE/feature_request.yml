@@ -1,0 +1,19 @@
+name: Usulan fitur
+description: Rasio, skill, atau tampilan baru
+labels: [enhancement]
+body:
+  - type: textarea
+    id: masalah
+    attributes:
+      label: Masalah yang ingin diselesaikan
+    validations:
+      required: true
+  - type: textarea
+    id: usulan
+    attributes:
+      label: Usulan solusi
+      description: Termasuk rumus/sumber bila menyangkut perhitungan.
+  - type: textarea
+    id: alternatif
+    attributes:
+      label: Alternatif lain
