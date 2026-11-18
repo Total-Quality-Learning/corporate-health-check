@@ -8,6 +8,28 @@ description: Menyusun laporan analisa keuangan & kinerja lengkap bergaya paket r
 Mengubah **paket data bulanan** menjadi laporan analisa lengkap. Semua angka, status, cerita, dan rencana kerja
 disusun **skrip deterministik**. Anda tidak menghitung apa pun sendiri.
 
+## Syarat mutlak: skrip harus benar-benar dijalankan
+
+Skrip dianggap tersedia **hanya jika** berkas `scripts/susun_laporan.py` benar-benar ada di lingkungan Anda dan Anda menjalankannya. Menulis kode sendiri untuk meniru skrip **tidak dihitung**, begitu juga membaca Excel lalu menghitung sendiri.
+
+Jika skrip tidak bisa dijalankan (mis. aplikasi chat yang hanya menerima lampiran), **Berhenti.** Jawaban Anda hanya
+berisi teks di bawah ini, tanpa tambahan apa pun: tanpa angka dari berkas, tanpa status (aman/waspada/kritis),
+tanpa skor, tanpa cerita, tanpa penyebab, tanpa rekomendasi. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi.
+
+```text
+Laporan analisa bulanan belum bisa dibuat di sini. Skor kesehatan, status indikator, dan cerita utama hanya
+boleh dihitung oleh skrip susun_laporan.py agar angkanya bisa dipertanggungjawabkan, dan skrip itu tidak bisa
+dijalankan di lingkungan ini.
+
+Pilihan:
+1. Jalankan skill ini di komputer sendiri atau di asisten AI yang bisa menjalankan skrip Python dari folder skill:
+   python scripts/susun_laporan.py <nama-file>.xlsx --out laporan.html
+2. Untuk gambaran awal sekarang, saya hitung rasio dasar dua periode dengan skill baca-laporan-keuangan
+   (ditandai "dihitung manual oleh AI, belum diverifikasi skrip").
+
+Pilih 1 atau 2?
+```
+
 ## Langkah kerja
 
 1. **Siapkan paket data.**
@@ -41,7 +63,7 @@ disusun **skrip deterministik**. Anda tidak menghitung apa pun sendiri.
    adanya, itu temuan penting, bukan kekurangan laporan.
 3. Daftar bagian yang berstatus PERLU DATA dan data apa yang dibutuhkan.
 4. Lokasi berkas `laporan.html`.
-5. Disclaimer + footer:
+5. Disclaimer + footer, disalin persis:
    > Alat bantu analisis, bukan nasihat investasi atau hasil audit.
    >
    > Disusun dengan TQ Board Insight | totalquality.co.id

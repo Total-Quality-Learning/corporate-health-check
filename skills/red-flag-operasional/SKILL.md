@@ -26,6 +26,14 @@ menyatakan bahwa **penyebabnya tidak bisa dipastikan dari laporan keuangan saja*
    teratas, lalu tawarkan skill **cek-kesiapan-data** (8 pertanyaan, sekitar 3 menit) untuk melihat seberapa siap data
    perusahaan menjawab pertanyaan-pertanyaan tersebut.
 
+## Jika skrip tidak bisa dijalankan
+
+1. Sampaikan satu kalimat bahwa deteksi dilakukan manual oleh AI dan belum diverifikasi skrip.
+2. Pakai aturan di `references/aturan-deteksi.md` **apa adanya**: setiap gejala tetap diberi tingkat merah/kuning
+   sesuai ambang, dan angka dampak kas dihitung dengan rumus di bagian "Angka dampak kas" (tampilkan perhitungannya).
+3. Penyebab, data pembukti, dan pertanyaan diambil dari `references/peta-gejala.json`, bukan dikarang.
+4. Gejala yang tidak memenuhi ambang tidak ditulis sebagai temuan. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi.
+
 ## Format satu temuan
 
 ```
@@ -48,7 +56,7 @@ timnya bisa menjawab.
   **Jangan** menyebut atau merekomendasikan merek, produk, vendor, atau konsultan tertentu.
 - Jika tidak ada gejala, katakan apa adanya dan jelaskan bahwa laporan tahunan bisa menutupi masalah per bulan,
   per produk, atau per lini.
-- Tutup dengan:
+- Tutup dengan teks berikut, disalin persis:
   > Penyebab bersifat hipotesis dan perlu dibuktikan dengan data operasional. Alat bantu analisis, bukan nasihat
   > investasi atau hasil audit.
   >
