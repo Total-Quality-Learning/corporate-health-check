@@ -186,6 +186,19 @@ class FiturBaru(unittest.TestCase):
         self.assertIn("Finance", r.stdout)
         self.assertIn("ekuitas nol/negatif", r.stdout)
 
+    def test_ringkas_emiten_dari_laporan_bulanan(self):
+        lap_json = self.t / "lap-bulanan.json"
+        r_lap = run(LAPORAN, SAMPLE / "Data-Keuangan-Bulanan.xlsx", "--out", self.t / "lap-bulanan.html",
+                    "--json", lap_json, "--diam")
+        self.assertEqual(r_lap.returncode, 0, r_lap.stderr)
+        r = run(RINGKAS_EMITEN, FIXTURE, "--rasio", lap_json, "--out-json", self.t / "e-bulanan.json")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        out = js(self.t / "e-bulanan.json")
+        self.assertIsNotNone(out["pengguna"]["gm"])
+        self.assertIsNotNone(out["pengguna"]["om"])
+        self.assertIsNotNone(out["pengguna"]["der"])
+        self.assertIn("Perusahaan Anda", r.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()
