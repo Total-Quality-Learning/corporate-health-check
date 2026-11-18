@@ -13,6 +13,22 @@ Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resm
 - Lingkungan AI tanpa akses internet (mis. sebagian sandbox eksekusi kode) tidak bisa memakai skill ini; sampaikan
   ke pengguna dan sarankan menjalankannya di komputer sendiri.
 
+## Larangan utama: tanpa skrip, tanpa angka
+
+Angka emiten **hanya** boleh berasal dari `emiten.json` hasil `scripts/tv_emiten.mjs` yang benar-benar dijalankan
+dalam sesi ini. Skrip dianggap tersedia **hanya jika** berkas `scripts/tv_emiten.mjs` benar-benar ada di lingkungan Anda dan Anda menjalankannya. Menulis kode sendiri untuk meniru skrip **tidak dihitung**, begitu juga mencari angka di ingatan model.
+
+Bila skrip tidak bisa dijalankan (tidak ada Node.js, tidak ada internet, atau aplikasi chat yang
+hanya membaca lampiran):
+
+1. **Jangan menampilkan angka emiten apa pun**, termasuk perkiraan ("sekitar", "kurang lebih") dan angka dari
+   ingatan model. Pengetahuan umum model tentang suatu emiten bukan data dan sering keliru.
+2. **Jangan menyebut TradingView atau sumber lain** sebagai asal angka yang tidak diambil oleh skrip. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi.
+3. Sampaikan bahwa skill ini perlu dijalankan di komputer sendiri (Node.js + internet), atau pengguna boleh
+   menyalin angka dari laporan keuangan resmi emiten (idx.co.id / situs emiten). Angka salinan pengguna boleh
+   dihitung rasionya dengan skill **baca-laporan-keuangan**, dengan sumber disebut "disalin pengguna dari LK resmi".
+4. Daftar kode emiten per sektor boleh disebut sebagai saran untuk dipilih, tanpa angka.
+
 ## Langkah kerja (interaktif)
 
 1. **Tanya tujuan** dalam satu pertanyaan bernomor: (1) melihat emiten tertentu, (2) memilih emiten per sektor/industri,
@@ -31,7 +47,7 @@ Peserta cukup memilih perusahaan Tbk; skrip menarik datanya. **Sumber tidak resm
    - Gaya mengikuti `preferensi.json` (skill **tampilan-direksi**) bila ada: `--preferensi preferensi.json`.
 5. **Sajikan** gaya direksi: 1 kalimat kesimpulan → 3 perbedaan terbesar terhadap median → catatan sumber.
 
-## Wajib disampaikan (singkat, sekali per sesi)
+## Wajib disampaikan bersama data hasil skrip (sekali per sesi; jangan ditampilkan bila tidak ada data)
 
 > Data emiten diambil dari TradingView melalui pustaka tidak resmi. Angka bisa tertunda atau berbeda dengan laporan
 > keuangan resmi (laba kotor bisa selisih hingga sekitar 4%). Verifikasi angka penting ke idx.co.id / situs emiten sebelum
