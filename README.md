@@ -80,13 +80,28 @@ python skills/baca-laporan-keuangan/scripts/visualisasi.py rasio.json --out visu
 cd skills/data-emiten/scripts && npm install        # sekali; butuh Node.js >= 20 & internet
 node tv_emiten.mjs daftar --cari tekstil --limit 15
 node tv_emiten.mjs ambil UNVR ICBP MYOR --out emiten.json
-python ringkas_emiten.py emiten.json --rasio ../../../rasio.json
+python ringkas_emiten.py emiten.json --rasio ../../../rasio.json   # mendukung rasio.json (tahunan) & laporan.json (bulanan)
 ```
 
 > **Penting:** TradingView tidak menyediakan API data publik resmi. Skill ini memakai pustaka komunitas
 > [TradingView-API](https://github.com/Mathieu2301/TradingView-API) yang tidak berafiliasi dengan TradingView, dan
 > ketentuan layanan TradingView membatasi pengambilan data otomatis. Data bisa tertunda atau berbeda dengan laporan
 > keuangan resmi (uji internal: laba kotor bisa selisih hingga sekitar 4%). Gunakan secukupnya dan verifikasi ke idx.co.id.
+
+## Forecast risiko kondisi ekonomi daerah
+
+```
+python skills/kondisi-ekonomi-daerah/scripts/ambil_makro.py --daerah "Jawa Barat" --kenaikan-ump-pct 6.5 --out ekonomi.json
+python skills/kondisi-ekonomi-daerah/scripts/analisa_risiko_ekonomi.py ekonomi.json --rasio rasio.json --out-md risiko-ekonomi.md --out-skenario skenario-makro.json
+python skills/uji-ketahanan-kas/scripts/uji_ketahanan_kas.py Data-Keuangan-Bulanan.xlsx --skenario skenario-makro.json
+```
+
+Bila memiliki angka resmi BPS daerah (PDRB, inflasi daerah, UMP/UMK), isi [`template-ekonomi-daerah.csv`](skills/kondisi-ekonomi-daerah/templates/template-ekonomi-daerah.csv) atau sertakan `--bps-key` (BPS WebAPI). Tanpa itu, skrip memakai data makro nasional World Bank API sebagai proksi awal dan menandai pos yang kosong sebagai **PERLU DATA**.
+
+## Panduan Agen AI (`SOUL.md`) & Pembaruan Terbaru
+
+- Untuk penggunaan dengan agen AI (seperti OpenClaw/runner berbasis `SOUL.md`, atau disalin ke `AGENTS.md`/`CLAUDE.md`/`GEMINI.md`), lihat [`SOUL.md`](SOUL.md). Berkas ini mengatur dialog interaktif, koneksi otomatis antar-skill (keuangan internal, risiko ekonomi daerah, stress test kas, dan pembanding emiten Tbk), serta keleluasaan menyusun **report kombinasi** sesuai kebutuhan rapat direksi.
+- Ringkasan lengkap seluruh penambahan fitur terbaru (PR #3 - #6) tercatat di [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Memakai data perusahaan Anda sendiri
 
@@ -127,7 +142,9 @@ corporate-health-check/
 │   └── kondisi-ekonomi-daerah/  SKILL.md | scripts/ | references/ | templates/template-ekonomi-daerah.csv
 ├── sample-data/                 4 case industri FIKTIF
 ├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py | konversi_data.py
-└── tests/                       python -m unittest discover tests -v
+├── tests/                       python -m unittest discover tests -v
+├── SOUL.md                      Panduan agen AI interaktif & report kombinasi lintas-skill
+└── CHANGELOG.md                 Catatan pembaruan & fitur yang ditambahkan
 ```
 
 Kebutuhan: Python 3.8+. Node.js ≥ 20 hanya untuk `data-emiten`. `openpyxl` untuk Excel; `pypdf`/`pymupdf`/`pdfplumber` (salah satu, opsional) untuk
