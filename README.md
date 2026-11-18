@@ -18,6 +18,7 @@ yang perlu dijawab tim.
 | [`data-emiten`](skills/data-emiten/SKILL.md) | Pilih perusahaan Tbk (per sektor/industri/kata kunci) → tarik data dari TradingView → tabel pembanding + posisi perusahaan Anda vs median | kode emiten |
 | [`laporan-analisa`](skills/laporan-analisa/SKILL.md) | **Paket rapat direksi** (tampilan Direksi atau Lengkap; cerita narasi atau checklist) (HTML interaktif, cetak PDF): putusan & skor, 5 cerita, 15 KPI, analisa laporan, selisih vs bulan lalu/tahun lalu/target, data operasional, uji ketahanan kas, proyeksi kas 13 minggu, rencana kerja, lampiran rasio | data bulanan (Excel) |
 | [`uji-ketahanan-kas`](skills/uji-ketahanan-kas/SKILL.md) | **Stress test kas**: skenario penjualan turun, bahan naik, piutang molor, pemasok, bunga, gabungan; bulan kas di bawah minimum, plafon kredit, kovenan DSCR/ICR, uji balik | data bulanan (Excel) + skenario (opsional) |
+| [`kondisi-ekonomi-daerah`](skills/kondisi-ekonomi-daerah/SKILL.md) | **Forecast risiko ekonomi daerah**: PDRB, inflasi, UMP/UMK, suku bunga, kurs (World Bank API / CSV daerah / opsional BPS) → paparan ke keuangan perusahaan & skenario stress test kas | data daerah (CSV/JSON) / makro + `rasio.json`/`laporan.json` |
 
 Prinsipnya: **angka dihitung skrip Python yang deterministik; AI hanya menulis narasi.** Jika neraca tidak seimbang,
 skrip berhenti dan tidak menghitung apa pun. Bagian yang tidak bisa dijawab dari data yang ada ditandai
@@ -121,7 +122,9 @@ corporate-health-check/
 │   ├── board-brief/             SKILL.md | scripts/ | templates/brief.md
 │   ├── tampilan-direksi/        SKILL.md | scripts/preferensi.py | references/prinsip-tampilan-direksi.md
 │   ├── data-emiten/             SKILL.md | scripts/ (tv_emiten.mjs, ringkas_emiten.py, package.json)
-│   └── laporan-analisa/         SKILL.md | scripts/ | references/ | templates/ (laporan.html, template-paket-data.xlsx)
+│   ├── laporan-analisa/         SKILL.md | scripts/ | references/ | templates/ (laporan.html, template-paket-data.xlsx)
+│   ├── uji-ketahanan-kas/       SKILL.md | scripts/ | references/skema-skenario.md
+│   └── kondisi-ekonomi-daerah/  SKILL.md | scripts/ | references/ | templates/template-ekonomi-daerah.csv
 ├── sample-data/                 4 case industri FIKTIF
 ├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py | konversi_data.py
 └── tests/                       python -m unittest discover tests -v

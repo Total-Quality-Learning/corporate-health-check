@@ -1,0 +1,9 @@
+kode,uraian,periode_lalu,periode_kini,satuan,sumber
+daerah,Nama provinsi / kabupaten / kota operasional,Jawa Barat,Jawa Barat,teks,Isi sesuai wilayah utama perusahaan
+pdrb_pct,Pertumbuhan ekonomi daerah (PDRB YoY),5.0,4.8,persen,BPS Daerah / Rilis Resmi Pemda
+inflasi_daerah_pct,Inflasi daerah (IHK YoY),2.8,3.6,persen,BPS Daerah / TPID
+kenaikan_ump_pct,Kenaikan UMP / UMK daerah (YoY),3.6,6.5,persen,SK Gubernur / Disnaker Daerah
+pengangguran_daerah_pct,Tingkat pengangguran terbuka (TPT),7.4,6.9,persen,BPS Daerah (Sakernas)
+suku_bunga_pct,Suku bunga acuan / kredit modal kerja,6.0,6.25,persen,Bank Indonesia / Perbankan
+kurs_usd,Kurs referensi rata-rata (IDR per USD),15400,15950,idr,Bank Indonesia (JISDOR / kurs tengah)
+catatan_risiko_daerah,Catatan gangguan logistik / iklim / regulasi daerah,,Musim hujan berisiko hambat distribusi darat,teks,BMKG / Pemda / catatan internal
