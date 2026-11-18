@@ -140,10 +140,51 @@ class FiturBaru(unittest.TestCase):
         unvr = e["emiten"]["UNVR"]
         mentah = js(FIXTURE)["emiten"]["UNVR"]
         self.assertAlmostEqual(unvr["pertumbuhan"], (mentah["total_revenue_fy_h"][0] / mentah["total_revenue_fy_h"][1] - 1) * 100, 6)
+        self.assertAlmostEqual(unvr["cfo_ni"], mentah["cash_f_operating_activities_fy"] / mentah["net_income_fy_h"][0], 6)
+        self.assertIsNotNone(unvr["qr"])
+        self.assertIn("posisi", e)
+        self.assertIn("cfo_ni", e["posisi"])
         self.assertIn("Perusahaan Anda", r.stdout)
         self.assertIn("TIDAK RESMI".lower(), js(FIXTURE)["sumber"].lower())
         r = run(RINGKAS_EMITEN, FIXTURE, "--rasio", self.t / "r.json", "--gaya", "checklist")
         self.assertIn("vs median", r.stdout)
+
+    def test_ringkas_emiten_ekuitas_negatif_dan_mata_uang(self):
+        contoh = {
+            "sumber": "Uji",
+            "diambil": "2026-11-18T00:00:00Z",
+            "emiten": {
+                "TEST1": {
+                    "description": "PT Uji Ekuitas Negatif",
+                    "sector": "Finance",
+                    "industry": "Banks",
+                    "currency": "IDR",
+                    "fundamental_currency_code": "USD",
+                    "market_cap_basic": 800_000_000,
+                    "total_revenue_fy_h": [500_000_000, 400_000_000],
+                    "net_income_fy_h": [50_000_000],
+                    "total_liabilities_fy": 1_000_000_000,
+                    "total_equity_fy": -100_000_000,
+                    "return_on_equity_fy": -50.0,
+                    "debt_to_equity_fy": -2.0,
+                    "cash_f_operating_activities_fy": 75_000_000,
+                }
+            },
+        }
+        f = self.t / "em-neg.json"
+        f.write_text(json.dumps(contoh), encoding="utf-8")
+        r = run(RINGKAS_EMITEN, f, "--out-json", self.t / "em-neg-out.json")
+        self.assertEqual(r.returncode, 0, r.stderr)
+        out = js(self.t / "em-neg-out.json")
+        t1 = out["emiten"]["TEST1"]
+        self.assertIsNone(t1["der"])
+        self.assertIsNone(t1["de"])
+        self.assertIsNone(t1["roe"])
+        self.assertAlmostEqual(t1["cfo_ni"], 1.5, 6)
+        self.assertIn("Rp800 JT", r.stdout)
+        self.assertIn("USD 500 JT", r.stdout)
+        self.assertIn("Finance", r.stdout)
+        self.assertIn("ekuitas nol/negatif", r.stdout)
 
 
 if __name__ == "__main__":
