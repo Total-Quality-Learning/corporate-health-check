@@ -8,6 +8,18 @@ description: Uji ketahanan kas (cash stress test) dari data keuangan bulanan. Me
 Skill ini menjawab satu pertanyaan direksi: **"Kalau keadaan memburuk, kas kita tahan sampai kapan?"**
 Semua angka dihitung skrip Python yang deterministik. AI hanya menanyakan skenario dan menulis narasi.
 
+## Syarat mutlak: skrip harus benar-benar dijalankan
+
+Skrip dianggap tersedia **hanya jika** berkas `scripts/uji_ketahanan_kas.py` benar-benar ada di lingkungan Anda dan Anda menjalankannya. Menulis kode sendiri untuk meniru skrip **tidak dihitung**, begitu juga membaca Excel lalu menghitung sendiri.
+
+Jika skrip tidak bisa dijalankan, **jangan membuat model kas sendiri**: tanpa perkiraan kas habis, kas minimum,
+DSCR, status, atau rekomendasi. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi. Lakukan ini saja:
+
+1. Katakan: "Uji ketahanan kas belum bisa dihitung di sini karena skrip uji_ketahanan_kas.py tidak bisa dijalankan
+   di lingkungan ini. Angkanya hanya boleh dari skrip agar bisa dipertanggungjawabkan."
+2. Ajukan pertanyaan skenario di langkah 2, lalu tuliskan jawabannya sebagai isi `skenario.json` dan perintah
+   yang bisa dijalankan pengguna di komputernya sendiri.
+
 ## Langkah kerja
 
 1. **Data.** Butuh paket data bulanan yang sama dengan skill **laporan-analisa** (Excel
@@ -51,4 +63,7 @@ Semua angka dihitung skrip Python yang deterministik. AI hanya menanyakan skenar
 - Rata-rata 3 bulan terakhir diteruskan; musiman, kontrak besar, dan jadwal pembayaran aktual tidak terlihat.
   Untuk keputusan pendanaan, minta tim keuangan menyusun proyeksi kas mingguan dari jadwal penagihan dan
   pembayaran yang sebenarnya.
-- Alat bantu analisis, bukan proyeksi resmi, hasil audit, atau nasihat keuangan.
+- Akhiri jawaban dengan teks berikut, disalin persis:
+  > Alat bantu analisis, bukan proyeksi resmi, hasil audit, atau nasihat keuangan.
+  >
+  > Disusun dengan TQ Board Insight | totalquality.co.id

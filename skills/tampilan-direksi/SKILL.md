@@ -16,10 +16,39 @@ mengikuti selera pembacanya, dan menyimpannya agar tidak perlu ditanya ulang.
 
 ## Langkah kerja
 
-1. **Tanya 4 pertanyaan inti sekaligus** (teks dari skrip agar konsisten):
+1. **Tanya 4 pertanyaan inti sekaligus, lalu tunggu jawabannya** sebelum menjalankan skill lain, juga bila
+   pengguna meminta preferensi dan analisis dalam satu pesan. Teks dari skrip agar konsisten:
    `python scripts/preferensi.py --pertanyaan`
-   Sajikan sebagai pilihan bernomor; minta jawaban singkat seperti `1A, 2C, 3B, 4A`. Jangan menanyakan pertanyaan
-   lanjutan kecuali pengguna tertarik, pakai bawaan.
+   Bila skrip tidak bisa dijalankan, pakai teks yang sama di bawah ini (dijaga sama oleh tes):
+
+```text
+**1. Laporan ini untuk siapa?**
+   A. Direksi / pemilik, keputusan cepat  ← bawaan
+   B. Dewan komisaris, pengawasan & risiko
+   C. Manajer keuangan / CFO, rinci & teknis
+   D. Bank / investor, kelayakan & utang
+
+**2. Bentuk narasi yang diinginkan?**
+   A. Singkat, rasio kunci + 3 hal yang perlu perhatian  ← bawaan
+   B. Detail, semua rasio, perhitungan, dan penjelasan
+   C. Checklist, setiap indikator sebagai kotak centang aman/perlu perhatian
+
+**3. Bentuk visualisasi?**
+   A. Grafik saja, dengan judul berupa kesimpulan
+   B. Penjelasan detail tiap grafik (teks), tanpa gambar
+   C. Grafik + penjelasan detail di bawahnya  ← bawaan
+   D. Tanpa visual, tabel & teks saja
+
+**4. Fokus utama?**
+   A. Semua aspek  ← bawaan
+   B. Kas & modal kerja
+   C. Margin & laba
+   D. Utang & kemampuan bayar
+   E. Efisiensi & produktivitas
+```
+
+   Minta jawaban singkat seperti `1A, 2C, 3B, 4A`. Jangan menanyakan pertanyaan lanjutan kecuali pengguna tertarik,
+   pakai bawaan.
    - Jika pengguna tidak mau menjawab / "terserah": pakai preset `direksi`.
    - Jika pengguna menyebut perannya ("saya komisaris", "untuk bank"), tawarkan preset yang sesuai:
      `direksi`, `komisaris`, `keuangan`, `bank`.
@@ -35,6 +64,10 @@ mengikuti selera pembacanya, dan menyimpannya agar tidak perlu ditanya ulang.
 | `istilah` | penjelasan istilah | `--istilah` | - | - | - |
 | `mode_laporan` | - | - | - | `--mode direksi/lengkap` | - |
 | `metode_rasio` | `--metode akhir/rata-rata` | - | - | - | - |
+
+   Bila skrip tidak bisa dijalankan, cukup ingat pilihan pengguna selama percakapan dan terapkan pada jawaban
+   berikutnya. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi
+   (termasuk `preferensi.json`).
 
 5. **Ubah kapan saja.** Jika pengguna berkata "lebih singkat", ubah satu kunci:
    `python scripts/preferensi.py --tampilkan preferensi.json` lalu simpan ulang dengan `--set gaya_narasi=ringkas`.
