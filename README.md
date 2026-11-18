@@ -91,6 +91,15 @@ python ringkas_emiten.py emiten.json --rasio ../../../rasio.json
 
 Panduan lengkap: [`panduan-data-sendiri.md`](skills/baca-laporan-keuangan/references/panduan-data-sendiri.md).
 
+Punya **CSV atau Excel format bebas** (ekspor akuntansi/ERP, multi-file CSV, atau format panjang/tidy)? Konversi dulu secara deterministik ke format standar:
+
+```
+python tools/konversi_data.py laporan-bebas.xlsx --out lk.json
+python tools/konversi_data.py neraca.csv labarugi.csv aruskas.csv --out lk.json
+python tools/konversi_data.py ekspor-bulanan.csv --jenis bulanan --out paket.xlsx
+python tools/konversi_data.py laporan-bebas.xlsx --tulis-pemetaan pemetaan.json   # jika ada akun khusus
+```
+
 | Punya data | Template | Samarkan (jalankan sendiri, tanpa AI) | Skill |
 |---|---|---|---|
 | LK tahunan | [`template-lk.xlsx`](skills/baca-laporan-keuangan/templates/template-lk.xlsx) | `python skills/baca-laporan-keuangan/scripts/samarkan_lk.py lk.json --out lk-samaran.json --samarkan-periode` | baca-laporan-keuangan → red-flag-operasional → board-brief |
@@ -114,7 +123,7 @@ corporate-health-check/
 │   ├── data-emiten/             SKILL.md | scripts/ (tv_emiten.mjs, ringkas_emiten.py, package.json)
 │   └── laporan-analisa/         SKILL.md | scripts/ | references/ | templates/ (laporan.html, template-paket-data.xlsx)
 ├── sample-data/                 4 case industri FIKTIF
-├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py
+├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py | konversi_data.py
 └── tests/                       python -m unittest discover tests -v
 ```
 
