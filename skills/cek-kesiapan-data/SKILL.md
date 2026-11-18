@@ -25,12 +25,18 @@ Delapan pertanyaan, sekitar 3 menit, untuk melihat apakah data perusahaan cukup 
    tidak bisa ditelusuri ke produk/lini).
 5. Tawarkan skill **board-brief** untuk merangkum semuanya dalam 1 halaman untuk direksi.
 
+## Jika skrip tidak bisa dijalankan
+
+Hitung dengan **Aturan skoring** di bawah (A = 1 sampai D = 4, rata-rata 8 skor, ambang level, aturan area
+prioritas). Hasilnya harus sama dengan skrip. Arah solusi dan "mengapa penting" untuk area terlemah diambil dari
+`references/pertanyaan.json`, bukan dikarang. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi.
+
 ## Gaya
 
 - Netral dan tidak menghakimi. Level 1-2 adalah kondisi yang umum, bukan kegagalan.
 - "Arah solusi" berupa kategori, **jangan** menyebut merek, produk, vendor, atau konsultan.
 - `kode_ringkas` (mis. `L2-1.5.7`) hanya dibagikan jika pengguna mau, misalnya untuk polling anonim saat sesi.
-- Tutup dengan:
+- Tutup dengan teks berikut, disalin persis:
   > Versi singkat dengan skoring sederhana tanpa bobot; gambaran awal, bukan hasil asesmen lengkap.
   >
   > Disusun dengan TQ Board Insight | totalquality.co.id
