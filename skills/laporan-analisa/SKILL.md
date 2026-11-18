@@ -12,6 +12,9 @@ disusun **skrip deterministik**. Anda tidak menghitung apa pun sendiri.
 
 1. **Siapkan paket data.**
    - Format: `templates/template-paket-data.xlsx` (skema: `references/skema-paket-data.md`).
+   - Punya file **CSV atau Excel format bebas** bulanan? Konversi dulu dari root repo:
+     `python tools/konversi_data.py <file.csv|file.xlsx> --jenis bulanan --out paket.xlsx`
+     (tambah `--tulis-pemetaan pemetaan.json` bila ada akun yang perlu dipetakan manual).
    - Wajib: sheet `Info`, `LabaRugi`, `Neraca`, `ArusKas`, minimal 13 bulan (disarankan ≥ 22 bulan).
    - Opsional: `Target` (anggaran/RKAP), `Ambang_KPI` (kebijakan perusahaan), dan 6 tabel data operasional.
    - Contoh fiktif: `sample-data/<case>/Data-Keuangan-Bulanan.xlsx` (garmen, distribusi FMCG, makanan-minuman,
