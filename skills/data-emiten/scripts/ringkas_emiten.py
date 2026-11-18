@@ -106,8 +106,54 @@ def hitung(e: dict) -> dict:
     return m
 
 
+def _angka_id(teks: str | None) -> float | None:
+    if not teks or teks == "-":
+        return None
+    s = teks.strip().replace("%", "").replace("x", "").replace("hari", "").strip()
+    neg = s.startswith("(") and s.endswith(")")
+    s = s.strip("()").replace(".", "").replace(",", ".")
+    try:
+        x = float(s)
+        return -x if neg else x
+    except ValueError:
+        return None
+
+
+def _pengguna_laporan(r: dict) -> tuple[str, dict]:
+    """Baca metrik perusahaan dari laporan.json (keluaran susun_laporan.py)."""
+    pid = "ytd" if "ytd" in r.get("kpi", {}) else "month"
+    kpi_rows = {row["key"]: row.get("v") for row in r.get("kpi", {}).get(pid, {}).get("yoy", [])}
+    lamp_map = {
+        row["nama"]: _angka_id(row.get("cur"))
+        for grp in r.get("lampiran", {}).get(pid, {}).get("yoy", [])
+        for row in grp.get("rows", [])
+    }
+    cc = kpi_rows.get("cash_conversion")
+    nilai = {
+        "pertumbuhan": kpi_rows.get("rev_growth"),
+        "gm": kpi_rows.get("gross_margin"),
+        "om": lamp_map.get("Margin laba usaha (EBIT)"),
+        "ebitda_m": kpi_rows.get("ebitda_margin"),
+        "nm": kpi_rows.get("net_margin"),
+        "roe": kpi_rows.get("roe_ltm"),
+        "roa": kpi_rows.get("roa_ltm"),
+        "cr": kpi_rows.get("current_ratio"),
+        "qr": kpi_rows.get("quick_ratio"),
+        "der": lamp_map.get("DER (liabilitas ÷ ekuitas)"),
+        "de": lamp_map.get("Utang bank ÷ ekuitas"),
+        "nde": kpi_rows.get("net_debt_ebitda"),
+        "at": lamp_map.get("DuPont: perputaran aset"),
+        "dso": kpi_rows.get("dso"),
+        "cfo_ni": (cc / 100.0) if cc is not None else None,
+    }
+    label_p = r.get("periode", {}).get(pid, {}).get("short") or r.get("meta", {}).get("bulan_aktif", "")
+    return f"{r['meta']['perusahaan']} ({label_p})", nilai
+
+
 def pengguna(path: Path) -> tuple[str, dict]:
     r = json.loads(path.read_text(encoding="utf-8-sig"))
+    if "kpi" in r and "rasio" not in r:
+        return _pengguna_laporan(r)
     p = r["meta"]["periode"][-1]
     nilai = {k: r["rasio"].get(kr, {}).get("nilai", {}).get(p) for k, _, _, _, kr in METRIK if kr}
     pend = r["pos_utama"].get("pendapatan", {}).get("nilai", {})
@@ -133,7 +179,7 @@ def main(argv=None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")
     ap = argparse.ArgumentParser(description="Tabel pembanding emiten IDX")
     ap.add_argument("emiten", type=Path, help="Keluaran tv_emiten.mjs ambil")
-    ap.add_argument("--rasio", type=Path, help="rasio.json perusahaan Anda (hitung_rasio.py)")
+    ap.add_argument("--rasio", type=Path, help="rasio.json (hitung_rasio.py) atau laporan.json (susun_laporan.py)")
     ap.add_argument("--gaya", choices=["ringkas", "detail", "checklist"])
     ap.add_argument("--preferensi", type=Path)
     ap.add_argument("--out-md", type=Path)
