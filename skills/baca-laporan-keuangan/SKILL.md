@@ -31,6 +31,8 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
    - Jika Anda tidak bisa membaca PDF langsung: `python scripts/ekstrak_teks_pdf.py <file.pdf> --out lk.txt`.
    - Petakan setiap akun ke kunci di `references/skema-input.md` dengan panduan `references/pemetaan-akun.md`.
    - Pakai **minimal 2 periode** dan **satu satuan** (mis. jutaan Rupiah). Beban ditulis **positif**.
+   - Status audit (diaudit / tidak diaudit / tidak disebut) hanya ditulis bila tertulis di dokumen. Jangan menyimpulkan
+     sendiri, mis. menyebut "LK audit" untuk dokumen yang tidak menyatakannya.
    - Tulis `lk.json`, lalu **tampilkan tabel hasil ekstraksi ke pengguna** (akun asli → kunci → angka) sebelum lanjut.
      Tandai akun yang Anda gabungkan atau ragukan.
 
@@ -52,6 +54,17 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
 5. **Sajikan hasil** dengan format di bawah. Simpan `rasio.json`: dipakai skill `red-flag-operasional`, `board-brief`,
    dan `data-emiten`.
 
+## Jika skrip tidak bisa dijalankan
+
+Sebagian aplikasi chat AI hanya membaca lampiran dan tidak menjalankan `scripts/`. Dalam kondisi itu:
+
+1. Katakan di awal jawaban, satu kalimat: "Skrip tidak bisa dijalankan di sini; rasio dihitung manual oleh AI dan
+   belum diverifikasi skrip."
+2. Hitung **hanya** dari angka yang ada di data pengguna, dengan rumus persis di `references/definisi-rasio.md`,
+   dan tampilkan baris perhitungannya untuk setiap rasio.
+3. Jika neraca tidak seimbang, berhenti seperti langkah 3. Jangan mengisi angka yang tidak ada.
+4. Jangan pernah menulis bahwa skrip sudah dijalankan atau berkas sudah dibuat bila itu tidak terjadi. Grafik dan `rasio.json` hanya dibuat bila memang bisa dibuat.
+
 ## Format jawaban (ikuti gaya pilihan pengguna; angka tidak boleh diubah)
 
 | Gaya | Isi jawaban |
@@ -68,7 +81,7 @@ Untuk semua gaya:
    mis. "DIO (rata-rata hari barang tersimpan sebelum terjual)". Definisi: `references/definisi-rasio.md`.
 4. Jika ada gejala (persediaan/piutang membengkak, kas operasi turun padahal laba naik, margin tergerus), tawarkan
    menjalankan skill **red-flag-operasional** untuk memetakan kemungkinan penyebab operasionalnya.
-5. Tutup dengan disclaimer dan footer:
+5. Tutup dengan disclaimer dan footer, disalin persis:
    > Alat bantu analisis, bukan nasihat investasi atau hasil audit. Angka bergantung pada kebenaran data input.
    >
    > Disusun dengan TQ Board Insight | totalquality.co.id
