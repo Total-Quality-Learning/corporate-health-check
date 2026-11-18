@@ -21,7 +21,9 @@ Skill ini mengubah laporan keuangan (LK) menjadi **format standar** lalu menghit
    - **Excel format template** (sheet `Info`, `Neraca`, `LabaRugi`, `ArusKas` dengan kolom `kode`):
      `python scripts/baca_excel.py <file.xlsx> --out lk.json`
    - **JSON format standar**: langsung ke langkah 3.
-   - **PDF atau Excel bebas** (format perusahaan masing-masing): lakukan langkah 2.
+   - **CSV atau Excel format bebas** (di dalam repo): jalankan konverter deterministik terlebih dulu:
+     `python ../../tools/konversi_data.py <file.csv|file.xlsx> --out lk.json` (gunakan `--tulis-pemetaan pemetaan.json` bila ada akun non-standar), lalu lanjut ke langkah 3.
+   - **PDF atau Excel bebas** (format perusahaan masing-masing, tanpa skrip konverter): lakukan langkah 2.
    - Tidak ada file / pengguna hanya ingin mencoba: pakai data contoh fiktif di `sample-data/<case>/`, pilihan:
      `01-manufaktur-garmen`, `02-distribusi-fmcg`, `03-makanan-minuman`, `04-komponen-logam`
      (`lk-tahunan.json`, `LK-Tahunan.xlsx`, atau PDF `LK-2025-*.pdf` untuk latihan ekstraksi). Sebutkan bahwa datanya fiktif.
