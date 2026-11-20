@@ -62,6 +62,14 @@ python tools/analisis_lengkap.py sample-data/01-manufaktur-garmen/lk-tahunan.jso
 Buka `laporan.html` di browser (tombol *Cetak / PDF* untuk versi kertas). Alur kedua menghasilkan folder `hasil/`
 berisi `rasio.md`, `gejala.md`, `kesiapan.md`, `brief.md`, dan `brief.html`.
 
+### 4. Portal Web Peserta (antarmuka browser lokal)
+
+```
+python tools/portal_peserta.py
+```
+
+Membuka antarmuka web lokal (`http://127.0.0.1:8765`) untuk mengunggah Excel/CSV/JSON (termasuk penyamaran angka, konversi format bebas, Trial Balance, & Arus Kas otomatis), menjalankan Laporan Direksi Bulanan, Analisis LK Tahunan, Stress Test Kas, Risiko Ekonomi Daerah, Benchmark Emiten IDX, Efisiensi SDM & Budgeting, serta menyusun Report Kombinasi.
+
 ## Pilih gaya tampilan
 
 Sebelum analisis, AI menanyakan 4 hal (untuk siapa, bentuk narasi, bentuk visual, fokus) lalu menyimpannya di
@@ -126,7 +134,7 @@ corporate-health-check/
 │   ├── uji-ketahanan-kas/       SKILL.md | scripts/ | references/skema-skenario.md
 │   └── kondisi-ekonomi-daerah/  SKILL.md | scripts/ | references/ | templates/template-ekonomi-daerah.csv
 ├── sample-data/                 4 case industri FIKTIF
-├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py | konversi_data.py
+├── tools/                       analisis_lengkap.py | buat_zip.py | format_data.py | konversi_data.py | portal_peserta.py
 └── tests/                       python -m unittest discover tests -v
 ```
 

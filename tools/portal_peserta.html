@@ -1,0 +1,1327 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal Peserta — Corporate Health Check</title>
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --ink: #162235;
+    --muted: #5a687c;
+    --line: #dce3ec;
+    --primary: #12487a;
+    --primary-hover: #0d365c;
+    --accent: #e8f1fa;
+    --ok-bg: #e7f6ee; --ok-ink: #146c43;
+    --warn-bg: #fff5db; --warn-ink: #996500;
+    --bad-bg: #fdeaea; --bad-ink: #b02a37;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  header {
+    background: linear-gradient(135deg, #10375c 0%, #17548f 100%);
+    color: #fff;
+    padding: 20px 28px;
+    border-bottom: 3px solid #d7a63c;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px; }
+  .head-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+  header h1 { margin: 0; font-size: 1.35rem; letter-spacing: 0.2px; }
+  header p { margin: 4px 0 0; font-size: 0.92rem; opacity: 0.9; }
+  .pill-badge {
+    background: rgba(255,255,255,0.16);
+    border: 1px solid rgba(255,255,255,0.28);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  nav.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 20px 0 16px;
+  }
+  nav.tabs button {
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--ink);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  nav.tabs button:hover { border-color: var(--primary); color: var(--primary); }
+  nav.tabs button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: minmax(310px, 410px) 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 920px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: 0 2px 6px rgba(16, 35, 65, 0.04);
+  }
+  .card h2 { margin: 0 0 10px; font-size: 1.08rem; color: var(--primary); }
+  .card h3 { margin: 14px 0 8px; font-size: 0.96rem; }
+  label.field { display: block; margin-bottom: 12px; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+  select, input[type="number"], input[type="text"], input[type="file"] {
+    width: 100%;
+    margin-top: 5px;
+    padding: 8px 10px;
+    border: 1px solid #c9d4e2;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background: #fff;
+    color: var(--ink);
+  }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .check-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--accent);
+    border: 1px solid #c9def3;
+    border-radius: 8px;
+    margin: 10px 0 14px;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+  .check-box input { margin-top: 3px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--primary); color: #fff; width: 100%; }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-primary:disabled { opacity: 0.6; cursor: wait; }
+  .btn-soft {
+    background: #eef3f9;
+    color: var(--primary);
+    border: 1px solid #cddbeb;
+    padding: 7px 12px;
+    font-size: 0.84rem;
+  }
+  .btn-soft:hover { background: #e1ebf6; }
+  .muted { color: var(--muted); font-size: 0.85rem; }
+  .alert {
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+  }
+  .alert-err { background: var(--bad-bg); color: var(--bad-ink); border: 1px solid #f5c2c7; }
+  .alert-ok { background: var(--ok-bg); color: var(--ok-ink); border: 1px solid #badbcc; }
+  .alert-warn { background: var(--warn-bg); color: var(--warn-ink); border: 1px solid #ffe69c; }
+  .kpi-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .kpi-box {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    background: #fafcff;
+  }
+  .kpi-box .lbl { font-size: 0.78rem; color: var(--muted); }
+  .kpi-box .val { font-size: 1.15rem; font-weight: 700; margin-top: 2px; }
+  .dl-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+  .subtabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  .subtabs button {
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    padding: 6px 11px;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 0.84rem;
+    cursor: pointer;
+  }
+  .subtabs button.active { background: var(--accent); color: var(--primary); border-color: #c5dcf3; }
+  iframe.preview {
+    width: 100%;
+    height: 680px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  pre.md-view {
+    background: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    overflow: auto;
+    max-height: 540px;
+    font-size: 0.84rem;
+    white-space: pre-wrap;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-top: 8px;
+  }
+  table.data th, table.data td {
+    border-bottom: 1px solid var(--line);
+    padding: 8px 8px;
+    text-align: left;
+  }
+  table.data th { background: #f6f8fb; font-weight: 600; }
+  table.data td.num, table.data th.num { text-align: right; }
+  .tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .tag-aman, .tag-hijau, .tag-lulus { background: var(--ok-bg); color: var(--ok-ink); }
+  .tag-waspada, .tag-kuning { background: var(--warn-bg); color: var(--warn-ink); }
+  .tag-kritis, .tag-merah { background: var(--bad-bg); color: var(--bad-ink); }
+  details.box { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; background: #fbfcfe; }
+  details.box summary { cursor: pointer; font-weight: 600; font-size: 0.88rem; }
+  .q-item { margin: 10px 0; padding-bottom: 8px; border-bottom: 1px dashed var(--line); font-size: 0.83rem; }
+  .q-item:last-child { border-bottom: none; }
+  .scenario-card { border: 1px solid var(--line); border-radius: 8px; padding: 10px; margin-bottom: 8px; background: #fafcff; }
+  footer { text-align: center; padding: 24px 16px; color: var(--muted); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap head-row">
+    <div>
+      <h1>Corporate Health Check — Portal Peserta</h1>
+      <p>Angka dihitung deterministik oleh skrip Python; AI hanya menyusun narasi. Neraca tidak seimbang otomatis dihentikan.</p>
+    </div>
+    <div class="pill-badge">Mode Lokal &amp; Offline-Ready</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="tabs" role="tablist">
+    <button class="active" data-tab="bulanan">1. Laporan Direksi (Bulanan)</button>
+    <button data-tab="tahunan">2. LK Tahunan &amp; Brief</button>
+    <button data-tab="kas">3. Stress Test Kas</button>
+    <button data-tab="ekonomi">4. Ekonomi Daerah</button>
+    <button data-tab="emiten">5. Benchmark Emiten IDX</button>
+    <button data-tab="sdm">6. Efisiensi SDM &amp; Budget</button>
+    <button data-tab="kombinasi">7. Report Kombinasi</button>
+    <button data-tab="panduan">8. Template &amp; Panduan AI</button>
+  </nav>
+
+  <!-- TAB 1: LAPORAN ANALISA BULANAN -->
+  <section id="tab-bulanan" class="panel active">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Input Paket Bulanan</h2>
+        <p class="muted">Mendukung Excel <code>template-paket-data.xlsx</code>, JSON, atau ekspor CSV/TSV/Excel format bebas (minimal 13 bulan).</p>
+        <label class="field">Sumber Data
+          <select id="b-sumber" onchange="toggleSumber('b')">
+            <option value="sample">Pakai Data Contoh Fiktif</option>
+            <option value="upload">Unggah File Sendiri (.xlsx / .csv / .json)</option>
+          </select>
+        </label>
+        <div id="b-sample-wrap">
+          <label class="field">Pilih Case Industri
+            <select id="b-case"></select>
+          </label>
+        </div>
+        <div id="b-upload-wrap" style="display:none">
+          <label class="field">File Data Bulanan (.xlsx / .csv / .tsv / .json)
+            <input type="file" id="b-file" accept=".xlsx,.xlsm,.csv,.tsv,.json">
+          </label>
+          <details class="box">
+            <summary>Opsi Konversi Format Bebas / Nama Perusahaan</summary>
+            <div style="margin-top:8px">
+              <label class="check-box">
+                <input type="checkbox" id="b-konversi">
+                <span><strong>Konversi otomatis CSV / Excel format bebas</strong></span>
+              </label>
+              <label class="field">Nama Perusahaan (opsional)
+                <input type="text" id="b-perusahaan" placeholder="PT Contoh Nusantara">
+              </label>
+            </div>
+          </details>
+        </div>
+        <div class="row-2">
+          <label class="field">Tampilan Awal
+            <select id="b-mode">
+              <option value="direksi">Direksi (Ringkas)</option>
+              <option value="lengkap">Lengkap (Semua Tab)</option>
+            </select>
+          </label>
+          <label class="field">Gaya Cerita
+            <select id="b-gaya">
+              <option value="narasi">Narasi</option>
+              <option value="checklist">Checklist</option>
+            </select>
+          </label>
+        </div>
+        <label class="check-box">
+          <input type="checkbox" id="b-samarkan">
+          <span><strong>Samarkan angka &amp; identitas terlebih dahulu</strong><br>
+          <span class="muted">Mengalikan semua angka uang dengan faktor acak (rasio &amp; status KPI tetap identik).</span></span>
+        </label>
+        <button class="btn btn-primary" id="b-run" onclick="jalankanBulanan()">Susun Laporan Direksi</button>
+      </div>
+      <div class="card" id="b-result">
+        <h2>Hasil Laporan Rapat Direksi</h2>
+        <p class="muted">Pilih data di sebelah kiri lalu klik <strong>Susun Laporan Direksi</strong>. Laporan HTML interaktif siap cetak PDF akan tampil di sini.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 2: ANALISIS LK TAHUNAN -->
+  <section id="tab-tahunan" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Input LK Tahunan</h2>
+        <p class="muted">Mendukung Excel <code>template-lk.xlsx</code>, JSON standar, Trial Balance (Neraca Saldo), ekspor CSV/Excel format bebas, atau data contoh.</p>
+        <label class="field">Sumber Data
+          <select id="t-sumber" onchange="toggleSumber('t')">
+            <option value="sample">Pakai Data Contoh Fiktif</option>
+            <option value="upload">Unggah File Sendiri (.xlsx / .csv / .json)</option>
+          </select>
+        </label>
+        <div id="t-sample-wrap">
+          <label class="field">Pilih Case Industri
+            <select id="t-case"></select>
+          </label>
+        </div>
+        <div id="t-upload-wrap" style="display:none">
+          <label class="field">File LK Tahunan (.xlsx / .csv / .tsv / .json)
+            <input type="file" id="t-file" accept=".xlsx,.xlsm,.csv,.tsv,.json">
+          </label>
+          <details class="box">
+            <summary>Opsi Konversi Bebas, Trial Balance &amp; Arus Kas Otomatis</summary>
+            <div style="margin-top:8px">
+              <label class="check-box">
+                <input type="checkbox" id="t-konversi">
+                <span><strong>Konversi otomatis CSV / Excel format bebas</strong></span>
+              </label>
+              <label class="check-box" id="t-tb-wrap">
+                <input type="checkbox" id="t-tb">
+                <span><strong>Input adalah Trial Balance (Neraca Saldo Debit/Kredit)</strong></span>
+              </label>
+              <label class="check-box">
+                <input type="checkbox" id="t-ak">
+                <span><strong>Hitung Arus Kas tidak langsung otomatis</strong> (jika belum ada data Arus Kas)</span>
+              </label>
+              <div class="row-2">
+                <label class="field">Nama Perusahaan (opsional)
+                  <input type="text" id="t-perusahaan" placeholder="PT Contoh Nusantara">
+                </label>
+                <label class="field">Periode (opsional, mis. 2025)
+                  <input type="text" id="t-periode" placeholder="2025">
+                </label>
+              </div>
+            </div>
+          </details>
+        </div>
+        <div class="row-2">
+          <label class="field">Gaya Penyajian
+            <select id="t-gaya">
+              <option value="ringkas">Ringkas</option>
+              <option value="detail">Detail (dengan rumus)</option>
+              <option value="checklist">Checklist</option>
+            </select>
+          </label>
+          <label class="field">Metode Neraca
+            <select id="t-metode">
+              <option value="akhir">Saldo Akhir</option>
+              <option value="rata-rata">Rata-rata Awal &amp; Akhir</option>
+            </select>
+          </label>
+        </div>
+        <label class="check-box">
+          <input type="checkbox" id="t-samarkan">
+          <span><strong>Samarkan angka &amp; periode (T-1, T)</strong><br>
+          <span class="muted">Menghasilkan <code>lk-samaran.json</code> yang aman dibagikan ke asisten AI.</span></span>
+        </label>
+        <details class="box">
+          <summary>Opsional: Cek Kesiapan Data &amp; Sistem (8 pertanyaan)</summary>
+          <div style="margin-top:8px">
+            <label class="check-box" style="margin:6px 0">
+              <input type="checkbox" id="t-pakai-kesiapan" onchange="toggleKesiapan()">
+              <span>Sertakan skor kesiapan data ke dalam Board Brief</span>
+            </label>
+            <div id="t-kesiapan-form" style="display:none"></div>
+          </div>
+        </details>
+        <button class="btn btn-primary" id="t-run" onclick="jalankanTahunan()">Hitung Rasio, Red Flag &amp; Brief</button>
+      </div>
+      <div class="card" id="t-result">
+        <h2>Hasil Analisis LK Tahunan</h2>
+        <p class="muted">Jalankan analisis untuk melihat Board Brief 1 halaman, grafik visual, 28 rasio keuangan, dan gejala red flag operasional.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: UJI KETAHANAN KAS -->
+  <section id="tab-kas" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Parameter Stress Test Kas</h2>
+        <p class="muted">Menguji daya tahan kas menggunakan rata-rata 3 bulan terakhir dari paket data bulanan.</p>
+        <label class="field">Sumber Data
+          <select id="k-sumber" onchange="toggleSumber('k')">
+            <option value="sample">Pakai Data Contoh Fiktif</option>
+            <option value="upload">Unggah File Sendiri (.xlsx / .csv / .json)</option>
+          </select>
+        </label>
+        <div id="k-sample-wrap">
+          <label class="field">Pilih Case Industri
+            <select id="k-case"></select>
+          </label>
+        </div>
+        <div id="k-upload-wrap" style="display:none">
+          <label class="field">File Data Bulanan (.xlsx / .csv / .tsv / .json)
+            <input type="file" id="k-file" accept=".xlsx,.xlsm,.csv,.tsv,.json">
+          </label>
+          <details class="box">
+            <summary>Opsi Konversi Format Bebas</summary>
+            <div style="margin-top:8px">
+              <label class="check-box">
+                <input type="checkbox" id="k-konversi">
+                <span><strong>Konversi otomatis CSV / Excel format bebas</strong></span>
+              </label>
+              <label class="field">Nama Perusahaan (opsional)
+                <input type="text" id="k-perusahaan" placeholder="PT Contoh Nusantara">
+              </label>
+            </div>
+          </details>
+        </div>
+        <div class="row-2">
+          <label class="field">Horizon (1–24 bulan)
+            <input type="number" id="k-horizon" min="1" max="24" value="6">
+          </label>
+          <label class="field">Sisa Plafon Kredit (opsional)
+            <input type="number" id="k-plafon" step="any" placeholder="0">
+          </label>
+        </div>
+        <div class="row-2">
+          <label class="field">Batas DSCR Bank (opsional)
+            <input type="number" id="k-dscr" step="0.05" placeholder="mis. 1.25">
+          </label>
+          <label class="field">Batas ICR Bank (opsional)
+            <input type="number" id="k-icr" step="0.1" placeholder="mis. 2">
+          </label>
+        </div>
+        <label class="field">Kas Minimum Aman (opsional; kosong = 1 bln biaya tetap)
+          <input type="number" id="k-min" step="any" placeholder="Otomatis 1 bulan biaya tetap">
+        </label>
+        <label class="check-box">
+          <input type="checkbox" id="k-custom-on" onchange="toggleCustomSkenario()">
+          <span><strong>Pakai skenario kustom</strong> (jika tidak dicentang, memakai 7 skenario bawaan)</span>
+        </label>
+        <div id="k-custom-wrap" style="display:none; margin-bottom:12px;">
+          <div class="scenario-card">
+            <label class="field">Nama Skenario
+              <input type="text" id="ks-nama" value="Skenario Peserta">
+            </label>
+            <div class="row-2">
+              <label class="field">Penjualan (%)
+                <input type="number" id="ks-jual" step="any" value="-15">
+              </label>
+              <label class="field">Harga Bahan (%)
+                <input type="number" id="ks-bahan" step="any" value="10">
+              </label>
+            </div>
+            <div class="row-2">
+              <label class="field">Tambah DSO (hari)
+                <input type="number" id="ks-dso" step="any" value="15">
+              </label>
+              <label class="field">Kurang DPO (hari)
+                <input type="number" id="ks-dpo" step="any" value="0">
+              </label>
+            </div>
+            <div class="row-2">
+              <label class="field">Bunga Naik (poin)
+                <input type="number" id="ks-bunga" step="any" value="0">
+              </label>
+              <label class="field">Belanja Sekali
+                <input type="number" id="ks-belanja" step="any" value="0">
+              </label>
+            </div>
+          </div>
+        </div>
+        <label class="check-box">
+          <input type="checkbox" id="k-samarkan">
+          <span><strong>Samarkan angka uang terlebih dahulu</strong></span>
+        </label>
+        <button class="btn btn-primary" id="k-run" onclick="jalankanUjiKas()">Jalankan Stress Test Kas</button>
+      </div>
+      <div class="card" id="k-result">
+        <h2>Hasil Uji Ketahanan Kas</h2>
+        <p class="muted">Menampilkan tabel ketahanan kas per skenario, bulan menyentuh batas minimum, kovenan bank, dan hasil uji balik.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: KONDISI EKONOMI DAERAH -->
+  <section id="tab-ekonomi" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Risiko Ekonomi Daerah &amp; Makro</h2>
+        <p class="muted">Memetakan PDRB, inflasi daerah, UMP/UMK, suku bunga BI, dan kurs USD/IDR terhadap paparan margin, piutang, dan utang berbunga perusahaan, lalu menghasilkan skenario siap pakai untuk Uji Ketahanan Kas.</p>
+        <div id="e-rasio-status" class="alert alert-warn" style="display:none"></div>
+        <label class="field">Nama Daerah / Provinsi / Kota
+          <input type="text" id="e-daerah" placeholder="mis. Jawa Barat / Nasional" value="Jawa Barat">
+        </label>
+        <label class="field">Sumber Data Daerah (opsional: CSV template / JSON)
+          <input type="file" id="e-file" accept=".csv,.json">
+        </label>
+        <div class="row-2">
+          <label class="field">Pertumbuhan PDRB (%)
+            <input type="number" id="e-pdrb" step="0.1" placeholder="mis. 4.8">
+          </label>
+          <label class="field">Inflasi Daerah (% YoY)
+            <input type="number" id="e-inflasi" step="0.1" placeholder="mis. 3.6">
+          </label>
+        </div>
+        <div class="row-2">
+          <label class="field">Kenaikan UMP/UMK (%)
+            <input type="number" id="e-ump" step="0.1" placeholder="mis. 6.5">
+          </label>
+          <label class="field">Suku Bunga Acuan / BI (%)
+            <input type="number" id="e-bunga" step="0.25" placeholder="mis. 6.0">
+          </label>
+        </div>
+        <label class="field">Kurs USD/IDR
+          <input type="number" id="e-kurs" step="10" placeholder="mis. 16200">
+        </label>
+        <label class="field">Catatan Konteks Daerah (opsional)
+          <input type="text" id="e-catatan" placeholder="mis. Kenaikan UMK Bekasi &amp; pelemahan permintaan ritel">
+        </label>
+        <label class="check-box">
+          <input type="checkbox" id="e-offline" checked>
+          <span><strong>Mode offline (tanpa mengambil API World Bank)</strong><br>
+          <span class="muted">Matikan centang jika ingin mengambil data makro Indonesia terbaru via World Bank API.</span></span>
+        </label>
+        <button class="btn btn-primary" id="e-run" onclick="jalankanEkonomi()">Analisis Risiko Ekonomi Daerah</button>
+      </div>
+      <div class="card" id="e-result">
+        <h2>Hasil Forecast Risiko Ekonomi</h2>
+        <p class="muted">Isi data daerah atau unggah <code>template-ekonomi-daerah.csv</code>, lalu klik <strong>Analisis Risiko Ekonomi Daerah</strong>. Jika Tab 1 atau Tab 2 sudah dijalankan, paparan perusahaan otomatis dipetakan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: BENCHMARK EMITEN IDX -->
+  <section id="tab-emiten" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Benchmark Emiten Bursa Efek (IDX)</h2>
+        <p class="muted">Bandingkan rasio perusahaan Anda terhadap emiten sejenis di BEI. Mendukung pengambilan data via TradingView (jika Node.js &amp; internet tersedia) atau mengunggah berkas <code>emiten.json</code>.</p>
+        <div id="em-rasio-status" class="alert alert-warn" style="display:none"></div>
+        <div id="em-node-note" class="alert alert-warn" style="display:none"></div>
+        <div class="row-2">
+          <label class="field">Cari Emiten / Kata Kunci
+            <input type="text" id="em-cari" placeholder="mis. makanan, tekstil, UNVR">
+          </label>
+          <label class="field">Filter Sektor (opsional)
+            <input type="text" id="em-sektor" placeholder="mis. Consumer Non-Cyclicals">
+          </label>
+        </div>
+        <button class="btn btn-soft" id="em-search-btn" onclick="cariEmiten()" style="margin-bottom:10px">Cari Daftar Emiten (TradingView)</button>
+        <div id="em-daftar" class="muted" style="font-size:0.86rem; margin-bottom:10px"></div>
+        <label class="field">Kode Emiten IDX (pisahkan spasi atau koma)
+          <input type="text" id="em-kode" placeholder="mis. UNVR ICBP MYOR">
+        </label>
+        <label class="field">Atau Unggah File JSON Emiten (opsional, untuk mode offline)
+          <input type="file" id="em-file" accept=".json">
+        </label>
+        <button class="btn btn-primary" id="em-run" onclick="bandingkanEmiten()">Bandingkan dengan Perusahaan</button>
+      </div>
+      <div class="card" id="em-result">
+        <h2>Hasil Pembanding Emiten</h2>
+        <p class="muted">Masukkan kode emiten (atau unggah JSON emiten) dan pastikan Analisis LK Tahunan (Tab 2) atau Laporan Direksi (Tab 1) sudah dijalankan bila ingin membandingkan posisi Perusahaan Anda.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 6: EFISIENSI SDM & BUDGETING -->
+  <section id="tab-sdm" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Efisiensi SDM &amp; KPI Budgeting Departemen</h2>
+        <p class="muted">Menghitung Rp pendapatan, laba bersih, &amp; biaya SDM per karyawan, serta menyusun pagu anggaran &amp; KPI tiap departemen berdasarkan struktur organisasi.</p>
+        <div id="sdm-fitur-note" class="alert alert-warn" style="display:none"></div>
+        <div id="sdm-rasio-status" class="alert alert-warn" style="display:none"></div>
+        <div class="row-2">
+          <label class="field">Total Karyawan Tahun Ini
+            <input type="number" id="s-karyawan" min="1" value="120">
+          </label>
+          <label class="field">Total Karyawan Tahun Lalu (opsional)
+            <input type="number" id="s-karyawan-lalu" min="0" placeholder="mis. 115">
+          </label>
+        </div>
+        <label class="field">Atau Gunakan Sample Case LK jika Tab 2 belum dijalankan
+          <select id="s-case"></select>
+        </label>
+        <label class="field">Struktur &amp; Jumlah Karyawan per Departemen (JSON atau unggah .csv/.json)
+          <input type="file" id="s-file" accept=".csv,.json">
+        </label>
+        <label class="field">Atau isi cepat daftar departemen (format: <code>Nama Dept: Jumlah</code> per baris)
+          <textarea id="s-dept-text" rows="5" style="width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font:0.86rem ui-monospace,monospace;">Produksi &amp; Gudang: 70
+Penjualan &amp; Pemasaran: 28
+Keuangan &amp; Umum: 22</textarea>
+        </label>
+        <button class="btn btn-primary" id="s-run" onclick="jalankanSdm()">Hitung Rasio Rp/Karyawan &amp; Budget</button>
+      </div>
+      <div class="card" id="sdm-result">
+        <h2>Hasil Efisiensi SDM &amp; KPI Budget</h2>
+        <p class="muted">Isi jumlah karyawan dan komposisi departemen di kiri, lalu klik <strong>Hitung Rasio Rp/Karyawan &amp; Budget</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 7: REPORT KOMBINASI -->
+  <section id="tab-kombinasi" class="panel">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Generator Report Kombinasi Direksi</h2>
+        <p class="muted">Menggabungkan hasil modul yang telah Anda jalankan di sesi ini (Laporan Bulanan, LK &amp; Red Flag, Uji Kas, Risiko Ekonomi Daerah, Benchmark Emiten, &amp; SDM/Budgeting) menjadi 1 paket laporan HTML interaktif siap cetak PDF.</p>
+        <div id="komb-fitur-note" class="alert alert-warn" style="display:none"></div>
+        <label class="field">Judul Paket Laporan Direksi
+          <input type="text" id="komb-judul" value="Paket Keputusan Direksi Terintegrasi">
+        </label>
+        <label class="field">Catatan Eksekutif / Arahan Rapat (opsional)
+          <textarea id="komb-catatan" rows="3" style="width:100%; border:1px solid var(--line); border-radius:8px; padding:8px; font-family:inherit;" placeholder="Ringkasan konteks keputusan rapat direksi..."></textarea>
+        </label>
+        <h3>Modul Tersedia dari Sesi Portal Ini</h3>
+        <div id="komb-status-list" style="margin-bottom:12px;"></div>
+        <button class="btn btn-primary" id="komb-run" onclick="jalankanKombinasi()">Susun Report Kombinasi (HTML &amp; MD)</button>
+      </div>
+      <div class="card" id="komb-result">
+        <h2>Pratinjau Report Kombinasi</h2>
+        <p class="muted">Jalankan minimal satu modul (misalnya Tab 2 atau Tab 1), tambahkan Tab 3/4/5/6 sesuai kebutuhan, lalu klik <strong>Susun Report Kombinasi</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 8: TEMPLATE & PANDUAN -->
+  <section id="tab-panduan" class="panel">
+    <div class="grid-2" style="grid-template-columns: 1fr 1fr;">
+      <div class="card">
+        <h2>Unduh Template Resmi</h2>
+        <p class="muted">Isi data keuangan perusahaan Anda di template berikut tanpa mengubah kolom <code>kode</code> atau struktur sheet.</p>
+        <div id="tpl-list" class="dl-bar" style="flex-direction:column; align-items:stretch;"></div>
+        <h3>Aturan Pengisian Singkat</h3>
+        <ul class="muted">
+          <li>Gunakan <strong>satu satuan</strong> konsisten di seluruh file (mis. Jutaan Rupiah).</li>
+          <li>Semua beban ditulis sebagai <strong>angka positif</strong>.</li>
+          <li>Baris bertanda <code>*</code> wajib diisi; Total Aset harus sama dengan Total Liabilitas + Ekuitas.</li>
+          <li>Jika angka di Excel memakai rumus, simpan ulang file setelah dihitung agar nilai hasil rumus tersimpan.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>Alur Kerja Aman dengan AI</h2>
+        <ol class="muted" style="padding-left:18px;">
+          <li><strong>Isi template Excel</strong> dengan laporan keuangan perusahaan Anda.</li>
+          <li><strong>Jalankan di portal ini</strong> dengan mencentang opsi <strong>Samarkan angka</strong>.</li>
+          <li>Periksa status validasi neraca &amp; rasio secara deterministik (bukan dihitung AI).</li>
+          <li>Unduh file <code>lk-samaran.json</code> / <code>rasio.md</code> / <code>gejala.md</code> lalu tempelkan ke asisten AI pilihan Anda (ChatGPT, Claude, Gemini) untuk menyusun narasi rapat direksi tanpa membocorkan nilai rupiah asli.</li>
+        </ol>
+        <h3>Contoh Prompt untuk Asisten AI</h3>
+        <pre class="md-view" id="prompt-contoh">Saya melampirkan hasil rasio dan red flag operasional perusahaan (angka sudah disamarkan).
+Tolong susun 3 poin keputusan utama untuk rapat direksi beserta 5 pertanyaan verifikasi untuk tim operasional, tanpa mengubah atau menghitung ulang angka dari data terlampir.</pre>
+        <button class="btn btn-soft" onclick="salinTeks('prompt-contoh')">Salin Contoh Prompt</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Alat bantu analisis, bukan nasihat investasi atau hasil audit. Angka bergantung pada kebenaran data input.<br>
+  Disusun dengan TQ Board Insight | totalquality.co.id
+</footer>
+
+<script>
+const STATE = {
+  cases: [],
+  pertanyaan: [],
+  templates: [],
+  fitur: {},
+  jobs: {
+    laporan: null,
+    rasio: null,
+    gejala: null,
+    kesiapan: null,
+    uji_kas: null,
+    ekonomi: null,
+    emiten: null,
+    sdm: null,
+  },
+  skenarioMakroTerakhir: null,
+};
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[c]));
+}
+
+function aktifkanTab(name) {
+  document.querySelectorAll("nav.tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.tab === name);
+  });
+  document.querySelectorAll(".panel").forEach(p => {
+    p.classList.toggle("active", p.id === "tab-" + name);
+  });
+  perbaruiStatusModul();
+}
+
+document.querySelectorAll("nav.tabs button").forEach(btn => {
+  btn.addEventListener("click", () => aktifkanTab(btn.dataset.tab));
+});
+
+function toggleSumber(prefix) {
+  const mode = document.getElementById(prefix + "-sumber").value;
+  document.getElementById(prefix + "-sample-wrap").style.display = mode === "sample" ? "block" : "none";
+  document.getElementById(prefix + "-upload-wrap").style.display = mode === "upload" ? "block" : "none";
+}
+
+function toggleKesiapan() {
+  const on = document.getElementById("t-pakai-kesiapan").checked;
+  document.getElementById("t-kesiapan-form").style.display = on ? "block" : "none";
+}
+
+function toggleCustomSkenario() {
+  const on = document.getElementById("k-custom-on").checked;
+  document.getElementById("k-custom-wrap").style.display = on ? "block" : "none";
+}
+
+function bacaFileBase64(inputId) {
+  return new Promise((resolve, reject) => {
+    const el = document.getElementById(inputId);
+    const file = el.files && el.files[0];
+    if (!file) { reject(new Error("Pilih berkas terlebih dahulu.")); return; }
+    const reader = new FileReader();
+    reader.onload = () => resolve({ file_name: file.name, file_b64: reader.result });
+    reader.onerror = () => reject(new Error("Gagal membaca berkas dari komputer Anda."));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function kumpulkanInput(prefix) {
+  const mode = document.getElementById(prefix + "-sumber").value;
+  if (mode === "sample") {
+    return { sample_case: document.getElementById(prefix + "-case").value };
+  }
+  const berkas = await bacaFileBase64(prefix + "-file");
+  const getEl = suf => document.getElementById(prefix + "-" + suf);
+  const konvEl = getEl("konversi");
+  const tbEl = getEl("tb");
+  const akEl = getEl("ak");
+  const perEl = getEl("perusahaan");
+  const pdEl = getEl("periode");
+  return {
+    ...berkas,
+    konversi_bebas: konvEl ? konvEl.checked : false,
+    trial_balance: tbEl ? tbEl.checked : false,
+    hitung_arus_kas: akEl ? akEl.checked : false,
+    perusahaan: perEl ? perEl.value.trim() : "",
+    periode: pdEl ? pdEl.value.trim() : "",
+  };
+}
+
+function sumberRasioAktif() {
+  if (STATE.jobs.rasio) return { rasio_job_id: STATE.jobs.rasio.job_id, rasio_file: STATE.jobs.rasio.file, label: "Hasil Tab 2 (LK Tahunan)" };
+  if (STATE.jobs.laporan) return { rasio_job_id: STATE.jobs.laporan.job_id, rasio_file: STATE.jobs.laporan.file, label: "Hasil Tab 1 (Laporan Bulanan)" };
+  return null;
+}
+
+function perbaruiStatusModul() {
+  const src = sumberRasioAktif();
+  ["e-rasio-status", "em-rasio-status", "sdm-rasio-status"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (src) {
+      el.className = "alert alert-ok";
+      el.style.display = "block";
+      el.textContent = "Terhubung ke data perusahaan: " + src.label + ".";
+    } else {
+      el.className = "alert alert-warn";
+      el.style.display = "block";
+      el.textContent = "Belum ada hasil Tab 1 atau Tab 2 di sesi ini. Jalankan Tab 1/Tab 2 terlebih dahulu bila ingin memetakan paparan perusahaan.";
+    }
+  });
+  const listEl = document.getElementById("komb-status-list");
+  if (listEl) {
+    const labelMap = [
+      ["laporan", "1. Laporan Direksi Bulanan"],
+      ["rasio", "2a. Rasio Keuangan Tahunan"],
+      ["gejala", "2b. Red Flag Operasional"],
+      ["kesiapan", "2c. Kesiapan Data & Sistem"],
+      ["uji_kas", "3. Uji Ketahanan Kas"],
+      ["ekonomi", "4. Risiko Ekonomi Daerah"],
+      ["emiten", "5. Benchmark Emiten IDX"],
+      ["sdm", "6. Efisiensi SDM & Budget"],
+    ];
+    listEl.innerHTML = labelMap.map(([k, lbl]) => {
+      const ada = Boolean(STATE.jobs[k]);
+      return `<div style="display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid var(--line); font-size:0.88rem;">
+        <span>${esc(lbl)}</span>
+        <span>${ada ? '<span class="tag tag-aman">Siap</span>' : '<span class="muted">Belum dijalankan</span>'}</span>
+      </div>`;
+    }).join("");
+  }
+}
+
+async function postApi(url, payload) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  const data = await res.json();
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || ("Permintaan gagal (" + res.status + ")"));
+  }
+  return data;
+}
+
+function renderDownloadBar(jobId, files) {
+  return '<div class="dl-bar">' + files.map(f =>
+    `<a class="btn btn-soft" href="/api/job/${esc(jobId)}/${encodeURIComponent(f)}" download="${esc(f)}">Unduh ${esc(f)}</a>`
+  ).join("") + "</div>";
+}
+
+function tagStatus(s) {
+  const k = String(s || "").toLowerCase();
+  const cls = k.includes("aman") || k.includes("hijau") || k.includes("lulus") ? "aman"
+    : k.includes("waspada") || k.includes("kuning") ? "waspada" : "kritis";
+  return `<span class="tag tag-${cls}">${esc(s)}</span>`;
+}
+
+async function jalankanBulanan() {
+  const btn = document.getElementById("b-run");
+  const out = document.getElementById("b-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Laporan Rapat Direksi</h2><p class="muted">Memvalidasi neraca dan menyusun laporan...</p>';
+  try {
+    const inp = await kumpulkanInput("b");
+    const data = await postApi("/api/laporan-analisa", {
+      ...inp,
+      mode: document.getElementById("b-mode").value,
+      gaya_cerita: document.getElementById("b-gaya").value,
+      samarkan: document.getElementById("b-samarkan").checked,
+    });
+    STATE.jobs.laporan = { job_id: data.job_id, file: "laporan.json" };
+    perbaruiStatusModul();
+    const r = data.ringkasan;
+    const htmlUrl = `/api/job/${esc(data.job_id)}/laporan.html`;
+    const ceritaHtml = (r.cerita || []).map(c =>
+      `<div style="padding:8px 0; border-bottom:1px solid var(--line)">
+        ${tagStatus(c.sev)} <strong>${esc(c.judul)}</strong>
+        <div class="muted">${esc(c.fakta)}</div>
+        <div style="font-size:0.86rem">Penyebab: ${esc(c.penyebab)}</div>
+      </div>`
+    ).join("");
+    out.innerHTML = `
+      <div class="head-row">
+        <h2>${esc(r.meta?.perusahaan || "Laporan Direksi")}</h2>
+        <a class="btn btn-soft" href="${htmlUrl}" target="_blank" rel="noopener">Buka Layar Penuh</a>
+      </div>
+      <div class="kpi-strip">
+        <div class="kpi-box"><div class="lbl">Periode Aktif</div><div class="val">${esc(r.periode || "-")}</div></div>
+        <div class="kpi-box"><div class="lbl">Skor Kesehatan</div><div class="val">${esc(r.skor?.grade || "-")} (${esc(r.skor?.nilai ?? "-")}/100)</div></div>
+        <div class="kpi-box"><div class="lbl">Tingkat Data</div><div class="val">${esc(r.meta?.tingkat_data || "-")}</div></div>
+      </div>
+      <div class="alert alert-ok"><strong>Putusan:</strong> ${esc(r.putusan?.teks || "-")}</div>
+      ${renderDownloadBar(data.job_id, data.files)}
+      <details class="box">
+        <summary>Ringkasan Cerita Utama (${(r.cerita || []).length} temuan)</summary>
+        ${ceritaHtml || '<p class="muted">Tidak ada cerita.</p>'}
+      </details>
+      <iframe class="preview" src="${htmlUrl}" title="Pratinjau Laporan Analisa"></iframe>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Validasi / Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function pilihSubtab(containerId, targetId, btn) {
+  const root = document.getElementById(containerId);
+  root.querySelectorAll(".subtabs button").forEach(b => b.classList.remove("active"));
+  root.querySelectorAll(".subview").forEach(v => v.style.display = "none");
+  btn.classList.add("active");
+  document.getElementById(targetId).style.display = "block";
+}
+
+async function jalankanTahunan() {
+  const btn = document.getElementById("t-run");
+  const out = document.getElementById("t-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Analisis LK Tahunan</h2><p class="muted">Memvalidasi neraca, menghitung rasio, dan mendeteksi red flag...</p>';
+  try {
+    const inp = await kumpulkanInput("t");
+    let kesiapan = "";
+    if (document.getElementById("t-pakai-kesiapan").checked) {
+      kesiapan = STATE.pertanyaan.map(q => {
+        const cek = document.querySelector(`input[name="q-${q.no}"]:checked`);
+        return cek ? cek.value : "B";
+      }).join(",");
+    }
+    const data = await postApi("/api/analisis-tahunan", {
+      ...inp,
+      gaya: document.getElementById("t-gaya").value,
+      metode: document.getElementById("t-metode").value,
+      samarkan: document.getElementById("t-samarkan").checked,
+      kesiapan,
+    });
+    STATE.jobs.rasio = { job_id: data.job_id, file: "rasio.json" };
+    STATE.jobs.gejala = { job_id: data.job_id, file: "gejala.json" };
+    if ((data.files || []).includes("kesiapan.json")) {
+      STATE.jobs.kesiapan = { job_id: data.job_id, file: "kesiapan.json" };
+    } else {
+      STATE.jobs.kesiapan = null;
+    }
+    perbaruiStatusModul();
+    const briefUrl = `/api/job/${esc(data.job_id)}/brief.html`;
+    const visualUrl = `/api/job/${esc(data.job_id)}/visual.html`;
+    const warnHtml = (data.peringatan && data.peringatan.length)
+      ? `<div class="alert alert-warn"><strong>Peringatan:</strong>\n${esc(data.peringatan.join("\n"))}</div>` : "";
+    out.innerHTML = `
+      <div class="head-row">
+        <h2>${esc(data.meta?.perusahaan || "Analisis Tahunan")}</h2>
+        <div class="dl-bar" style="margin:0">
+          <a class="btn btn-soft" href="${briefUrl}" target="_blank" rel="noopener">Buka Brief</a>
+          <a class="btn btn-soft" href="${visualUrl}" target="_blank" rel="noopener">Buka Grafik</a>
+        </div>
+      </div>
+      ${warnHtml}
+      ${renderDownloadBar(data.job_id, data.files)}
+      <div class="subtabs">
+        <button class="active" onclick="pilihSubtab('t-result', 'tv-brief', this)">Board Brief (HTML)</button>
+        <button onclick="pilihSubtab('t-result', 'tv-visual', this)">Visualisasi Grafik</button>
+        <button onclick="pilihSubtab('t-result', 'tv-rasio', this)">Rasio (Markdown)</button>
+        <button onclick="pilihSubtab('t-result', 'tv-gejala', this)">Red Flag (Markdown)</button>
+        ${data.kesiapan_md ? `<button onclick="pilihSubtab('t-result', 'tv-kesiapan', this)">Kesiapan Data</button>` : ""}
+      </div>
+      <div id="tv-brief" class="subview"><iframe class="preview" src="${briefUrl}"></iframe></div>
+      <div id="tv-visual" class="subview" style="display:none"><iframe class="preview" src="${visualUrl}"></iframe></div>
+      <div id="tv-rasio" class="subview" style="display:none"><pre class="md-view">${esc(data.rasio_md)}</pre></div>
+      <div id="tv-gejala" class="subview" style="display:none"><pre class="md-view">${esc(data.gejala_md)}</pre></div>
+      ${data.kesiapan_md ? `<div id="tv-kesiapan" class="subview" style="display:none"><pre class="md-view">${esc(data.kesiapan_md)}</pre></div>` : ""}
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Validasi / Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function jalankanUjiKas() {
+  const btn = document.getElementById("k-run");
+  const out = document.getElementById("k-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Uji Ketahanan Kas</h2><p class="muted">Menjalankan simulasi skenario dan uji balik...</p>';
+  try {
+    const inp = await kumpulkanInput("k");
+    const numOrNull = id => {
+      const v = document.getElementById(id).value.trim();
+      return v === "" ? null : Number(v);
+    };
+    let skenario = null;
+    if (document.getElementById("k-custom-on").checked) {
+      skenario = [
+        { nama: "Dasar (tren 3 bulan terakhir berlanjut)" },
+        {
+          nama: document.getElementById("ks-nama").value.trim() || "Skenario Peserta",
+          penjualan_pct: Number(document.getElementById("ks-jual").value || 0),
+          harga_bahan_pct: Number(document.getElementById("ks-bahan").value || 0),
+          tambah_dso_hari: Number(document.getElementById("ks-dso").value || 0),
+          kurang_dpo_hari: Number(document.getElementById("ks-dpo").value || 0),
+          bunga_poin: Number(document.getElementById("ks-bunga").value || 0),
+          belanja_tambahan: Number(document.getElementById("ks-belanja").value || 0),
+        }
+      ];
+    }
+    const data = await postApi("/api/uji-kas", {
+      ...inp,
+      horizon: Number(document.getElementById("k-horizon").value || 6),
+      plafon: numOrNull("k-plafon"),
+      batas_dscr: numOrNull("k-dscr"),
+      batas_icr: numOrNull("k-icr"),
+      kas_minimum: numOrNull("k-min"),
+      samarkan: document.getElementById("k-samarkan").checked,
+      skenario,
+    });
+    STATE.jobs.uji_kas = { job_id: data.job_id, file: "uji-kas.json" };
+    perbaruiStatusModul();
+    const d = data.data;
+    const fmtAngka = v => v == null ? "-" : Number(v).toLocaleString("id-ID", { maximumFractionDigits: 1 });
+    const rows = (d.skenario || []).map(s => `
+      <tr>
+        <td>${esc(s.nama)}</td>
+        <td class="num">${fmtAngka(s.kas_terendah)}</td>
+        <td class="num">${fmtAngka(s.kas_akhir)}</td>
+        <td>${s.bulan_bawah_minimum ? esc(d.bulan_proyeksi[s.bulan_bawah_minimum - 1]) : "-"}</td>
+        <td class="num">${s.dscr == null ? "-" : s.dscr.toFixed(2) + "x"}</td>
+        <td>${tagStatus(s.status)}</td>
+      </tr>`).join("");
+    const balik = (d.uji_balik || []).map(b =>
+      `<li>${esc(b.guncangan)}: <strong>${b.nilai == null ? "tidak tercapai" : (b.nilai + " " + b.satuan)}</strong></li>`
+    ).join("");
+    out.innerHTML = `
+      <h2>${esc(d.perusahaan || "Hasil Uji Ketahanan Kas")}</h2>
+      <div class="kpi-strip">
+        <div class="kpi-box"><div class="lbl">Kas Saat Ini (${esc(d.satuan)})</div><div class="val">${fmtAngka(d.kas_kini)}</div></div>
+        <div class="kpi-box"><div class="lbl">Kas Minimum</div><div class="val">${fmtAngka(d.kas_minimum)}</div></div>
+        <div class="kpi-box"><div class="lbl">Horizon</div><div class="val">${esc(d.horizon)} bulan</div></div>
+      </div>
+      ${renderDownloadBar(data.job_id, data.files)}
+      <table class="data">
+        <thead><tr><th>Skenario</th><th class="num">Kas Terendah</th><th class="num">Kas Akhir</th><th>Di Bawah Min</th><th class="num">DSCR</th><th>Status</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <h3>Uji Balik (Batas Guncangan Sampai Kas Minimum)</h3>
+      <ul class="muted">${balik}</ul>
+      <details class="box">
+        <summary>Lihat Laporan Markdown Lengkap (uji-kas.md)</summary>
+        <pre class="md-view">${esc(data.md)}</pre>
+      </details>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Validasi / Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function jalankanEkonomi() {
+  const btn = document.getElementById("e-run");
+  const out = document.getElementById("e-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Forecast Risiko Ekonomi</h2><p class="muted">Memetakan indikator ekonomi daerah &amp; sensitivitas perusahaan...</p>';
+  try {
+    const numVal = id => {
+      const v = document.getElementById(id).value.trim();
+      return v === "" ? null : Number(v);
+    };
+    let filePayload = {};
+    const fileEl = document.getElementById("e-file");
+    if (fileEl.files && fileEl.files[0]) {
+      filePayload = await bacaFileBase64("e-file");
+    }
+    const src = sumberRasioAktif() || {};
+    const data = await postApi("/api/ekonomi-daerah", {
+      ...filePayload,
+      ...src,
+      daerah: document.getElementById("e-daerah").value.trim() || "Indonesia",
+      pdrb_pct: numVal("e-pdrb"),
+      inflasi_daerah_pct: numVal("e-inflasi"),
+      kenaikan_ump_pct: numVal("e-ump"),
+      suku_bunga_pct: numVal("e-bunga"),
+      kurs_usd: numVal("e-kurs"),
+      catatan_daerah: document.getElementById("e-catatan").value.trim(),
+      offline: document.getElementById("e-offline").checked,
+    });
+    STATE.jobs.ekonomi = { job_id: data.job_id, file: "risiko-ekonomi.json" };
+    const daftarSk = Array.isArray(data.skenario) ? data.skenario : (data.skenario?.skenario || []);
+    STATE.skenarioMakroTerakhir = daftarSk;
+    perbaruiStatusModul();
+    const risiko = data.data?.risiko || [];
+    const risikoHtml = risiko.map(r => `
+      <tr>
+        <td>${esc(r.aspek || r.kategori || r.kode || "-")}</td>
+        <td>${tagStatus(r.tingkat || r.level || "-")}</td>
+        <td>${esc(r.ringkasan || r.dampak || "-")}</td>
+      </tr>`).join("");
+    const tombolKas = daftarSk.length
+      ? `<button class="btn btn-soft" onclick="kirimSkenarioMakroKeKas()">Kirim Skenario Makro ke Uji Ketahanan Kas</button>`
+      : "";
+    out.innerHTML = `
+      <div class="head-row">
+        <h2>Risiko Makro: ${esc(data.data?.daerah || "Daerah")}</h2>
+        ${tombolKas}
+      </div>
+      ${renderDownloadBar(data.job_id, data.files)}
+      ${risikoHtml ? `<table class="data"><thead><tr><th>Aspek</th><th>Tingkat</th><th>Paparan &amp; Dampak</th></tr></thead><tbody>${risikoHtml}</tbody></table>` : ""}
+      <details class="box" open>
+        <summary>Laporan Lengkap Ekonomi Daerah (risiko-ekonomi.md)</summary>
+        <pre class="md-view">${esc(data.md)}</pre>
+      </details>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function kirimSkenarioMakroKeKas() {
+  const daftar = STATE.skenarioMakroTerakhir || [];
+  const sk = daftar.find(s => !String(s.nama || "").toLowerCase().includes("dasar")) || daftar[0];
+  if (!sk) return;
+  document.getElementById("k-custom-on").checked = true;
+  toggleCustomSkenario();
+  document.getElementById("ks-nama").value = sk.nama || "Skenario Makro Daerah";
+  document.getElementById("ks-jual").value = sk.penjualan_pct ?? 0;
+  document.getElementById("ks-bahan").value = sk.harga_bahan_pct ?? 0;
+  document.getElementById("ks-dso").value = sk.tambah_dso_hari ?? 0;
+  document.getElementById("ks-dpo").value = sk.kurang_dpo_hari ?? 0;
+  document.getElementById("ks-bunga").value = sk.bunga_poin ?? 0;
+  document.getElementById("ks-belanja").value = sk.belanja_tambahan ?? 0;
+  aktifkanTab("kas");
+}
+
+async function cariEmiten() {
+  const btn = document.getElementById("em-search-btn");
+  const out = document.getElementById("em-daftar");
+  btn.disabled = true;
+  out.textContent = "Mencari daftar emiten di TradingView...";
+  try {
+    const data = await postApi("/api/emiten", {
+      action: "daftar",
+      cari: document.getElementById("em-cari").value.trim(),
+      sektor: document.getElementById("em-sektor").value.trim(),
+      limit: 12,
+    });
+    const list = data.daftar || [];
+    if (!list.length) {
+      out.textContent = "Tidak ada emiten yang cocok.";
+      return;
+    }
+    out.innerHTML = "<strong>Klik untuk menambahkan kode:</strong> " + list.map(it => {
+      const kd = typeof it === "string" ? it : (it.kode || it.symbol || "");
+      const nm = typeof it === "string" ? "" : (it.nama || it.name || "");
+      return `<button type="button" class="btn btn-soft" style="padding:3px 8px; margin:2px; font-size:0.78rem" onclick="tambahKodeEmiten('${esc(kd)}')">${esc(kd)}${nm ? " · " + esc(nm) : ""}</button>`;
+    }).join(" ");
+  } catch (err) {
+    out.innerHTML = `<span style="color:var(--bad)">${esc(err.message)}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function tambahKodeEmiten(kd) {
+  const el = document.getElementById("em-kode");
+  const lama = el.value.trim().split(/[\s,;]+/).filter(Boolean);
+  if (!lama.includes(kd)) lama.push(kd);
+  el.value = lama.join(" ");
+}
+
+async function bandingkanEmiten() {
+  const btn = document.getElementById("em-run");
+  const out = document.getElementById("em-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Pembanding Emiten</h2><p class="muted">Mengambil data emiten &amp; menyusun perbandingan rasio...</p>';
+  try {
+    let payload = {
+      action: "bandingkan",
+      kode: document.getElementById("em-kode").value.trim(),
+      ...(sumberRasioAktif() || {}),
+    };
+    const fileEl = document.getElementById("em-file");
+    if (fileEl.files && fileEl.files[0]) {
+      const f = await bacaFileBase64("em-file");
+      payload = { ...payload, ...f };
+    }
+    const data = await postApi("/api/emiten", payload);
+    STATE.jobs.emiten = { job_id: data.job_id, file: "pembanding.json" };
+    perbaruiStatusModul();
+    out.innerHTML = `
+      <h2>Benchmark Emiten IDX</h2>
+      ${renderDownloadBar(data.job_id, data.files)}
+      <pre class="md-view">${esc(data.md)}</pre>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function parseDeptText(teks) {
+  const hasil = [];
+  String(teks || "").split(/\r?\n/).forEach(baris => {
+    const clean = baris.trim();
+    if (!clean) return;
+    const m = clean.match(/^(.+?)[:=,\t]\s*(\d+(?:[.,]\d+)?)$/);
+    if (m) {
+      hasil.push({ nama: m[1].trim(), karyawan: Number(m[2].replace(",", ".")) });
+    }
+  });
+  return hasil;
+}
+
+async function jalankanSdm() {
+  const btn = document.getElementById("s-run");
+  const out = document.getElementById("sdm-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Hasil Efisiensi SDM &amp; KPI Budget</h2><p class="muted">Menghitung Rp/karyawan dan rekomendasi anggaran departemen...</p>';
+  try {
+    const src = sumberRasioAktif() || { sample_case: document.getElementById("s-case").value };
+    let payload = {
+      ...src,
+      karyawan: Number(document.getElementById("s-karyawan").value || 0),
+    };
+    const kl = document.getElementById("s-karyawan-lalu").value.trim();
+    if (kl !== "") payload.karyawan_lalu = Number(kl);
+    const fileEl = document.getElementById("s-file");
+    if (fileEl.files && fileEl.files[0]) {
+      const f = await bacaFileBase64("s-file");
+      payload = { ...payload, ...f };
+    } else {
+      const depts = parseDeptText(document.getElementById("s-dept-text").value);
+      if (depts.length) payload.departemen = depts;
+    }
+    const data = await postApi("/api/sdm-budget", payload);
+    STATE.jobs.sdm = { job_id: data.job_id, file: "sdm-budget.json" };
+    perbaruiStatusModul();
+    out.innerHTML = `
+      <h2>Efisiensi SDM &amp; KPI Budgeting</h2>
+      ${renderDownloadBar(data.job_id, data.files)}
+      <pre class="md-view">${esc(data.md)}</pre>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function jalankanKombinasi() {
+  const btn = document.getElementById("komb-run");
+  const out = document.getElementById("komb-result");
+  btn.disabled = true;
+  out.innerHTML = '<h2>Pratinjau Report Kombinasi</h2><p class="muted">Menggabungkan modul aktif menjadi paket HTML/PDF direksi...</p>';
+  try {
+    const sumber = {};
+    Object.entries(STATE.jobs).forEach(([k, v]) => {
+      if (v) sumber[k] = v;
+    });
+    const data = await postApi("/api/report-kombinasi", {
+      judul: document.getElementById("komb-judul").value.trim() || "Paket Keputusan Direksi Terintegrasi",
+      catatan: document.getElementById("komb-catatan").value.trim(),
+      sumber,
+    });
+    const htmlUrl = `/api/job/${esc(data.job_id)}/report-kombinasi.html`;
+    out.innerHTML = `
+      <div class="head-row">
+        <h2>Report Kombinasi Siap</h2>
+        <a class="btn btn-soft" href="${htmlUrl}" target="_blank" rel="noopener">Buka Layar Penuh / Cetak PDF</a>
+      </div>
+      ${renderDownloadBar(data.job_id, data.files)}
+      <iframe class="preview" src="${htmlUrl}" title="Pratinjau Report Kombinasi"></iframe>
+    `;
+  } catch (err) {
+    out.innerHTML = `<h2>Proses Gagal</h2><div class="alert alert-err">${esc(err.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function salinTeks(elId) {
+  const teks = document.getElementById(elId).textContent;
+  navigator.clipboard?.writeText(teks);
+}
+
+async function muatInfo() {
+  const res = await fetch("/api/info");
+  const info = await res.json();
+  STATE.cases = info.cases || [];
+  STATE.pertanyaan = info.pertanyaan_kesiapan || [];
+  STATE.templates = info.templates || [];
+  STATE.fitur = info.fitur || {};
+
+  ["b-case", "t-case", "k-case", "s-case"].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    sel.innerHTML = STATE.cases.map(c =>
+      `<option value="${esc(c.id)}">${esc(c.judul)}</option>`
+    ).join("");
+  });
+
+  const fitur = STATE.fitur;
+  if (fitur.trial_balance === false) {
+    const wrap = document.getElementById("t-tb-wrap");
+    if (wrap) wrap.style.display = "none";
+  }
+  if (fitur.emiten_node === false) {
+    const el = document.getElementById("em-node-note");
+    if (el) {
+      el.style.display = "block";
+      el.textContent = "Pengambilan langsung TradingView belum terpasang (butuh Node.js + npm install di skills/data-emiten/scripts). Anda tetap bisa mengunggah file emiten.json secara offline.";
+    }
+  }
+  if (fitur.sdm_budget === false) {
+    const el = document.getElementById("sdm-fitur-note");
+    if (el) {
+      el.style.display = "block";
+      el.textContent = "Modul Efisiensi SDM belum aktif di branch ini (akan aktif otomatis setelah skill efisiensi-sdm-departemen terpasang).";
+    }
+    const sBtn = document.getElementById("s-run");
+    if (sBtn) sBtn.disabled = true;
+  }
+  if (fitur.report_kombinasi === false) {
+    const el = document.getElementById("komb-fitur-note");
+    if (el) {
+      el.style.display = "block";
+      el.textContent = "Generator Report Kombinasi belum terpasang di branch ini (membutuhkan tools/susun_report_kombinasi.py).";
+    }
+    const kBtn = document.getElementById("komb-run");
+    if (kBtn) kBtn.disabled = true;
+  }
+  perbaruiStatusModul();
+
+  document.getElementById("t-kesiapan-form").innerHTML = STATE.pertanyaan.map(q => {
+    const opts = Object.entries(q.pilihan).map(([k, v]) =>
+      `<label style="display:block; font-weight:400; margin:2px 0;">
+        <input type="radio" name="q-${q.no}" value="${esc(k)}" ${k === "B" ? "checked" : ""}> <strong>${esc(k)}.</strong> ${esc(v)}
+      </label>`
+    ).join("");
+    return `<div class="q-item"><strong>${q.no}. ${esc(q.teks)}</strong>${opts}</div>`;
+  }).join("");
+
+  document.getElementById("tpl-list").innerHTML = STATE.templates.map(t =>
+    `<a class="btn btn-soft" href="${esc(t.url)}" download="${esc(t.nama)}">Unduh ${esc(t.label)}</a>`
+  ).join("");
+}
+
+muatInfo().catch(console.error);
+</script>
+</body>
+</html>
