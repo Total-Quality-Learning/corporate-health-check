@@ -32,6 +32,12 @@ if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
 from format_data import LABEL_LK, LABEL_PAKET, tulis_lk_excel, tulis_paket_excel  # noqa: E402
+from trial_balance import (  # noqa: E402
+    deteksi_kolom_tb,
+    ekstrak_baris_tb,
+    hitung_arus_kas_tidak_langsung,
+    konversi_tb_ke_mapped,
+)
 
 BULAN_MAP = {
     "jan": 1, "januari": 1, "january": 1,
@@ -1192,6 +1198,10 @@ def main(argv=None) -> int:
     ap.add_argument("--mata-uang", help="Override mata uang (default: IDR)")
     ap.add_argument("--satuan", help="Override satuan angka (default: juta)")
     ap.add_argument("--bulan-aktif", help="Override bulan_aktif YYYY-MM (mode bulanan)")
+    ap.add_argument("--trial-balance", action="store_true", help="Perlakukan input sebagai Neraca Saldo (Debit/Kredit)")
+    ap.add_argument("--periode", default="2025", help="Label periode bawaan untuk Trial Balance 1 periode")
+    ap.add_argument("--hitung-arus-kas", action="store_true",
+                    help="Hitung Arus Kas metode tidak langsung otomatis jika ArusKas kosong")
     ap.add_argument("--draf", action="store_true", help="Tetap tulis keluaran meski validasi gagal (untuk perbaikan)")
     ap.add_argument("--diam", action="store_true", help="Ringkas output terminal")
     a = ap.parse_args(argv)
@@ -1205,16 +1215,49 @@ def main(argv=None) -> int:
     if not paths:
         ap.error("Berikan minimal satu berkas input (.xlsx/.xlsm/.csv/.tsv).")
 
+    info_hint: dict[str, str] = {}
+    tb_warnings: list[str] = []
     try:
         tabel, info_file = baca_sumber(paths, peran)
-        baris_mentah, info_hint = ekstrak_baris_mentah(tabel)
-        if not baris_mentah:
-            print("GAGAL: Tidak ada tabel laporan keuangan dengan kolom periode yang terbaca.", file=sys.stderr)
-            return 1
-        jenis = pilih_jenis(baris_mentah, a.jenis)
-        periode = normalisasi_periode_jenis(baris_mentah, jenis)
         pemetaan_kustom = muat_pemetaan_kustom(a.pemetaan)
-        mapped, audit = petakan_data(baris_mentah, jenis, pemetaan_kustom)
+        apakah_tb = a.trial_balance or any(deteksi_kolom_tb(rows, parse_periode, bersihkan_label) for _, _, rows in tabel)
+
+        if apakah_tb:
+            baris_tb, totals_dk = ekstrak_baris_tb(tabel, parse_angka, parse_periode, bersihkan_label, a.periode)
+            if not baris_tb:
+                print("GAGAL: Tidak ada baris Trial Balance (Debit/Kredit) yang terbaca.", file=sys.stderr)
+                return 1
+            for p_lbl, (tot_d, tot_k) in sorted(totals_dk.items()):
+                tol = max(2.0, max(tot_d, tot_k, 1.0) * 0.001)
+                if abs(tot_d - tot_k) > tol:
+                    print(
+                        f"VALIDASI GAGAL: Trial Balance [{p_lbl}] tidak seimbang: "
+                        f"Debit {tot_d:,.2f} vs Kredit {tot_k:,.2f} (selisih {tot_d - tot_k:,.2f}).",
+                        file=sys.stderr,
+                    )
+                    return 2
+            if a.jenis in ("tahunan", "bulanan"):
+                jenis = a.jenis
+            else:
+                semua_p = [pm for b in baris_tb for pm in b.get("periode_meta", {}).values()]
+                jml_tgl = len({pm[0] for pm in semua_p if pm[1]})
+                jenis = "bulanan" if jml_tgl >= 3 else "tahunan"
+            mapped, audit, periode = konversi_tb_ke_mapped(
+                baris_tb, jenis, pemetaan_kustom, KODE_VALID[jenis],
+                SINONIM_TAHUNAN if jenis == "tahunan" else SINONIM_BULANAN,
+                bersihkan_label, _cocok_sinonim, FALLBACK_BULANAN,
+            )
+            # Urutkan periode kronologis berdasar meta
+            urutan_tb = {pm[0]: pm[2] for b in baris_tb for pm in b.get("periode_meta", {}).values()}
+            periode = sorted(periode, key=lambda p_k: urutan_tb.get(p_k, (9999, 12, 31)))
+        else:
+            baris_mentah, info_hint = ekstrak_baris_mentah(tabel)
+            if not baris_mentah:
+                print("GAGAL: Tidak ada tabel laporan keuangan dengan kolom periode yang terbaca.", file=sys.stderr)
+                return 1
+            jenis = pilih_jenis(baris_mentah, a.jenis)
+            periode = normalisasi_periode_jenis(baris_mentah, jenis)
+            mapped, audit = petakan_data(baris_mentah, jenis, pemetaan_kustom)
     except (FileNotFoundError, ValueError, RuntimeError, json.JSONDecodeError) as e:
         print(f"GAGAL: {e}", file=sys.stderr)
         return 1
@@ -1229,7 +1272,10 @@ def main(argv=None) -> int:
         tulis_draf_pemetaan(a.tulis_pemetaan, audit)
 
     hasil = bangun_keluaran(mapped, periode, jenis, info_meta)
+    if a.hitung_arus_kas or (apakah_tb and not hasil["arus_kas"].get("arus_kas_operasi")):
+        tb_warnings.extend(hitung_arus_kas_tidak_langsung(hasil, jenis))
     error, peringatan = validasi_hasil(hasil, jenis)
+    peringatan = tb_warnings + peringatan
 
     if not a.diam:
         print(f"Jenis terdeteksi : {jenis}")
