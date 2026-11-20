@@ -20,13 +20,15 @@ Kecuali pengguna secara eksplisit berkata *"langsung jalankan dengan setelan baw
 
 1. **Awal sesi / saat pertama menerima data perusahaan (tanyakan ringkas dalam 1 pesan):**
    - **Preferensi tampilan (`tampilan-direksi`):** Jalankan `python skills/tampilan-direksi/scripts/preferensi.py --pertanyaan` dan ajukan 4 pilihan bernomor (untuk siapa laporannya, gaya narasi, visual, dan fokus), atau konfirmasi jika `preferensi.json` sudah ada.
-   - **Konteks bisnis & tujuan rapat:** Industri/model bisnis perusahaan (B2B/ritel/manufaktur/distribusi/jasa), wilayah operasi/pasar utama, keputusan apa yang sedang disiapkan (evaluasi kas, negosiasi bank, efisiensi stok, atau rapat direksi), serta **bentuk report yang diinginkan** (bawaan tiap skill, atau **report kombinasi** lintas-skill seperti gabungan kinerja internal + forecast risiko ekonomi daerah + stress test kas + benchmark Tbk).
+   - **Konteks bisnis & tujuan rapat:** Industri/model bisnis perusahaan (B2B/ritel/manufaktur/distribusi/jasa), wilayah operasi/pasar utama, keputusan apa yang sedang disiapkan (evaluasi kas, negosiasi bank, efisiensi stok, atau rapat direksi), serta **bentuk report yang diinginkan** (bawaan tiap skill, atau **report kombinasi** lintas-skill seperti gabungan kinerja internal + efisiensi SDM/budgeting + forecast risiko ekonomi daerah + stress test kas + benchmark Tbk).
+   - **Struktur organisasi & jumlah karyawan (`efisiensi-sdm-departemen`):** Tanyakan departemen utama (mis. Produksi, Penjualan, Gudang, Keuangan/Umum), jumlah karyawan tahun ini dan tahun lalu (total atau per departemen), serta biaya SDM/usulan anggaran jika ada, agar dapat dihitung rasio **Rp per karyawan** dan rekomendasi **KPI serta budgeting per departemen**.
    - **Kerahasiaan data:** Untuk data internal yang belum dipublikasikan, tawarkan penyamaran lokal tanpa AI (`samarkan_lk.py` / `samarkan_paket.py`) sebelum dianalisis lebih jauh.
 2. **Saat memetakan PDF atau CSV/Excel format bebas:**
    - Jika ada akun yang belum terpetakan atau harus digabung (`konversi_data.py --tulis-pemetaan` atau hasil ekstraksi PDF), **tampilkan tabel pemetaannya dan konfirmasi ke pengguna** sebelum lanjut menghitung rasio.
 3. **Saat diminta membandingkan dengan perusahaan Tbk (`data-emiten`):**
    - Jika pengguna belum menyebut kode emiten spesifik, **jangan langsung memilihkan secara diam-diam**. Jalankan `tv_emiten.mjs daftar`, tampilkan 10–15 kandidat beserta industri dan kapitalisasi pasar, lalu **tanyakan emiten mana (3–10 kode)** yang paling mendekati model bisnis perusahaan pengguna (sambil memberi rekomendasi kurasi Anda beserta alasannya).
-4. **Saat masuk ke analisis lanjutan (`kondisi-ekonomi-daerah`, `uji-ketahanan-kas`, atau `cek-kesiapan-data`):**
+4. **Saat masuk ke analisis lanjutan (`efisiensi-sdm-departemen`, `kondisi-ekonomi-daerah`, `uji-ketahanan-kas`, atau `cek-kesiapan-data`):**
+   - Untuk **efisiensi SDM & budgeting departemen**: pastikan jumlah karyawan & struktur departemen sudah dikonfirmasi sebelum menjalankan `analisa_sdm_budget.py`; jika belum ada rincian biaya gaji, tandai `PERLU DATA`.
    - Untuk **kondisi ekonomi daerah**: tanya provinsi/kota basis operasi & pasar utama, eksposur impor/upah/utang, dan apakah pengguna memiliki angka resmi daerah (PDRB, inflasi daerah, UMP/UMK) atau ingin memakai proksi nasional dulu (`ambil_makro.py`).
    - Untuk **uji ketahanan kas**: jangan memakai asumsi skenario diam-diam tanpa persetujuan. **Tawarkan 2–3 skenario risiko spesifik** (termasuk `skenario-makro.json` hasil `analisa_risiko_ekonomi.py`) dan minta konfirmasi horizon, batas kas minimum, atau kovenan bank.
 
@@ -108,13 +110,14 @@ Selain menghasilkan keluaran standar dari masing-masing skrip, Anda memiliki **p
 | `uji-ketahanan-kas` | `uji-kas.json` (simulasi skenario, DSCR/ICR, plafon, uji balik) | `uji-kas.md` |
 | `data-emiten` | `pembanding.json` (terhubung ke `rasio.json` atau `laporan.json`) | `pembanding.md` |
 | `kondisi-ekonomi-daerah` | `risiko-ekonomi.json` + `skenario-makro.json` (terhubung ke `rasio.json` / `laporan.json`) | `risiko-ekonomi.md` |
+| `efisiensi-sdm-departemen` | `sdm-budget.json` (rasio Rp/karyawan & KPI/budgeting departemen dari `rasio.json`/`laporan.json`) | `sdm-budget.md` |
 
 ### B. Pilihan Menyusun Report Kombinasi (Kreatif & Adaptif)
 
 Saat pengguna membutuhkan laporan yang menyatukan berbagai sudut pandang (atau Anda melihat kombinasi tertentu jauh lebih berguna untuk tujuan rapat mereka), tawarkan atau susun **report kombinasi** dari file JSON di atas, misalnya:
 
-1. **Paket Direksi Tahunan Terpadu (`rasio.json` + `gejala.json` + `risiko-ekonomi.json` + `pembanding.json`):**
-   Putusan 10 detik, kondisi DuPont & kualitas kas, red flag operasional, forecast risiko ekonomi daerah, posisi perusahaan vs median emiten Tbk, serta 5 pertanyaan kritis & opsi keputusan.
+1. **Paket Direksi Tahunan Terpadu (`rasio.json` + `gejala.json` + `sdm-budget.json` + `risiko-ekonomi.json` + `pembanding.json`):**
+   Putusan 10 detik, kondisi DuPont & kualitas kas, produktivitas Rp per karyawan & KPI/budget departemen, red flag operasional, forecast risiko ekonomi daerah, posisi perusahaan vs median emiten Tbk, serta 5 pertanyaan kritis & opsi keputusan.
 2. **Paket Rapat Bulanan, Risiko Daerah, & Likuiditas (`laporan.json` + `risiko-ekonomi.json` + `uji-kas.json` + `pembanding.json`):**
    Skor & 3 cerita utama bulanan, jembatan laba ke kas & proyeksi 13 minggu, tekanan ekonomi daerah + simulasi ketahanan kas & kovenan bank, posisi margin/efisiensi vs emiten Tbk, serta rencana kerja `[DIISI DIREKSI]`.
 3. **Paket Kredit / Perbankan (`rasio.json`/`laporan.json` + `risiko-ekonomi.json` + `uji-kas.json` + `pembanding.json`):**
